@@ -1,100 +1,68 @@
 # BananaBoard
 
-BananaBoard is a free, self-hostable study organizer for homework, calendars, reminders, A4-style notebooks, study timers, goals, widgets, grades, subjects, and personal statistics.
+**A calm, self-hosted study planner for keeping schoolwork, notes, focus time, and progress in one place.**
 
-The web app lives at `app.bananaboard.net`; the public landing page is published from `landing/` to `bananaboard.net` through GitHub Pages.
+[Open BananaBoard](https://app.bananaboard.net) · [Visit the website](https://bananaboard.net) · [Self-hosting guide](#self-hosting)
 
-## What is in this repository
+BananaBoard is a personal study organizer for students who want a quieter, more intentional space to plan their work. Create a private account, track assignments and tests, take rich notes, run focus sessions, and see your progress without handing your study life to a third-party planner.
 
-- A Fastify + TypeScript server that serves the existing BananaBoard interface.
-- PostgreSQL persistence for users, sessions, workspace records, and uploads.
-- Email/password accounts with editable case-sensitive display names.
-- Secure, HTTP-only session cookies; Argon2id password hashes; CSRF checks; same-origin API; rate limits on sign-in endpoints; and security headers.
-- Authenticated image uploads stored on a persistent Docker volume on the VPS.
-- Docker Compose files for local development and production.
-- GitHub Actions for verification, GitHub Container Registry publishing, and GitHub Pages.
+It is free to run yourself and comes with everything needed to deploy it with Docker and PostgreSQL.
 
-The original browser-only `localStorage` persistence has been replaced with account-scoped server synchronization. Existing local browser data is intentionally **not** migrated.
+## What you can do
 
-## Architecture
+- Plan homework by subject, due date, status, and priority.
+- Keep events, tests, and your day-to-day study schedule in a calendar.
+- Add one-off or repeating reminders, with optional browser notifications.
+- Write rich notes, organize them into notebooks, add highlights, drawings, and images, and link them to assignments.
+- Record grades using number, percentage, or letter scales.
+- Use a configurable focus timer with study, break, long-break, and custom modes.
+- Set goals, monitor completion and focused-time statistics, and keep useful widgets visible throughout the app.
+- Make the space yours with themes, accent colours, language preferences, profile photos, and a choice of 12- or 24-hour time.
+- Export your complete board to JSON for safekeeping or import a previous export.
 
-```text
-Browser
-  └─ HTTPS / Caddy ──> BananaBoard app container (Fastify)
-                              ├─ PostgreSQL container
-                              └─ persistent uploads Docker volume
-```
+## Screens and data
 
-The UI is still deliberately framework-free. It is served by the Fastify app and synchronizes the same workspace shape it already uses. The database stores workspace settings separately from typed record collections, which keeps every item user-scoped and makes future collection-level APIs or relational tables possible without rewriting the interface.
+BananaBoard is designed around a single personal workspace: Dashboard, Homework, Calendar, Reminders, Notes, Grades, Study Timer, Statistics, Goals, Subjects, Widgets, and Settings. Data is tied to each account and is persisted in PostgreSQL; uploaded profile and note images are kept in a separate persistent Docker volume.
 
-## Local development on macOS
+Accounts use email and password sign-in. Passwords are hashed with Argon2id, sessions use secure HTTP-only cookies, and state-changing requests use CSRF protection.
 
-The Docker path is the recommended one. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) or OrbStack, then:
+## Self-hosting
+
+### What you need
+
+- A Linux server or other Docker-capable host.
+- Docker Engine with the Docker Compose plugin.
+- A domain name and a reverse proxy for HTTPS in production. The included example uses [Caddy](https://caddyserver.com/).
+
+### Quick start
+
+Clone the project on your server and create a production environment file:
 
 ```sh
+git clone https://github.com/SwiftMonkeyCoder/BananaBoard.git
+cd BananaBoard
 cp .env.example .env
-docker compose -f compose.dev.yml up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The app server watches source changes, while PostgreSQL and uploaded files live in named development volumes.
-
-To run the server directly instead, install Node.js 22 LTS and pnpm:
-
-```sh
-brew install node@22 pnpm
-corepack enable
-pnpm install
-cp .env.example .env
-pnpm dev
-```
-
-You still need PostgreSQL running locally; the development Compose file is the simplest way to provide it.
-
-Useful commands:
-
-```sh
-pnpm typecheck
-pnpm test
-pnpm build
-pnpm db:migrate
-```
-
-## Production deployment
-
-The app image is published to:
-
-```text
-ghcr.io/swiftmonkeycoder/bananaboard:main
-```
-
-On the VPS, create a dedicated directory, copy `compose.yml`, and create a production `.env` from the template:
-
-```sh
-mkdir -p /opt/bananaboard
-cd /opt/bananaboard
-curl -O https://raw.githubusercontent.com/SwiftMonkeyCoder/BananaBoard/main/compose.yml
-curl -o .env https://raw.githubusercontent.com/SwiftMonkeyCoder/BananaBoard/main/.env.example
-```
-
-Edit `.env` before starting. At minimum, set all of these values:
+Edit `.env` and set at least the following values. Use unique, long values for the database password and session secret.
 
 ```dotenv
 NODE_ENV=production
-APP_ORIGIN=https://app.bananaboard.net
+APP_ORIGIN=https://planner.example.com
 APP_PORT=3000
 POSTGRES_DB=bananaboard
 POSTGRES_USER=bananaboard
-POSTGRES_PASSWORD=use-a-unique-long-password
-SESSION_SECRET=use-a-long-random-secret-at-least-32-characters
+POSTGRES_PASSWORD=replace-with-a-unique-long-password
+SESSION_SECRET=replace-with-a-random-secret-of-at-least-32-characters
 ```
 
-Generate a secure session secret with:
+Generate a session secret, if helpful:
 
 ```sh
 openssl rand -base64 48
 ```
 
-Start or upgrade the service:
+Start BananaBoard:
 
 ```sh
 docker compose pull
@@ -102,61 +70,77 @@ docker compose up -d
 docker compose ps
 ```
 
-The app automatically applies the versioned SQL migrations before it starts serving requests. PostgreSQL is never exposed to the Internet; the app listens only on `127.0.0.1:3000` for Caddy.
+The production Compose configuration pulls `ghcr.io/swiftmonkeycoder/bananaboard:main`, runs database migrations automatically, and binds the app to `127.0.0.1:3000`. PostgreSQL is intentionally not exposed to the internet.
 
-### Caddy
+### Put it behind HTTPS
 
-Add the contents of [Caddyfile.example](Caddyfile.example) to the VPS Caddy configuration, then reload Caddy. Caddy handles TLS and proxies to `127.0.0.1:3000`.
+Point your chosen domain at the server, then configure your reverse proxy to pass traffic to `127.0.0.1:3000`. With Caddy, the essential site block is:
 
-### GitHub Container Registry visibility
-
-The first successful publish creates the GHCR package. In the package settings, confirm that `ghcr.io/swiftmonkeycoder/bananaboard` is public. A public package lets the VPS pull updates without a registry token.
-
-### GitHub Pages landing page
-
-In the repository settings, set **Pages → Source** to **GitHub Actions**. The Pages workflow deploys `landing/`; GitHub Pages itself holds the `bananaboard.net` custom-domain setting.
-
-In Cloudflare, point `bananaboard.net` and `www.bananaboard.net` to GitHub Pages according to GitHub’s custom-domain instructions. Keep `app.bananaboard.net` pointed at the VPS.
-
-### Komodo daily updates
-
-Create a Komodo Compose stack using this repository’s production `compose.yml` and your VPS `.env`. Configure it to pull and redeploy the `main` image once a day. Keep the `sha-…` image tags shown in GitHub Packages for a quick rollback:
-
-```sh
-IMAGE_TAG=sha-REPLACE_WITH_A_KNOWN_GOOD_SHA docker compose up -d
+```caddyfile
+planner.example.com {
+  reverse_proxy 127.0.0.1:3000
+}
 ```
 
-## Backups
+Caddy will obtain and renew the TLS certificate when the domain’s DNS points to the server. See [Caddyfile.example](Caddyfile.example) for the deployed site configuration.
 
-The `postgres_data` and `bananaboard_uploads` Docker volumes are application data. Back up both, preferably to storage outside the VPS.
+### Updating
 
-A PostgreSQL dump can be created from the deployment directory with:
+From the BananaBoard directory:
+
+```sh
+git pull
+docker compose pull
+docker compose up -d
+```
+
+For a rollback, set `IMAGE_TAG` to a known-good `sha-…` image tag before running `docker compose up -d`.
+
+### Backups
+
+Back up both Docker volumes: `postgres_data` (your accounts and board data) and `bananaboard_uploads` (uploaded images). For a database dump:
 
 ```sh
 mkdir -p backups
 docker compose exec -T db pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" | gzip > "backups/bananaboard-$(date +%F).sql.gz"
 ```
 
-Schedule this with a daily system timer or your backup tool, copy the result off-server, and periodically test a restore on a non-production database. Also back up the uploads volume; a database dump alone does not contain profile pictures or note images.
+Store backups away from the server and test restoring them regularly. A database dump does not include uploaded images.
 
-## Account behavior
+## Architecture
 
-- Login uses the account email address, normalized case-insensitively.
-- Display names are case-sensitive and can be changed at any time in **Settings → Account**.
-- Changing an email address or password requires the current password.
-- Password recovery is intentionally not included in v1. Users should retain their passwords carefully.
-- Friends/discoverability is not yet implemented as a server feature.
+```text
+Browser → HTTPS reverse proxy → Fastify application → PostgreSQL
+                                     └───────────→ persistent uploads volume
+```
 
-## Development workflow
+The interface is deliberately framework-free JavaScript, served by a Fastify + TypeScript application. The backend uses PostgreSQL with Drizzle ORM and keeps workspace records scoped to individual users. Docker Compose provides both the application and its database.
 
-Pull requests and pushes to `main` run type checking, unit tests, and a production TypeScript build. Pushes to `main` also build and publish the Docker image. Version tags beginning with `v` publish a tagged release image as well.
+## Development
 
-Before merging or deploying a change, run:
+For local development, deployment notes, Caddy configuration, GitHub Actions details, and the full operational reference, see [DEVELOPMENT.md](DEVELOPMENT.md).
+
+The quick local path is:
 
 ```sh
-pnpm typecheck && pnpm test && pnpm build
+cp .env.example .env
+docker compose -f compose.dev.yml up --build
+```
+
+Then open [http://localhost:3000](http://localhost:3000).
+
+## Contributing
+
+Bug reports, focused improvements, and documentation fixes are welcome. Before opening a substantial pull request, start a discussion or issue so the change can be aligned with the project’s direction.
+
+Before submitting a change, run:
+
+```sh
+pnpm typecheck
+pnpm test
+pnpm build
 ```
 
 ## License
 
-This project is open source. Add your chosen license file before inviting outside contributions.
+This repository does not currently include a license file. Until one is added, the code is subject to its authors’ default copyright; ask the maintainer before redistributing it or contributing work intended for reuse.
