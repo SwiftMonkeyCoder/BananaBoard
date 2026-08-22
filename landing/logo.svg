@@ -1,7 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="BananaBoard">
-  <rect width="512" height="512" rx="114" fill="#FFFDF2"/>
-  <rect x="16" y="16" width="480" height="480" rx="99" fill="none" stroke="#352d13" stroke-opacity=".12" stroke-width="4"/>
-  <path d="M132 140C144 274 225 383 365 409c25 5 48-16 43-40-2-10-8-17-19-20-114-28-175-112-193-234-23 13-43 21-64 25Z" fill="#FFD84C" stroke="#27220f" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
-  <path d="M167 149c23 97 83 169 207 213" fill="none" stroke="#C69A1A" stroke-linecap="round" stroke-width="12"/>
-  <path d="M132 140c5-22 19-38 42-46 10-4 15-13 15-25" fill="none" stroke="#27220f" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+  <defs>
+    <linearGradient id="tile" x1="58" y1="42" x2="458" y2="476" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset=".72" stop-color="#fafafa"/><stop offset="1" stop-color="#e8e9eb"/></linearGradient>
+    <linearGradient id="cell" x1="91" y1="84" x2="228" y2="236" gradientUnits="userSpaceOnUse"><stop stop-color="#38424e"/><stop offset=".55" stop-color="#1d2530"/><stop offset="1" stop-color="#111720"/></linearGradient>
+    <linearGradient id="banana" x1="255" y1="161" x2="477" y2="409" gradientUnits="userSpaceOnUse"><stop stop-color="#fff06a"/><stop offset=".36" stop-color="#ffd833"/><stop offset=".73" stop-color="#ffc515"/><stop offset="1" stop-color="#eaaa00"/></linearGradient>
+    <linearGradient id="bananaShade" x1="317" y1="422" x2="449" y2="193" gradientUnits="userSpaceOnUse"><stop stop-color="#eaa400" stop-opacity=".82"/><stop offset=".52" stop-color="#ffc60f" stop-opacity=".05"/><stop offset="1" stop-color="#fff7a0" stop-opacity=".5"/></linearGradient>
+    <filter id="tileShadow" x="-12%" y="-12%" width="124%" height="128%"><feDropShadow dx="0" dy="13" stdDeviation="12" flood-color="#1d2430" flood-opacity=".23"/></filter>
+    <filter id="cellShadow" x="-14%" y="-14%" width="128%" height="132%"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#05080d" flood-opacity=".38"/></filter>
+    <filter id="bananaShadow" x="-18%" y="-15%" width="136%" height="132%"><feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#af7600" flood-opacity=".42"/></filter>
+  </defs>
+  <g filter="url(#tileShadow)"><rect x="28" y="28" width="456" height="456" rx="104" fill="url(#tile)"/><rect x="29.5" y="29.5" width="453" height="453" rx="102.5" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="3"/></g>
+  <g fill="url(#cell)" stroke="#10161f" stroke-width="5" filter="url(#cellShadow)"><rect x="85" y="88" width="144" height="144" rx="39"/><rect x="283" y="88" width="144" height="144" rx="39"/><rect x="85" y="286" width="144" height="144" rx="39"/></g>
+  <g transform="translate(246 220) scale(.47)" filter="url(#bananaShadow)">
+    <path d="M83 445c-29 0-52-23-52-52 0-29 22-51 51-53 82-5 143-40 184-95 38-52 57-115 57-189v-12c0-28 22-50 50-50s50 22 50 50v137c0 147-113 264-258 264H83Z" fill="url(#banana)" stroke="#dfaa00" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M84 414c91 2 178-49 217-131 22-46 28-98 28-170V65c0-13 7-24 18-30-12-1-22 9-22 23v50c0 126-45 215-134 267-35 21-72 34-111 36-18 1-31 12-37 27 12 2 28 2 41 0Z" fill="#fff8a5" opacity=".55"/>
+    <path d="M121 444h74c121 0 220-95 225-214v-95c-18 116-85 206-193 255-38 18-78 31-121 40 6 16 11 14 15 14Z" fill="url(#bananaShade)" opacity=".68"/>
+  </g>
 </svg>

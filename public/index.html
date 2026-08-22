@@ -6,23 +6,24 @@
     <meta name="theme-color" content="#f4c53a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="icon" href="/static/studyflow-icon.svg?v=5" type="image/svg+xml">
-    <link rel="shortcut icon" href="/static/favicon.ico?v=5" type="image/x-icon">
-    <link rel="icon" href="/static/favicon-32x32.png?v=5" sizes="32x32" type="image/png">
-    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=5" sizes="180x180">
-    <link rel="apple-touch-icon-precomposed" href="/static/apple-touch-icon.png?v=5" sizes="180x180">
-    <link rel="mask-icon" href="/static/safari-pinned-tab.svg?v=5" color="#24200d">
+    <link rel="icon" href="/static/favicon.svg?v=20260822-5" type="image/svg+xml">
+    <link rel="shortcut icon" href="/static/favicon.ico?v=20260822-5" type="image/x-icon">
+    <link rel="icon" href="/static/favicon-32x32.png?v=20260822-5" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=20260822-4" sizes="180x180">
+    <link rel="apple-touch-icon-precomposed" href="/static/apple-touch-icon.png?v=20260822-4" sizes="180x180">
+    <link rel="mask-icon" href="/static/safari-pinned-tab.svg?v=20260822-4" color="#24200d">
     <meta name="apple-mobile-web-app-title" content="BananaBoard">
-    <link rel="manifest" href="/static/site.webmanifest?v=5">
+    <link rel="manifest" href="/static/site.webmanifest?v=20260822-4">
     <title>BananaBoard</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=20260822-4">
+    <style>@media (max-width: 760px) { #sidebar, #scrim { display: none !important; } }</style>
   </head>
   <body>
     <div id="setupScreen" class="setup-screen" aria-live="polite">
       <div class="orb orb-one"></div><div class="orb orb-two"></div><div class="orb orb-three"></div>
       <form id="setupForm" class="setup-card">
         <section class="setup-step active" data-setup-step="welcome">
-          <div class="brand-mark" aria-label="BananaBoard"><svg class="studyflow-symbol" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="banana-body" d="M16.5 17.5C18 34.2 28.1 47.9 45.6 51.1c3.1.6 6-1.9 5.4-5-.2-1.2-1-2.1-2.2-2.4C34.6 40.2 27 29.7 24.8 14.5c-2.9 1.6-5.4 2.6-8.3 3Z"/><path class="banana-inner" d="M20.9 18.5c2.9 12.1 10.4 21 25.8 27.3"/><path class="banana-stem" d="M16.5 17.5c.5-2.8 2.4-4.8 5.2-5.8 1.2-.4 1.8-1.5 1.8-2.8"/></svg></div>
+          <div class="brand-mark" aria-label="BananaBoard"><img class="studyflow-symbol" src="/static/icon-192.png?v=20260822-4" alt=""></div>
           <p class="eyebrow" data-i18n="YOUR STUDY SPACE">YOUR STUDY SPACE</p>
           <h1 data-i18n="Welcome to BananaBoard!">Welcome to BananaBoard!</h1>
           <p class="muted" data-i18n="Your calm space for homework, notes, plans, and focus.">Your calm space for homework, notes, plans, and focus.</p>
@@ -45,7 +46,7 @@
         </section>
         <section class="setup-step" data-setup-step="personalize" hidden>
           <button class="text-button setup-back" type="button" data-setup-next="discovery">← <span data-i18n="Back">Back</span></button>
-          <div class="brand-mark" aria-label="BananaBoard"><svg class="studyflow-symbol" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="banana-body" d="M16.5 17.5C18 34.2 28.1 47.9 45.6 51.1c3.1.6 6-1.9 5.4-5-.2-1.2-1-2.1-2.2-2.4C34.6 40.2 27 29.7 24.8 14.5c-2.9 1.6-5.4 2.6-8.3 3Z"/><path class="banana-inner" d="M20.9 18.5c2.9 12.1 10.4 21 25.8 27.3"/><path class="banana-stem" d="M16.5 17.5c.5-2.8 2.4-4.8 5.2-5.8 1.2-.4 1.8-1.5 1.8-2.8"/></svg></div>
+          <div class="brand-mark" aria-label="BananaBoard"><img class="studyflow-symbol" src="/static/icon-192.png?v=20260822-4" alt=""></div>
           <p class="eyebrow" data-i18n="ONE LAST STEP">ONE LAST STEP</p>
           <h1 data-i18n="Make your study space yours.">Make your study space yours.</h1>
           <p class="muted" data-i18n="Choose how BananaBoard should look and calculate grades.">Choose how BananaBoard should look and calculate grades.</p>
@@ -96,7 +97,7 @@
     <div id="app" class="app hidden">
       <aside id="sidebar" class="sidebar">
         <div class="sidebar-header">
-          <button class="logo" data-page="dashboard" aria-label="Open dashboard"><span class="brand-mark"><svg class="studyflow-symbol" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="banana-body" d="M16.5 17.5C18 34.2 28.1 47.9 45.6 51.1c3.1.6 6-1.9 5.4-5-.2-1.2-1-2.1-2.2-2.4C34.6 40.2 27 29.7 24.8 14.5c-2.9 1.6-5.4 2.6-8.3 3Z"/><path class="banana-inner" d="M20.9 18.5c2.9 12.1 10.4 21 25.8 27.3"/><path class="banana-stem" d="M16.5 17.5c.5-2.8 2.4-4.8 5.2-5.8 1.2-.4 1.8-1.5 1.8-2.8"/></svg></span><span>BananaBoard<small>Study smarter</small></span></button>
+          <button class="logo" data-page="dashboard" aria-label="Open dashboard"><span class="brand-mark"><img class="studyflow-symbol" src="/static/icon-192.png?v=20260822-4" alt=""></span><span>BananaBoard<small>Study smarter</small></span></button>
           <button id="closeSidebar" class="icon-button mobile-only" aria-label="Close menu">×</button>
         </div>
         <nav id="mainNav" class="nav" aria-label="Main navigation"></nav>
@@ -109,7 +110,7 @@
       <main class="main">
         <header class="mobile-header">
           <span class="mobile-version"><span data-i18n="Version">Version</span> 1.0</span>
-          <button class="logo compact" data-page="dashboard"><span class="brand-mark"><svg class="studyflow-symbol" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="banana-body" d="M16.5 17.5C18 34.2 28.1 47.9 45.6 51.1c3.1.6 6-1.9 5.4-5-.2-1.2-1-2.1-2.2-2.4C34.6 40.2 27 29.7 24.8 14.5c-2.9 1.6-5.4 2.6-8.3 3Z"/><path class="banana-inner" d="M20.9 18.5c2.9 12.1 10.4 21 25.8 27.3"/><path class="banana-stem" d="M16.5 17.5c.5-2.8 2.4-4.8 5.2-5.8 1.2-.4 1.8-1.5 1.8-2.8"/></svg></span><span>BananaBoard</span></button>
+          <button class="logo compact" data-page="dashboard"><span class="brand-mark"><img class="studyflow-symbol" src="/static/icon-192.png?v=20260822-4" alt=""></span><span>BananaBoard</span></button>
           <span class="mobile-header-spacer" aria-hidden="true"></span>
         </header>
         <div class="topbar">
@@ -132,6 +133,6 @@
     <div id="modalRoot"></div>
     <div id="toastRoot" class="toast-root" aria-live="polite"></div>
     <input id="importInput" type="file" accept="application/json" hidden>
-    <script src="/static/script.js"></script>
+    <script src="/static/script.js?v=20260822-4"></script>
   </body>
 </html>

@@ -86,7 +86,7 @@ export function buildServer() {
   });
   app.register(rateLimit, { global: false });
   app.register(multipart, { limits: { files: 1, fileSize: maxUploadBytes, fields: 5 } });
-  app.register(staticFiles, { root: publicDirectory, prefix: '/static/', index: false, cacheControl: !config.isProduction ? false : true, maxAge: config.isProduction ? '30d' : 0 });
+  app.register(staticFiles, { root: publicDirectory, prefix: '/static/', index: false, cacheControl: true, maxAge: 0 });
 
   app.setErrorHandler((error, _request, reply) => {
     app.log.error(error);
@@ -104,7 +104,7 @@ export function buildServer() {
     const user = await currentUser(request);
     if (!user) return reply.redirect('/auth');
     noStore(reply);
-    return reply.sendFile('index.html');
+    return reply.sendFile('index.html', { cacheControl: false });
   });
 
   app.get('/auth', async (request, reply) => {
@@ -112,7 +112,7 @@ export function buildServer() {
     if (user) return reply.redirect('/');
     csrfToken(request, reply);
     noStore(reply);
-    return reply.sendFile('auth.html');
+    return reply.sendFile('auth.html', { cacheControl: false });
   });
 
   app.get('/api/csrf', async (request, reply) => {

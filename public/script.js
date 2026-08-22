@@ -1314,7 +1314,7 @@
     if (document.visibilityState !== 'visible' || el('#app')?.classList.contains('hidden')) return false;
     if (els('.banana-notice', toastRoot).some(notice => notice.dataset.noticeTag === tag)) return true;
     const notice = document.createElement('article'); notice.className = 'banana-notice'; notice.dataset.noticeTag = tag;
-    notice.innerHTML = `<img src="/static/studyflow-icon.svg" alt=""><div><small>BananaBoard</small><b>${escape(brandText(t(title)))}</b><p>${escape(brandText(t(body)))}</p></div><button type="button" aria-label="${escape(t('Close'))}">×</button>`;
+    notice.innerHTML = `<img src="/static/icon-192.png?v=20260822-4" alt=""><div><small>BananaBoard</small><b>${escape(brandText(t(title)))}</b><p>${escape(brandText(t(body)))}</p></div><button type="button" aria-label="${escape(t('Close'))}">×</button>`;
     notice.querySelector('button')?.addEventListener('click', () => notice.remove()); toastRoot.append(notice); window.setTimeout(() => notice.remove(), 9000);
     return true;
   }
