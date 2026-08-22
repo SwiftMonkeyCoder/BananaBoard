@@ -417,6 +417,7 @@
     const layout = responsiveLayout();
     document.body.classList.remove('layout-pc', 'layout-tablet', 'layout-phone');
     document.body.classList.add(`layout-${layout}`);
+    if (layout === 'phone') closeSidebar();
   }
   function toast(message, type = '') {
     const node = document.createElement('div');
