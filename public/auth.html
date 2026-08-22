@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4c53a">
+    <title>Sign in · BananaBoard</title>
+    <link rel="icon" href="/static/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body class="auth-page">
+    <main class="auth-shell">
+      <section class="auth-brand" aria-label="BananaBoard">
+        <div class="auth-logo-orbit" aria-hidden="true"><img src="/static/studyflow-icon.svg" alt=""></div>
+        <p class="eyebrow">YOUR CALM STUDY SPACE</p>
+        <h1>BananaBoard</h1>
+        <p>Plan your work, keep your notes together, and make steady progress.</p>
+      </section>
+      <section class="auth-card card" aria-labelledby="authTitle">
+        <div class="auth-mode-tabs" role="tablist" aria-label="Account access">
+          <button type="button" class="auth-mode active" data-auth-mode="login" role="tab" aria-selected="true">Sign in</button>
+          <button type="button" class="auth-mode" data-auth-mode="register" role="tab" aria-selected="false">Create account</button>
+        </div>
+        <h2 id="authTitle">Welcome back</h2>
+        <p id="authIntro" class="muted">Sign in to open your personal BananaBoard.</p>
+        <form id="authForm" novalidate>
+          <label id="displayNameField" class="field-label" hidden>
+            Display name
+            <input id="displayName" class="input" name="displayName" type="text" autocomplete="nickname" maxlength="40" placeholder="What should we call you?">
+          </label>
+          <label class="field-label">
+            Email address
+            <input id="email" class="input" name="email" type="email" autocomplete="email" inputmode="email" maxlength="320" required placeholder="you@example.com">
+          </label>
+          <label class="field-label">
+            Password
+            <input id="password" class="input" name="password" type="password" autocomplete="current-password" minlength="12" required placeholder="Your password">
+          </label>
+          <p id="passwordHelp" class="help" hidden>Use at least 12 characters to protect your account.</p>
+          <p id="authError" class="auth-error" role="alert" hidden></p>
+          <button id="authSubmit" class="button primary full" type="submit">Sign in</button>
+        </form>
+        <p class="auth-footnote">BananaBoard does not offer password recovery yet. Keep your password somewhere safe.</p>
+      </section>
+    </main>
+    <script src="/static/auth.js"></script>
+  </body>
+</html>

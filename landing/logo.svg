@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="BananaBoard">
+  <rect width="512" height="512" rx="114" fill="#FFFDF2"/>
+  <rect x="16" y="16" width="480" height="480" rx="99" fill="none" stroke="#352d13" stroke-opacity=".12" stroke-width="4"/>
+  <path d="M132 140C144 274 225 383 365 409c25 5 48-16 43-40-2-10-8-17-19-20-114-28-175-112-193-234-23 13-43 21-64 25Z" fill="#FFD84C" stroke="#27220f" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+  <path d="M167 149c23 97 83 169 207 213" fill="none" stroke="#C69A1A" stroke-linecap="round" stroke-width="12"/>
+  <path d="M132 140c5-22 19-38 42-46 10-4 15-13 15-25" fill="none" stroke="#27220f" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
+</svg>

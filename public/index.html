@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4c53a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="icon" href="/static/studyflow-icon.svg?v=5" type="image/svg+xml">
+    <link rel="shortcut icon" href="/static/favicon.ico?v=5" type="image/x-icon">
+    <link rel="icon" href="/static/favicon-32x32.png?v=5" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=5" sizes="180x180">
+    <link rel="apple-touch-icon-precomposed" href="/static/apple-touch-icon.png?v=5" sizes="180x180">
+    <link rel="mask-icon" href="/static/safari-pinned-tab.svg?v=5" color="#24200d">
+    <meta name="apple-mobile-web-app-title" content="BananaBoard">
+    <link rel="manifest" href="/static/site.webmanifest?v=5">
+    <title>BananaBoard</title>
+    <link rel="stylesheet" href="/static/style.css">
+  </head>
+  <body>
+    <div id="setupScreen" class="setup-screen" aria-live="polite">
+      <div class="orb orb-one"></div><div class="orb orb-two"></div><div class="orb orb-three"></div>
+      <form id="setupForm" class="setup-card">
+        <section class="setup-step active" data-setup-step="welcome">
+          <div class="brand-mark" aria-label="BananaBoard"><svg class="studyflow-symbol" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="banana-body" d="M16.5 17.5C18 34.2 28.1 47.9 45.6 51.1c3.1.6 6-1.9 5.4-5-.2-1.2-1-2.1-2.2-2.4C34.6 40.2 27 29.7 24.8 14.5c-2.9 1.6-5.4 2.6-8.3 3Z"/><path class="banana-inner" d="M20.9 18.5c2.9 12.1 10.4 21 25.8 27.3"/><path class="banana-stem" d="M16.5 17.5c.5-2.8 2.4-4.8 5.2-5.8 1.2-.4 1.8-1.5 1.8-2.8"/></svg></div>
+          <p class="eyebrow" data-i18n="YOUR STUDY SPACE">YOUR STUDY SPACE</p>
+          <h1 data-i18n="Welcome to BananaBoard!">Welcome to BananaBoard!</h1>
+          <p class="muted" data-i18n="Your calm space for homework, notes, plans, and focus.">Your calm space for homework, notes, plans, and focus.</p>
+          <button class="button primary full setup-submit" type="button" data-setup-next="discovery"><span data-i18n="Get started">Get started</span> <span>→</span></button>
+        </section>
+        <section class="setup-step" data-setup-step="discovery" hidden>
+          <button class="text-button setup-back" type="button" data-setup-next="welcome">← <span data-i18n="Back">Back</span></button>
+          <p class="eyebrow" data-i18n="A QUICK QUESTION">A QUICK QUESTION</p>
+          <h1 data-i18n="Where did you hear about BananaBoard?">Where did you hear about BananaBoard?</h1>
+          <p class="muted" data-i18n="Help us understand how people find BananaBoard.">Help us understand how people find BananaBoard.</p>
+          <div class="discovery-grid" role="group" aria-label="Where did you hear about BananaBoard?">
+            <button class="discovery-choice" type="button" data-discovery-source="social"><span>◌</span><b data-i18n="Social media">Social media</b></button>
+            <button class="discovery-choice" type="button" data-discovery-source="friend"><span>♡</span><b data-i18n="A friend">A friend</b></button>
+            <button class="discovery-choice" type="button" data-discovery-source="ad"><span>✦</span><b data-i18n="Advertisement">Advertisement</b></button>
+            <button class="discovery-choice" type="button" data-discovery-source="google"><span>⌕</span><b data-i18n="Google">Google</b></button>
+            <button class="discovery-choice" type="button" data-discovery-source="school"><span>⌂</span><b data-i18n="School">School</b></button>
+            <button class="discovery-choice" type="button" data-discovery-source="other"><span>○</span><b data-i18n="Other">Other</b></button>
+          </div>
+          <button class="button primary full setup-submit" type="button" data-setup-next="personalize"><span data-i18n="Continue">Continue</span> <span>→</span></button>
+        </section>
+        <section class="setup-step" data-setup-step="personalize" hidden>
+          <button class="text-button setup-back" type="button" data-setup-next="discovery">← <span data-i18n="Back">Back</span></button>
+          <div class="brand-mark" aria-label="BananaBoard"><svg class="studyflow-symbol" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="banana-body" d="M16.5 17.5C18 34.2 28.1 47.9 45.6 51.1c3.1.6 6-1.9 5.4-5-.2-1.2-1-2.1-2.2-2.4C34.6 40.2 27 29.7 24.8 14.5c-2.9 1.6-5.4 2.6-8.3 3Z"/><path class="banana-inner" d="M20.9 18.5c2.9 12.1 10.4 21 25.8 27.3"/><path class="banana-stem" d="M16.5 17.5c.5-2.8 2.4-4.8 5.2-5.8 1.2-.4 1.8-1.5 1.8-2.8"/></svg></div>
+          <p class="eyebrow" data-i18n="ONE LAST STEP">ONE LAST STEP</p>
+          <h1 data-i18n="Make your study space yours.">Make your study space yours.</h1>
+          <p class="muted" data-i18n="Choose how BananaBoard should look and calculate grades.">Choose how BananaBoard should look and calculate grades.</p>
+          <label class="field-label" for="setupName" data-i18n="What should we call you?">What should we call you?</label>
+          <input id="setupName" class="input" maxlength="30" autocomplete="name" placeholder="Your name" data-i18n-placeholder="Your name">
+          <div class="setup-options">
+            <label class="field-label" data-i18n="Theme">Theme</label>
+            <div class="choice-row" role="group" aria-label="Theme">
+              <button class="choice active" type="button" data-setup-theme="light">☀ <span data-i18n="Light">Light</span></button>
+              <button class="choice" type="button" data-setup-theme="dark">☾ <span data-i18n="Dark">Dark</span></button>
+              <button class="choice" type="button" data-setup-theme="system">◐ <span data-i18n="System">System</span></button>
+            </div>
+            <label class="field-label" data-i18n="Accent colour">Accent colour</label>
+            <div id="setupAccents" class="accent-row" role="group" aria-label="Accent colour"></div>
+            <label class="field-label" for="setupGradeSystem" data-i18n="Grade system">Grade system</label>
+            <select id="setupGradeSystem" class="input">
+              <option value="numeric" data-i18n="Number scale (1 is best · 6 is worst)">Number scale (1 is best · 6 is worst)</option>
+              <option value="percentage" data-i18n="Percentage (0–100%)">Percentage (0–100%)</option>
+              <option value="letter" data-i18n="Letter (A–F)">Letter (A–F)</option>
+            </select>
+            <label class="field-label" for="setupLanguage" data-i18n="Language">Language</label>
+            <select id="setupLanguage" class="input" aria-label="Language">
+              <option value="en">English</option><option value="de">German</option><option value="tr">Turkish</option><option value="ru">Russian</option><option value="uk">Ukrainian</option><option value="es">Spanish</option>
+            </select>
+          </div>
+          <button class="button primary full setup-submit" type="submit"><span data-i18n="Personalize">Personalize</span> BananaBoard <span>→</span></button>
+        </section>
+      </form>
+    </div>
+
+    <div id="personalizingScreen" class="personalizing-screen hidden" aria-live="polite">
+      <div class="loader-card">
+        <div class="loader"><span></span></div>
+        <h2>Personalizing your experience</h2>
+        <p id="personalizingText">Setting up your study space…</p>
+      </div>
+    </div>
+
+    <div id="languageScreen" class="language-screen hidden" aria-live="polite" aria-busy="true">
+      <div class="orb orb-one"></div><div class="orb orb-two"></div><div class="orb orb-three"></div>
+      <div class="loader-card language-loader-card">
+        <div class="language-loader"><span></span></div>
+        <h2 id="languageLoadingTitle">Setting language</h2>
+        <p id="languageLoadingText">Making every part of your space feel familiar…</p>
+      </div>
+    </div>
+
+    <div id="app" class="app hidden">
+      <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+          <button class="logo" data-page="dashboard" aria-label="Open dashboard"><span class="brand-mark"><svg class="studyflow-symbol" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="banana-body" d="M16.5 17.5C18 34.2 28.1 47.9 45.6 51.1c3.1.6 6-1.9 5.4-5-.2-1.2-1-2.1-2.2-2.4C34.6 40.2 27 29.7 24.8 14.5c-2.9 1.6-5.4 2.6-8.3 3Z"/><path class="banana-inner" d="M20.9 18.5c2.9 12.1 10.4 21 25.8 27.3"/><path class="banana-stem" d="M16.5 17.5c.5-2.8 2.4-4.8 5.2-5.8 1.2-.4 1.8-1.5 1.8-2.8"/></svg></span><span>BananaBoard<small>Study smarter</small></span></button>
+          <button id="closeSidebar" class="icon-button mobile-only" aria-label="Close menu">×</button>
+        </div>
+        <nav id="mainNav" class="nav" aria-label="Main navigation"></nav>
+        <div class="sidebar-footer">
+          <button class="nav-link" data-page="settings"><span>⚙</span> <span data-i18n="Settings">Settings</span></button>
+          <button class="profile-button" data-page="settings"><span id="profileInitial">O</span><span><b id="profileName">Student</b><small data-i18n="Personal space">Personal space</small></span></button>
+        </div>
+      </aside>
+      <div id="scrim" class="scrim"></div>
+      <main class="main">
+        <header class="mobile-header">
+          <span class="mobile-version"><span data-i18n="Version">Version</span> 1.0</span>
+          <button class="logo compact" data-page="dashboard"><span class="brand-mark"><svg class="studyflow-symbol" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path class="banana-body" d="M16.5 17.5C18 34.2 28.1 47.9 45.6 51.1c3.1.6 6-1.9 5.4-5-.2-1.2-1-2.1-2.2-2.4C34.6 40.2 27 29.7 24.8 14.5c-2.9 1.6-5.4 2.6-8.3 3Z"/><path class="banana-inner" d="M20.9 18.5c2.9 12.1 10.4 21 25.8 27.3"/><path class="banana-stem" d="M16.5 17.5c.5-2.8 2.4-4.8 5.2-5.8 1.2-.4 1.8-1.5 1.8-2.8"/></svg></span><span>BananaBoard</span></button>
+          <span class="mobile-header-spacer" aria-hidden="true"></span>
+        </header>
+        <div class="topbar">
+          <label class="search"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search everything…" data-i18n-placeholder="Search everything…"><kbd>/</kbd></label>
+          <div class="topbar-actions"><span id="todayLabel" class="today-label"></span><div class="quick-add-wrap"><button id="quickAdd" class="button primary" aria-expanded="false">＋ <span data-i18n="Quick add">Quick add</span></button><div id="quickAddMenu" class="quick-add-menu hidden" role="menu"><button data-action="add-homework">✓ <span data-i18n="Homework">Homework</span></button><button data-action="add-event">□ <span data-i18n="Event or test">Event or test</span></button><button data-action="add-reminder">⊙ <span data-i18n="Reminder">Reminder</span></button><button data-action="add-goal">◎ <span data-i18n="Goal">Goal</span></button><button data-action="add-subject">▦ <span data-i18n="Subject">Subject</span></button><button data-action="add-grade">A+ <span data-i18n="Grade">Grade</span></button><button data-action="add-note">▤ <span data-i18n="Note">Note</span></button></div></div></div>
+        </div>
+        <div id="pageRoot"></div>
+        <nav id="mobileBottomNav" class="mobile-bottom-nav" aria-label="Phone navigation"></nav>
+      </main>
+      <aside id="floatingTimer" class="floating-timer hidden" aria-label="Active study timer">
+        <button class="floating-timer-main" data-page="timer" aria-label="Open study timer">
+          <span id="floatingTimerMode">Focus session</span>
+          <strong id="floatingTimerDisplay">25:00</strong>
+        </button>
+        <button id="floatingTimerToggle" class="floating-timer-toggle" type="button" data-action="timer-start" aria-label="Pause timer">Ⅱ</button>
+      </aside>
+      <aside id="floatingWidgets" class="floating-widgets" aria-label="Your active widgets"></aside>
+    </div>
+
+    <div id="modalRoot"></div>
+    <div id="toastRoot" class="toast-root" aria-live="polite"></div>
+    <input id="importInput" type="file" accept="application/json" hidden>
+    <script src="/static/script.js"></script>
+  </body>
+</html>
