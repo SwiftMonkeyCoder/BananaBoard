@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/bananaboard-logo.png" alt="BananaBoard logo" width="128">
+</p>
+
 # BananaBoard
 
 **A calm, self-hosted study planner for keeping schoolwork, notes, focus time, and progress in one place.**
