@@ -147,4 +147,4 @@ pnpm build
 
 ## License
 
-This repository does not currently include a license file. Until one is added, the code is subject to its authors’ default copyright; ask the maintainer before redistributing it or contributing work intended for reuse.
+BananaBoard is available under the [MIT License](LICENSE).
