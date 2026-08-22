@@ -114,7 +114,7 @@ The first successful publish creates the GHCR package. In the package settings, 
 
 ### GitHub Pages landing page
 
-In the repository settings, set **Pages → Source** to **GitHub Actions**. The Pages workflow deploys `landing/`, including its `CNAME` for `bananaboard.net`.
+In the repository settings, set **Pages → Source** to **GitHub Actions**. The Pages workflow deploys `landing/`; GitHub Pages itself holds the `bananaboard.net` custom-domain setting.
 
 In Cloudflare, point `bananaboard.net` and `www.bananaboard.net` to GitHub Pages according to GitHub’s custom-domain instructions. Keep `app.bananaboard.net` pointed at the VPS.
 
