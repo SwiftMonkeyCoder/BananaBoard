@@ -38,9 +38,20 @@ export function csrfToken(request: FastifyRequest, reply: FastifyReply) {
 export function requestHasValidCsrf(request: FastifyRequest) {
   const token = request.headers['x-csrf-token'];
   const origin = request.headers.origin;
-  return typeof token === 'string'
-    && token === request.cookies[CSRF_COOKIE]
-    && (!origin || origin === config.appOrigin);
+  if (typeof token !== 'string' || token !== request.cookies[CSRF_COOKIE]) return false;
+  if (!origin) return true;
+
+  // The configured origin remains the primary allowlist entry. Also accept the
+  // origin Caddy forwarded for this request so a stale deployment environment
+  // setting cannot reject the app's own same-origin form submissions.
+  const host = request.headers.host;
+  if (!host) return origin === config.appOrigin;
+  try {
+    const requestOrigin = new URL(`${request.protocol}://${host}`).origin;
+    return origin === config.appOrigin || origin === requestOrigin;
+  } catch {
+    return false;
+  }
 }
 
 export async function createSession(reply: FastifyReply, userId: string) {

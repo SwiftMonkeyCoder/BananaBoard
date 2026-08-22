@@ -4,10 +4,23 @@
   let csrf = '';
   const $ = selector => document.querySelector(selector);
 
+  let csrfRequest;
+
   async function getCsrf() {
-    const response = await fetch('/api/csrf', { credentials: 'same-origin' });
-    const payload = await response.json();
-    csrf = payload.token;
+    if (csrf) return csrf;
+    if (!csrfRequest) {
+      csrfRequest = fetch('/api/csrf', { credentials: 'same-origin', cache: 'no-store' })
+        .then(response => {
+          if (!response.ok) throw new Error('Could not prepare a secure sign-in request. Refresh and try again.');
+          return response.json();
+        })
+        .then(payload => {
+          csrf = payload.token;
+          return csrf;
+        })
+        .finally(() => { csrfRequest = null; });
+    }
+    return csrfRequest;
   }
 
   function setMode(nextMode) {
@@ -51,7 +64,7 @@
     submit.textContent = mode === 'register' ? 'Creating account…' : 'Signing in…';
     error.hidden = true;
     try {
-      if (!csrf) await getCsrf();
+      await getCsrf();
       const response = await fetch(mode === 'register' ? '/api/auth/register' : '/api/auth/login', {
         method: 'POST',
         credentials: 'same-origin',
@@ -68,5 +81,6 @@
       submit.textContent = mode === 'register' ? 'Create account' : 'Sign in';
     }
   });
+  setMode('login');
   getCsrf().catch(() => { $('#authError').textContent = 'Could not prepare a secure sign-in request. Refresh and try again.'; $('#authError').hidden = false; });
 })();
