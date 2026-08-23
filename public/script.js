@@ -9,6 +9,7 @@
     ['reminders', '⊙', 'Reminders'], ['notes', '▤', 'Notes'], ['grades', 'A+', 'Grades'], ['timer', '◷', 'Study Timer'],
     ['statistics', '↗', 'Statistics'], ['goals', '◎', 'Goals'], ['subjects', '▦', 'Subjects'], ['widgets', '◫', 'Widgets']
   ];
+  const SETTINGS_NAV_ICON = '<svg class="settings-nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="M19.1 13.7c.1-.5.1-1 .1-1.7s0-1.2-.1-1.7l2-1.5-2-3.5-2.4 1a8.4 8.4 0 0 0-2.9-1.7L13.5 2h-4l-.4 2.6a8.4 8.4 0 0 0-2.9 1.7l-2.4-1-2 3.5 2 1.5c-.1.5-.1 1-.1 1.7s0 1.2.1 1.7l-2 1.5 2 3.5 2.4-1a8.4 8.4 0 0 0 2.9 1.7l.4 2.6h4l.4-2.6a8.4 8.4 0 0 0 2.9-1.7l2.4 1 2-3.5-2-1.5Z"/></svg>';
   const QUOTES = [
     ['Small steps every day become big results.', APP_NAME],
     ['The secret of getting ahead is getting started.', 'Mark Twain'],
@@ -444,9 +445,9 @@
       <button class="nav-link ${ui.page === id ? 'active' : ''}" data-page="${id}"><span>${icon}</span>${label}${id === 'homework' && incomplete ? `<b class="nav-badge">${incomplete}</b>` : ''}</button>
     `).join('');
     const primaryPhoneTabs = [['dashboard', '⌂', 'Dashboard'], ['homework', '✓', 'Homework'], ['calendar', '□', 'Calendar'], ['notes', '▤', 'Notes'], ['grades', 'A+', 'Grades']];
-    const morePhoneTabs = [['timer', '◷', 'Focus'], ['reminders', '⊙', 'Reminders'], ['statistics', '↗', 'Stats'], ['goals', '◎', 'Goals'], ['subjects', '▦', 'Subjects'], ['widgets', '◫', 'Widgets'], ['settings', '⚙', 'Settings']];
+    const morePhoneTabs = [['timer', '◷', 'Focus'], ['reminders', '⊙', 'Reminders'], ['statistics', '↗', 'Stats'], ['goals', '◎', 'Goals'], ['subjects', '▦', 'Subjects'], ['widgets', '◫', 'Widgets'], ['settings', SETTINGS_NAV_ICON, 'Settings']];
     const phoneNav = el('#mobileBottomNav');
-    phoneNav.innerHTML = [...primaryPhoneTabs, ...morePhoneTabs].map(([id, icon, label], index) => `<button class="phone-tab ${index < primaryPhoneTabs.length ? 'primary-phone-tab' : ''} ${ui.page === id ? 'active' : ''}" data-page="${id}"><span>${icon}</span><small>${label}</small></button>`).join('');
+    phoneNav.innerHTML = [...primaryPhoneTabs, ...morePhoneTabs].map(([id, icon, label], index) => `<button class="phone-tab ${index < primaryPhoneTabs.length ? 'primary-phone-tab' : ''} ${ui.page === id ? 'active' : ''}" data-page="${id}"><span>${id === 'settings' ? icon : escape(icon)}</span><small>${label}</small></button>`).join('');
     window.requestAnimationFrame(() => phoneNav.querySelector('.phone-tab.active')?.scrollIntoView({ block: 'nearest', inline: 'nearest' }));
     els('[data-page="settings"]').forEach(item => item.classList.toggle('active', ui.page === 'settings'));
     el('#profileName').textContent = data.profile.name || 'Student';
@@ -703,8 +704,39 @@
   }
 
   /* goals, friends, timer, statistics */
+  function isBadGrade(grade) {
+    const value = gradeNumeric(grade);
+    if (!Number.isFinite(value)) return false;
+    if (data.profile.gradeSystem === 'numeric') return value >= 4;
+    if (data.profile.gradeSystem === 'percentage') return value < 60;
+    return value <= 55;
+  }
+  function bananaHealth() {
+    const overdueHomework = data.homework.filter(item => !item.done && item.due && item.due < todayISO());
+    const overdueGoals = data.goals.filter(goal => Number(goal.progress) < 100 && goal.targetDate && goal.targetDate < todayISO());
+    const badGrades = data.grades.filter(isBadGrade);
+    const issues = [
+      ...overdueHomework.map(item => ({ kind: 'homework', id: item.id, title: item.title, action: 'toggle-homework', label: 'Finish homework' })),
+      ...overdueGoals.map(goal => ({ kind: 'goal', id: goal.id, title: goal.title, action: 'goal-complete', label: 'Complete goal' })),
+      ...badGrades.map(grade => ({ kind: 'grade', id: grade.id, title: grade.title, action: 'edit-grade', label: 'Review grade' }))
+    ];
+    const rot = clamp(overdueHomework.length * 22 + overdueGoals.length * 20 + badGrades.length * 12, 0, 100);
+    const stage = rot === 0 ? 'fresh' : rot < 35 ? 'speckled' : rot < 70 ? 'bruised' : 'rotten';
+    return { issues, rot, stage };
+  }
+  function renderGoalHealth() {
+    const health = bananaHealth();
+    const freshness = 100 - health.rot;
+    const status = health.stage === 'fresh' ? 'Fresh and ready' : health.stage === 'speckled' ? 'A few spots need attention' : health.stage === 'bruised' ? 'Time for a reset' : 'Needs attention now';
+    const summary = health.issues.length
+      ? 'Finish overdue homework and goals to freshen your banana. Review any weak grades to keep it healthy.'
+      : 'Everything is up to date. Keep this rhythm going and your banana will stay fresh.';
+    const actionButtons = health.issues.slice(0, 4).map(issue => `<button class="banana-health-action ${issue.kind}" data-action="${issue.action}" data-id="${escape(issue.id)}" title="${escape(issue.title)}"><span>${issue.kind === 'grade' ? '↗' : '✓'}</span><b>${issue.label}</b><small>${escape(issue.title)}</small></button>`).join('');
+    const remaining = health.issues.length - 4;
+    return `<article class="card goal-health goal-health-${health.stage}" style="--banana-rot:${(health.rot / 100).toFixed(2)}"><div class="goal-health-copy"><p class="eyebrow">GOAL HEALTH</p><h2>${status}</h2><p>${summary}</p><div class="banana-health-meter"><div><span>Freshness</span><b>${freshness}%</b></div><div class="progress" style="--progress:${freshness}%"><span></span></div></div>${health.issues.length ? `<div class="banana-health-actions" aria-label="Items that affect banana health">${actionButtons}${remaining > 0 ? `<span class="banana-health-more">+${remaining} more to review</span>` : ''}</div>` : '<span class="banana-health-clear">✓ No overdue work or weak grades</span>'}</div><div class="goal-banana-stage" role="img" aria-label="${escape(`Banana freshness is ${freshness} percent: ${status}`)}"><svg class="goal-banana-art" viewBox="0 0 560 280" focusable="false" aria-hidden="true"><defs><linearGradient id="goalBananaFresh" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff59a"/><stop offset=".32" stop-color="#ffd847"/><stop offset="1" stop-color="#f0aa12"/></linearGradient><linearGradient id="goalBananaBruised" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#e6cb63"/><stop offset=".42" stop-color="#a77924"/><stop offset="1" stop-color="#6d451d"/></linearGradient><linearGradient id="goalBananaRotten" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#997936"/><stop offset=".48" stop-color="#5f4023"/><stop offset="1" stop-color="#38271d"/></linearGradient></defs><path class="goal-banana-shadow" d="M58 95C119 178 227 208 335 180c73-19 126-62 158-124l19 11c-27 78-92 137-174 160-114 33-235-6-294-96Z"/><path class="goal-banana-stem" d="m471 56 20-35 24 10-18 37"/><path class="goal-banana-skin" d="M55 81c46 69 137 113 231 105 86-7 159-56 192-129l29 13c-24 84-93 153-182 180-109 33-227-2-286-91-15-23-24-50-27-79Z"/><path class="goal-banana-highlight" d="M85 94c43 61 126 93 204 87 56-4 109-28 145-68-42 53-105 83-177 86-70 2-134-27-172-79Z"/><g class="goal-banana-spots"><circle cx="188" cy="164" r="13"/><circle cx="263" cy="184" r="10"/><circle cx="342" cy="159" r="16"/><circle cx="406" cy="124" r="9"/><circle cx="123" cy="131" r="7"/></g></svg></div></article>`;
+  }
   function renderGoals() {
-    return `${pageHeader('MILESTONES', 'Goals', 'Turn the things you want to achieve into visible progress.', button('＋ Add goal', 'add-goal'))}<article class="card"><div class="card-head"><h2>In progress</h2></div>${data.goals.length ? `<div class="goal-list">${data.goals.map(goal => `<div class="goal-row"><button class="check ${Number(goal.progress) >= 100 ? 'done' : ''}" data-action="goal-complete" data-id="${goal.id}">✓</button><div><b>${escape(goal.title)}</b><small>${goal.targetDate ? t('Target {date}', { date: formatDate(goal.targetDate) }) : t('No target date')}</small><div class="progress" style="--progress:${clamp(goal.progress,0,100)}%"><span></span></div></div><span class="goal-percent">${clamp(goal.progress,0,100)}%</span><div class="row-menu"><button class="mini-button" data-action="edit-goal" data-id="${goal.id}">✎</button><button class="mini-button delete" data-action="delete-goal" data-id="${goal.id}">×</button></div></div>`).join('')}</div>` : empty('Set your first goal', 'A goal can be as small as revising one chapter.', 'add-goal', 'Add goal')}</article>`;
+    return `${pageHeader('MILESTONES', 'Goals', 'Turn the things you want to achieve into visible progress.', button('＋ Add goal', 'add-goal'))}${renderGoalHealth()}<article class="card goal-list-card"><div class="card-head"><h2>In progress</h2></div>${data.goals.length ? `<div class="goal-list">${data.goals.map(goal => `<div class="goal-row"><button class="check ${Number(goal.progress) >= 100 ? 'done' : ''}" data-action="goal-complete" data-id="${goal.id}">✓</button><div><b>${escape(goal.title)}</b><small>${goal.targetDate ? t('Target {date}', { date: formatDate(goal.targetDate) }) : t('No target date')}</small><div class="progress" style="--progress:${clamp(goal.progress,0,100)}%"><span></span></div></div><span class="goal-percent">${clamp(goal.progress,0,100)}%</span><div class="row-menu"><button class="mini-button" data-action="edit-goal" data-id="${goal.id}">✎</button><button class="mini-button delete" data-action="delete-goal" data-id="${goal.id}">×</button></div></div>`).join('')}</div>` : empty('Set your first goal', 'A goal can be as small as revising one chapter.', 'add-goal', 'Add goal')}</article>`;
   }
   function renderFriends() {
     const friendsById = new Map(data.friends.map(friend => [friend.id, friend]));
