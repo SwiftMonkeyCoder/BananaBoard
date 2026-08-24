@@ -86,7 +86,7 @@ planner.example.com {
 }
 ```
 
-Caddy will obtain and renew the TLS certificate when the domain’s DNS points to the server. See [Caddyfile.example](Caddyfile.example) for the deployed site configuration.
+Caddy will obtain and renew the TLS certificate when the domain’s DNS points to the server. The production configuration, including its security header, is in the [Caddy section of DEVELOPMENT.md](DEVELOPMENT.md#caddy).
 
 ### Updating
 

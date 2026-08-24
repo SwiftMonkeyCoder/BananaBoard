@@ -106,7 +106,19 @@ The app automatically applies the versioned SQL migrations before it starts serv
 
 ### Caddy
 
-Add the contents of [Caddyfile.example](Caddyfile.example) to the VPS Caddy configuration, then reload Caddy. Caddy handles TLS and proxies to `127.0.0.1:3000`.
+Add this site block to the VPS Caddy configuration, replacing `app.bananaboard.net` with your domain, then reload Caddy:
+
+```caddyfile
+app.bananaboard.net {
+  reverse_proxy 127.0.0.1:3000
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+  }
+}
+```
+
+Caddy handles TLS and proxies to `127.0.0.1:3000`.
 
 ### GitHub Container Registry visibility
 
