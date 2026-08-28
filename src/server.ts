@@ -79,9 +79,14 @@ export function buildServer() {
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
         frameAncestors: ["'none'"],
-        formAction: ["'self'"]
+        formAction: ["'self'"],
+        // Helmet enables this directive by default. It is right for the HTTPS
+        // deployment, but it upgrades every local asset request to HTTPS.
+        // Our direct development server deliberately runs over HTTP.
+        upgradeInsecureRequests: config.isProduction ? [] : null
       }
     },
+    strictTransportSecurity: config.isProduction ? {} : false,
     crossOriginEmbedderPolicy: false
   });
   app.register(rateLimit, { global: false });
