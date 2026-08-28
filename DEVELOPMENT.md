@@ -29,7 +29,7 @@ The UI is still deliberately framework-free. It is served by the Fastify app and
 
 ## Local development on macOS
 
-The Docker path is the recommended one. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) or OrbStack, then:
+Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) or OrbStack. The fully Dockerized path is useful when you want both the app and database in containers:
 
 ```sh
 cp .env.example .env
@@ -38,17 +38,28 @@ docker compose -f compose.dev.yml up --build
 
 Open [http://localhost:3000](http://localhost:3000). The app server watches source changes, while PostgreSQL and uploaded files live in named development volumes.
 
-To run the server directly instead, install Node.js 22 LTS and pnpm:
+To run the app directly from the local repository while Docker Desktop runs only PostgreSQL, install Node.js 22 LTS and pnpm, then:
 
 ```sh
-brew install node@22 pnpm
-corepack enable
-pnpm install
 cp .env.example .env
+```
+
+Edit `.env` for the direct-server setup:
+
+```dotenv
+DATABASE_URL=postgres://bananaboard:bananaboard@127.0.0.1:5432/bananaboard
+UPLOAD_DIR=./data/uploads
+```
+
+Then start the database and app in separate terminals:
+
+```sh
+docker compose -f compose.dev.yml up -d db
+pnpm install
 pnpm dev
 ```
 
-You still need PostgreSQL running locally; the development Compose file is the simplest way to provide it.
+`pnpm dev` loads `.env` automatically and watches server files for changes. Browser assets in `public/` are served directly; refresh the browser to see those changes. The local database stays in Docker's `dev_postgres_data` volume, while direct-server uploads are kept in the ignored local `data/` directory.
 
 Useful commands:
 
