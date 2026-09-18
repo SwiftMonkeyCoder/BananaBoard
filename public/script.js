@@ -3,13 +3,44 @@
   'use strict';
 
   const APP_NAME = 'BananaBoard';
+  const APP_VERSION = '0.1';
   const ACCENTS = ['#f4c53a', '#6c63ff', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
   const NAV = [
-    ['dashboard', '⌂', 'Dashboard'], ['homework', '✓', 'Homework'], ['calendar', '□', 'Calendar'],
-    ['reminders', '⊙', 'Reminders'], ['notes', '▤', 'Notes'], ['grades', 'A+', 'Grades'], ['timer', '◷', 'Study Timer'],
-    ['statistics', '↗', 'Statistics'], ['goals', '◎', 'Goals'], ['subjects', '▦', 'Subjects'], ['widgets', '◫', 'Widgets']
+    ['dashboard', 'dashboard', 'Dashboard'], ['homework', 'homework', 'Homework'], ['calendar', 'calendar', 'Calendar'],
+    ['reminders', 'reminders', 'Reminders'], ['notes', 'notes', 'Notes'], ['grades', 'grades', 'Grades'], ['timer', 'timer', 'Study Timer'],
+    ['statistics', 'statistics', 'Statistics'], ['goals', 'goals', 'Goals'], ['subjects', 'subjects', 'Subjects'], ['widgets', 'widgets', 'Widgets']
   ];
-  const SETTINGS_NAV_ICON = '<svg class="settings-nav-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 8.2a3.8 3.8 0 1 0 0 7.6 3.8 3.8 0 0 0 0-7.6Z"/><path d="M19.1 13.7c.1-.5.1-1 .1-1.7s0-1.2-.1-1.7l2-1.5-2-3.5-2.4 1a8.4 8.4 0 0 0-2.9-1.7L13.5 2h-4l-.4 2.6a8.4 8.4 0 0 0-2.9 1.7l-2.4-1-2 3.5 2 1.5c-.1.5-.1 1-.1 1.7s0 1.2.1 1.7l-2 1.5 2 3.5 2.4-1a8.4 8.4 0 0 0 2.9 1.7l.4 2.6h4l.4-2.6a8.4 8.4 0 0 0 2.9-1.7l2.4 1 2-3.5-2-1.5Z"/></svg>';
+  const APP_ICON_PATHS = {
+    dashboard: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+    homework: '<path d="m5 12 4.2 4.2L19.5 6"/><rect x="3" y="3" width="18" height="18" rx="4"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4M17 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>',
+    reminders: '<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 22h4"/>',
+    notes: '<path d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8M8 16h8"/>',
+    grades: '<path d="M4 19 10 5l6 14M6.2 14h7.6M18 14h3M19.5 11v6"/>',
+    timer: '<circle cx="12" cy="13" r="8"/><path d="M9 2h6M12 5v2M12 13l3 2"/>',
+    statistics: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+    goals: '<path d="M6 21V4M6 5h11l-2.5 4L17 13H6"/>',
+    subjects: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 5.5v16M8 7h8M8 11h8"/>',
+    widgets: '<rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2 2-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-2.8v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-2-2 .1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H5.7v-2.8h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9L7 8.2l2-2 .1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5V5h2.8v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 2 2-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2V14h-.2a1.7 1.7 0 0 0-1.5 1Z"/>',
+    math: '<path d="M5 5h14M5 19h14M8 9l8 6M16 9l-8 6"/>',
+    language: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v16H6.5A2.5 2.5 0 0 0 4 21.5zM20 5.5A2.5 2.5 0 0 0 17.5 3H12v16h5.5a2.5 2.5 0 0 1 2.5 2.5z"/>',
+    science: '<path d="M9 3h6M10 3v6l-5 8a3 3 0 0 0 2.6 4h8.8A3 3 0 0 0 19 17l-5-8V3M8.1 16h7.8"/>',
+    history: '<path d="M5 20V8M9 20V8M15 20V8M19 20V8M3 20h18M3 6l9-3 9 3H3"/>',
+    geography: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+    art: '<path d="M12 3a9 9 0 1 0 0 18h1.2a1.8 1.8 0 0 0 0-3.6h-.8a1.8 1.8 0 0 1 0-3.6h4.4A3.2 3.2 0 0 0 20 10.6 8.8 8.8 0 0 0 12 3Z"/><path d="M7.5 10h.01M9 6.7h.01M14.5 6.7h.01"/>',
+    music: '<path d="M9 18V6l10-2v12M9 18a3 3 0 1 1-3-3 3 3 0 0 1 3 3ZM19 16a3 3 0 1 1-3-3 3 3 0 0 1 3 3Z"/>',
+    computer: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8M12 16v5"/>',
+    sport: '<circle cx="12" cy="12" r="9"/><path d="m5.5 5.5 4 3.5 5-1 3.5 4-2.5 5.5-5.5.5-3-4.5Z"/>',
+    business: '<path d="M4 20V4M4 20h17M8 16l4-5 3 2 5-7"/><path d="M16 6h4v4"/>',
+    book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 5.5v16M8 7h8M8 11h6"/>',
+    bell: '<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 22h4"/>'
+  };
+  const subjectIconOptions = [['math', 'Math'], ['language', 'Languages'], ['science', 'Science'], ['history', 'History'], ['geography', 'Geography'], ['art', 'Art'], ['music', 'Music'], ['computer', 'Computer science'], ['sport', 'Sport'], ['business', 'Business'], ['book', 'Literature']];
+  const appIcon = (name, className = '') => APP_ICON_PATHS[name]
+    ? `<svg class="app-icon ${className}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${APP_ICON_PATHS[name]}</svg>`
+    : `<span class="app-icon app-icon-custom" aria-hidden="true">${escape(name || '•')}</span>`;
+  const subjectIcon = icon => appIcon(icon || 'book', 'subject-svg');
   const QUOTES = [
     ['Small steps every day become big results.', APP_NAME],
     ['The secret of getting ahead is getting started.', 'Mark Twain'],
@@ -24,6 +55,7 @@
     { id: 'sophia-lee', name: 'Sophia Lee', activity: 'Taking a focus break', color: '#6c63ff' }
   ];
   const LANGUAGE_OPTIONS = [['en', 'English'], ['de', 'German'], ['tr', 'Turkish'], ['ru', 'Russian'], ['uk', 'Ukrainian'], ['es', 'Spanish']];
+  const LANGUAGE_PREFERENCES = new Set(['auto', 'manual']);
   const LOCALE_CODES = { en: 'en-GB', de: 'de-DE', tr: 'tr-TR', ru: 'ru-RU', uk: 'uk-UA', es: 'es-ES' };
   const TRANSLATIONS = {
     de: {
@@ -240,6 +272,49 @@
     es: { 'Welcome to BananaBoard!': '¡Bienvenido a BananaBoard!', 'Your calm space for homework, notes, plans, and focus.': 'Tu espacio tranquilo para deberes, notas, planes y concentración.', 'Get started': 'Empezar', 'A QUICK QUESTION': 'UNA PREGUNTA RÁPIDA', 'Where did you hear about BananaBoard?': '¿Dónde conociste BananaBoard?', 'Help us understand how people find BananaBoard.': 'Ayúdanos a entender cómo encuentra la gente BananaBoard.', 'Social media': 'Redes sociales', 'A friend': 'Un amigo', 'Advertisement': 'Anuncio', 'Google': 'Google', 'School': 'Escuela', 'Other': 'Otro', 'Continue': 'Continuar', 'Back': 'Atrás', 'Choose where you heard about BananaBoard to continue.': 'Elige dónde conociste BananaBoard para continuar.' }
   };
   Object.entries(ONBOARDING_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+  const LANGUAGE_PREFERENCE_TRANSLATIONS = {
+    de: { 'Use your device language whenever BananaBoard supports it, or choose one yourself.': 'Verwende die Sprache deines Geräts, wenn BananaBoard sie unterstützt, oder wähle selbst eine aus.', 'Device language': 'Gerätesprache', 'Automatic mode follows your device language.': 'Der automatische Modus folgt der Sprache deines Geräts.' },
+    tr: { 'Use your device language whenever BananaBoard supports it, or choose one yourself.': 'BananaBoard desteklediğinde cihazının dilini kullan veya kendin bir dil seç.', 'Device language': 'Cihaz dili', 'Automatic mode follows your device language.': 'Otomatik mod cihazının dilini takip eder.' },
+    ru: { 'Use your device language whenever BananaBoard supports it, or choose one yourself.': 'Используйте язык устройства, если BananaBoard его поддерживает, или выберите другой.', 'Device language': 'Язык устройства', 'Automatic mode follows your device language.': 'Автоматический режим следует языку вашего устройства.' },
+    uk: { 'Use your device language whenever BananaBoard supports it, or choose one yourself.': 'Використовуйте мову свого пристрою, якщо BananaBoard її підтримує, або виберіть іншу.', 'Device language': 'Мова пристрою', 'Automatic mode follows your device language.': 'Автоматичний режим використовує мову вашого пристрою.' },
+    es: { 'Use your device language whenever BananaBoard supports it, or choose one yourself.': 'Usa el idioma de tu dispositivo cuando BananaBoard lo admita o elige uno tú mismo.', 'Device language': 'Idioma del dispositivo', 'Automatic mode follows your device language.': 'El modo automático sigue el idioma de tu dispositivo.' }
+  };
+  Object.entries(LANGUAGE_PREFERENCE_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+
+  const SETTINGS_TRANSLATIONS = {
+    de: {
+      'Light, dark, or match your device': 'Hell, dunkel oder passend zu deinem Gerät', 'Choose the language used throughout BananaBoard.': 'Wähle die Sprache für ganz BananaBoard.', 'Changes are applied after a short setup moment.': 'Änderungen werden nach einem kurzen Einrichtungsmoment übernommen.', 'Your profile and grade preferences are saved securely to your account.': 'Dein Profil und deine Noteneinstellungen werden sicher in deinem Konto gespeichert.', 'Account': 'Konto', 'Change your email address, display name, or password.': 'Ändere deine E-Mail-Adresse, deinen Anzeigenamen oder dein Passwort.', 'Manage account': 'Konto verwalten', 'Log out': 'Abmelden', 'Download all BananaBoard data': 'Alle BananaBoard-Daten herunterladen', 'Replace data from a previous export': 'Daten aus einem früheren Export ersetzen', 'Clear this account’s board. This cannot be undone.': 'Lösche dieses Board. Das kann nicht rückgängig gemacht werden.', 'Number scale (1 is best · 6 is worst)': 'Zahlenskala (1 ist am besten · 6 am schlechtesten)', 'Percentage (0–100%)': 'Prozent (0–100 %)', 'Letter (A–F)': 'Buchstaben (A–F)', 'Profile & grades': 'Profil & Noten', 'Choose a language and grade system during account creation, or update them here any time.': 'Wähle Sprache und Notensystem bei der Kontoerstellung oder ändere sie hier jederzeit.'
+    },
+    tr: {
+      'Light, dark, or match your device': 'Açık, koyu veya cihazına uygun', 'Choose the language used throughout BananaBoard.': 'BananaBoard’un tamamında kullanılacak dili seç.', 'Changes are applied after a short setup moment.': 'Değişiklikler kısa bir hazırlık anından sonra uygulanır.', 'Your profile and grade preferences are saved securely to your account.': 'Profilin ve not tercihlerin hesabında güvenle saklanır.', 'Account': 'Hesap', 'Change your email address, display name, or password.': 'E-posta adresini, görünen adını veya parolanı değiştir.', 'Manage account': 'Hesabı yönet', 'Log out': 'Çıkış yap', 'Download all BananaBoard data': 'Tüm BananaBoard verilerini indir', 'Replace data from a previous export': 'Önceki dışa aktarmadaki verileri değiştir', 'Clear this account’s board. This cannot be undone.': 'Bu hesabın panosunu temizle. Bu işlem geri alınamaz.', 'Number scale (1 is best · 6 is worst)': 'Sayı sistemi (1 en iyi · 6 en kötü)', 'Percentage (0–100%)': 'Yüzde (0–100%)', 'Letter (A–F)': 'Harf (A–F)', 'Profile & grades': 'Profil ve notlar', 'Choose a language and grade system during account creation, or update them here any time.': 'Hesap oluştururken dil ve not sistemi seçebilir ya da bunları burada istediğin zaman güncelleyebilirsin.'
+    },
+    ru: {
+      'Light, dark, or match your device': 'Светлая, тёмная или как на устройстве', 'Choose the language used throughout BananaBoard.': 'Выберите язык для всего BananaBoard.', 'Changes are applied after a short setup moment.': 'Изменения применятся после короткой настройки.', 'Your profile and grade preferences are saved securely to your account.': 'Профиль и настройки оценок надёжно сохранены в аккаунте.', 'Account': 'Аккаунт', 'Change your email address, display name, or password.': 'Измените адрес электронной почты, отображаемое имя или пароль.', 'Manage account': 'Управление аккаунтом', 'Log out': 'Выйти', 'Download all BananaBoard data': 'Скачать все данные BananaBoard', 'Replace data from a previous export': 'Заменить данные данными из предыдущего экспорта', 'Clear this account’s board. This cannot be undone.': 'Очистить доску этого аккаунта. Это нельзя отменить.', 'Number scale (1 is best · 6 is worst)': 'Числовая шкала (1 — лучшая · 6 — худшая)', 'Percentage (0–100%)': 'Проценты (0–100%)', 'Letter (A–F)': 'Буквы (A–F)', 'Profile & grades': 'Профиль и оценки', 'Choose a language and grade system during account creation, or update them here any time.': 'Выберите язык и систему оценок при создании аккаунта или измените их здесь в любое время.'
+    },
+    uk: {
+      'Light, dark, or match your device': 'Світла, темна або як на пристрої', 'Choose the language used throughout BananaBoard.': 'Виберіть мову для всього BananaBoard.', 'Changes are applied after a short setup moment.': 'Зміни буде застосовано після короткого налаштування.', 'Your profile and grade preferences are saved securely to your account.': 'Профіль і налаштування оцінок надійно збережені у вашому обліковому записі.', 'Account': 'Обліковий запис', 'Change your email address, display name, or password.': 'Змініть адресу електронної пошти, відображуване ім’я або пароль.', 'Manage account': 'Керувати обліковим записом', 'Log out': 'Вийти', 'Download all BananaBoard data': 'Завантажити всі дані BananaBoard', 'Replace data from a previous export': 'Замінити дані з попереднього експорту', 'Clear this account’s board. This cannot be undone.': 'Очистити дошку цього облікового запису. Це неможливо скасувати.', 'Number scale (1 is best · 6 is worst)': 'Числова шкала (1 — найкраща · 6 — найгірша)', 'Percentage (0–100%)': 'Відсотки (0–100%)', 'Letter (A–F)': 'Літери (A–F)', 'Profile & grades': 'Профіль і оцінки', 'Choose a language and grade system during account creation, or update them here any time.': 'Виберіть мову та систему оцінювання під час створення облікового запису або змініть їх тут у будь-який час.'
+    },
+    es: {
+      'Light, dark, or match your device': 'Claro, oscuro o igual que tu dispositivo', 'Choose the language used throughout BananaBoard.': 'Elige el idioma que se usará en todo BananaBoard.', 'Changes are applied after a short setup moment.': 'Los cambios se aplican después de un breve momento de preparación.', 'Your profile and grade preferences are saved securely to your account.': 'Tu perfil y preferencias de calificaciones se guardan de forma segura en tu cuenta.', 'Account': 'Cuenta', 'Change your email address, display name, or password.': 'Cambia tu correo electrónico, nombre visible o contraseña.', 'Manage account': 'Gestionar cuenta', 'Log out': 'Cerrar sesión', 'Download all BananaBoard data': 'Descargar todos los datos de BananaBoard', 'Replace data from a previous export': 'Reemplazar datos de una exportación anterior', 'Clear this account’s board. This cannot be undone.': 'Borrar el tablero de esta cuenta. Esta acción no se puede deshacer.', 'Number scale (1 is best · 6 is worst)': 'Escala numérica (1 es mejor · 6 es peor)', 'Percentage (0–100%)': 'Porcentaje (0–100%)', 'Letter (A–F)': 'Letras (A–F)', 'Profile & grades': 'Perfil y calificaciones', 'Choose a language and grade system during account creation, or update them here any time.': 'Elige un idioma y sistema de calificaciones al crear la cuenta, o actualízalos aquí cuando quieras.'
+    }
+  };
+  Object.entries(SETTINGS_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+  const FULL_SETTINGS_TRANSLATIONS = {
+    de: { 'PREFERENCES': 'EINSTELLUNGEN', 'Settings': 'Einstellungen', 'Every change on this page saves automatically.': 'Jede Änderung auf dieser Seite wird automatisch gespeichert.', 'Appearance': 'Darstellung', 'Changes appear immediately, so you can see what feels right.': 'Änderungen erscheinen sofort, damit du sehen kannst, was sich richtig anfühlt.', 'Theme': 'Design', 'Light': 'Hell', 'Dark': 'Dunkel', 'System': 'System', 'Accent color': 'Akzentfarbe', 'Applied across the whole app': 'In der ganzen App verwendet', 'Clock format': 'Uhrzeitformat', 'Dashboard local time': 'Ortszeit auf der Übersicht', '24-hour': '24-Stunden', '12-hour': '12-Stunden', 'Language preference': 'Sprache', 'Language': 'Sprache', 'Profile & grades': 'Profil & Noten', 'Display name': 'Anzeigename', 'Grade system': 'Notensystem', 'Changes save automatically.': 'Änderungen werden automatisch gespeichert.', 'Backup': 'Sicherung', 'Export your dashboard to a private JSON file, or import it later in the same account.': 'Exportiere dein Board in eine private JSON-Datei oder importiere sie später in diesem Konto.', 'Export data': 'Daten exportieren', 'Import data': 'Daten importieren', 'Export': 'Exportieren', 'Import': 'Importieren', 'Reset': 'Zurücksetzen', 'Clear all data': 'Alle Daten löschen' },
+    tr: { 'PREFERENCES': 'AYARLAR', 'Settings': 'Ayarlar', 'Every change on this page saves automatically.': 'Bu sayfadaki her değişiklik otomatik olarak kaydedilir.', 'Appearance': 'Görünüm', 'Changes appear immediately, so you can see what feels right.': 'Değişiklikler hemen görünür; böylece sana en uygun olanı görebilirsin.', 'Theme': 'Tema', 'Light': 'Açık', 'Dark': 'Koyu', 'System': 'Sistem', 'Accent color': 'Vurgu rengi', 'Applied across the whole app': 'Tüm uygulamada kullanılır', 'Clock format': 'Saat biçimi', 'Dashboard local time': 'Panel yerel saati', '24-hour': '24 saat', '12-hour': '12 saat', 'Language preference': 'Dil tercihi', 'Language': 'Dil', 'Profile & grades': 'Profil ve notlar', 'Display name': 'Görünen ad', 'Grade system': 'Not sistemi', 'Changes save automatically.': 'Değişiklikler otomatik olarak kaydedilir.', 'Backup': 'Yedekleme', 'Export your dashboard to a private JSON file, or import it later in the same account.': 'Panonu özel bir JSON dosyasına aktar veya daha sonra aynı hesapta içe aktar.', 'Export data': 'Verileri dışa aktar', 'Import data': 'Verileri içe aktar', 'Export': 'Dışa aktar', 'Import': 'İçe aktar', 'Reset': 'Sıfırla', 'Clear all data': 'Tüm verileri temizle' },
+    ru: { 'PREFERENCES': 'НАСТРОЙКИ', 'Settings': 'Настройки', 'Every change on this page saves automatically.': 'Каждое изменение на этой странице сохраняется автоматически.', 'Appearance': 'Оформление', 'Changes appear immediately, so you can see what feels right.': 'Изменения появляются сразу, поэтому можно увидеть подходящий вариант.', 'Theme': 'Тема', 'Light': 'Светлая', 'Dark': 'Тёмная', 'System': 'Системная', 'Accent color': 'Акцентный цвет', 'Applied across the whole app': 'Используется во всём приложении', 'Clock format': 'Формат времени', 'Dashboard local time': 'Местное время на панели', '24-hour': '24 часа', '12-hour': '12 часов', 'Language preference': 'Язык', 'Language': 'Язык', 'Profile & grades': 'Профиль и оценки', 'Display name': 'Отображаемое имя', 'Grade system': 'Система оценок', 'Changes save automatically.': 'Изменения сохраняются автоматически.', 'Backup': 'Резервная копия', 'Export your dashboard to a private JSON file, or import it later in the same account.': 'Экспортируйте доску в личный JSON-файл или импортируйте его позже в этом же аккаунте.', 'Export data': 'Экспорт данных', 'Import data': 'Импорт данных', 'Export': 'Экспорт', 'Import': 'Импорт', 'Reset': 'Сбросить', 'Clear all data': 'Очистить все данные' },
+    uk: { 'PREFERENCES': 'НАЛАШТУВАННЯ', 'Settings': 'Налаштування', 'Every change on this page saves automatically.': 'Кожна зміна на цій сторінці зберігається автоматично.', 'Appearance': 'Вигляд', 'Changes appear immediately, so you can see what feels right.': 'Зміни з’являються одразу, тож ви можете побачити, що вам підходить.', 'Theme': 'Тема', 'Light': 'Світла', 'Dark': 'Темна', 'System': 'Системна', 'Accent color': 'Акцентний колір', 'Applied across the whole app': 'Використовується в усьому застосунку', 'Clock format': 'Формат часу', 'Dashboard local time': 'Місцевий час на панелі', '24-hour': '24-годинний', '12-hour': '12-годинний', 'Language preference': 'Мова', 'Language': 'Мова', 'Profile & grades': 'Профіль і оцінки', 'Display name': 'Відображуване ім’я', 'Grade system': 'Система оцінювання', 'Changes save automatically.': 'Зміни зберігаються автоматично.', 'Backup': 'Резервна копія', 'Export your dashboard to a private JSON file, or import it later in the same account.': 'Експортуйте дошку до приватного JSON-файлу або імпортуйте його пізніше в цьому ж обліковому записі.', 'Export data': 'Експорт даних', 'Import data': 'Імпорт даних', 'Export': 'Експорт', 'Import': 'Імпорт', 'Reset': 'Скинути', 'Clear all data': 'Очистити всі дані' },
+    es: { 'PREFERENCES': 'PREFERENCIAS', 'Settings': 'Ajustes', 'Every change on this page saves automatically.': 'Cada cambio de esta página se guarda automáticamente.', 'Appearance': 'Apariencia', 'Changes appear immediately, so you can see what feels right.': 'Los cambios aparecen de inmediato para que puedas ver qué te parece mejor.', 'Theme': 'Tema', 'Light': 'Claro', 'Dark': 'Oscuro', 'System': 'Sistema', 'Accent color': 'Color de acento', 'Applied across the whole app': 'Se aplica en toda la aplicación', 'Clock format': 'Formato de reloj', 'Dashboard local time': 'Hora local del panel', '24-hour': '24 horas', '12-hour': '12 horas', 'Language preference': 'Preferencia de idioma', 'Language': 'Idioma', 'Profile & grades': 'Perfil y calificaciones', 'Display name': 'Nombre visible', 'Grade system': 'Sistema de calificaciones', 'Changes save automatically.': 'Los cambios se guardan automáticamente.', 'Backup': 'Copia de seguridad', 'Export your dashboard to a private JSON file, or import it later in the same account.': 'Exporta tu panel a un archivo JSON privado o impórtalo más tarde en la misma cuenta.', 'Export data': 'Exportar datos', 'Import data': 'Importar datos', 'Export': 'Exportar', 'Import': 'Importar', 'Reset': 'Restablecer', 'Clear all data': 'Borrar todos los datos' }
+  };
+  Object.entries(FULL_SETTINGS_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+  const REMINDER_GROUP_TRANSLATIONS = {
+    de: { '＋ New group': '＋ Neue Gruppe', 'No reminder group': 'Keine Erinnerungsgruppe', 'Reminder group': 'Erinnerungsgruppe', 'New reminder group': 'Neue Erinnerungsgruppe', 'Edit reminder group': 'Erinnerungsgruppe bearbeiten', 'Group name': 'Gruppenname', 'e.g. School mornings': 'z. B. Schulmorgen', 'Add reminders to this group now or whenever you create one.': 'Füge dieser Gruppe jetzt oder beim Erstellen Erinnerungen hinzu.', 'Create group': 'Gruppe erstellen', 'Ungrouped reminders': 'Nicht gruppierte Erinnerungen', 'Everything is grouped': 'Alles ist gruppiert', 'Create a reminder here or add one directly inside a group.': 'Erstelle hier eine Erinnerung oder füge eine direkt in einer Gruppe hinzu.', 'No reminders in this group yet.': 'In dieser Gruppe gibt es noch keine Erinnerungen.', 'Edit group': 'Gruppe bearbeiten', 'Delete group': 'Gruppe löschen', 'Delete “{name}”? Its reminders will be kept without a group.': '„{name}“ löschen? Die Erinnerungen bleiben ohne Gruppe erhalten.', 'Reminder group deleted.': 'Erinnerungsgruppe gelöscht.' },
+    tr: { '＋ New group': '＋ Yeni grup', 'No reminder group': 'Hatırlatıcı grubu yok', 'Reminder group': 'Hatırlatıcı grubu', 'New reminder group': 'Yeni hatırlatıcı grubu', 'Edit reminder group': 'Hatırlatıcı grubunu düzenle', 'Group name': 'Grup adı', 'e.g. School mornings': 'ör. Okul sabahları', 'Add reminders to this group now or whenever you create one.': 'Hatırlatıcıları şimdi veya oluştururken bu gruba ekle.', 'Create group': 'Grup oluştur', 'Ungrouped reminders': 'Gruplanmamış hatırlatıcılar', 'Everything is grouped': 'Her şey gruplandı', 'Create a reminder here or add one directly inside a group.': 'Burada bir hatırlatıcı oluştur veya doğrudan bir grubun içine ekle.', 'No reminders in this group yet.': 'Bu grupta henüz hatırlatıcı yok.', 'Edit group': 'Grubu düzenle', 'Delete group': 'Grubu sil', 'Delete “{name}”? Its reminders will be kept without a group.': '“{name}” silinsin mi? Hatırlatıcılar grupsuz olarak kalacak.', 'Reminder group deleted.': 'Hatırlatıcı grubu silindi.' },
+    ru: { '＋ New group': '＋ Новая группа', 'No reminder group': 'Без группы напоминаний', 'Reminder group': 'Группа напоминаний', 'New reminder group': 'Новая группа напоминаний', 'Edit reminder group': 'Изменить группу напоминаний', 'Group name': 'Название группы', 'e.g. School mornings': 'например, школьное утро', 'Add reminders to this group now or whenever you create one.': 'Добавьте напоминания в эту группу сейчас или при их создании.', 'Create group': 'Создать группу', 'Ungrouped reminders': 'Напоминания без группы', 'Everything is grouped': 'Всё сгруппировано', 'Create a reminder here or add one directly inside a group.': 'Создайте напоминание здесь или добавьте его прямо в группу.', 'No reminders in this group yet.': 'В этой группе пока нет напоминаний.', 'Edit group': 'Изменить группу', 'Delete group': 'Удалить группу', 'Delete “{name}”? Its reminders will be kept without a group.': 'Удалить «{name}»? Напоминания останутся без группы.', 'Reminder group deleted.': 'Группа напоминаний удалена.' },
+    uk: { '＋ New group': '＋ Нова група', 'No reminder group': 'Без групи нагадувань', 'Reminder group': 'Група нагадувань', 'New reminder group': 'Нова група нагадувань', 'Edit reminder group': 'Редагувати групу нагадувань', 'Group name': 'Назва групи', 'e.g. School mornings': 'наприклад, шкільний ранок', 'Add reminders to this group now or whenever you create one.': 'Додайте нагадування до цієї групи зараз або під час їх створення.', 'Create group': 'Створити групу', 'Ungrouped reminders': 'Нагадування без групи', 'Everything is grouped': 'Усе згруповано', 'Create a reminder here or add one directly inside a group.': 'Створіть нагадування тут або додайте його прямо до групи.', 'No reminders in this group yet.': 'У цій групі ще немає нагадувань.', 'Edit group': 'Редагувати групу', 'Delete group': 'Видалити групу', 'Delete “{name}”? Its reminders will be kept without a group.': 'Видалити «{name}»? Нагадування залишаться без групи.', 'Reminder group deleted.': 'Групу нагадувань видалено.' },
+    es: { '＋ New group': '＋ Nuevo grupo', 'No reminder group': 'Sin grupo de recordatorios', 'Reminder group': 'Grupo de recordatorios', 'New reminder group': 'Nuevo grupo de recordatorios', 'Edit reminder group': 'Editar grupo de recordatorios', 'Group name': 'Nombre del grupo', 'e.g. School mornings': 'p. ej., mañanas de escuela', 'Add reminders to this group now or whenever you create one.': 'Añade recordatorios a este grupo ahora o cuando crees uno.', 'Create group': 'Crear grupo', 'Ungrouped reminders': 'Recordatorios sin grupo', 'Everything is grouped': 'Todo está agrupado', 'Create a reminder here or add one directly inside a group.': 'Crea aquí un recordatorio o añádelo directamente dentro de un grupo.', 'No reminders in this group yet.': 'Aún no hay recordatorios en este grupo.', 'Edit group': 'Editar grupo', 'Delete group': 'Eliminar grupo', 'Delete “{name}”? Its reminders will be kept without a group.': '¿Eliminar «{name}»? Sus recordatorios se conservarán sin grupo.', 'Reminder group deleted.': 'Grupo de recordatorios eliminado.' }
+  };
+  Object.entries(REMINDER_GROUP_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
 
   const el = (selector, parent = document) => parent.querySelector(selector);
   const els = (selector, parent = document) => [...parent.querySelectorAll(selector)];
@@ -273,13 +348,13 @@
   };
 
   const defaultData = () => ({
-    profile: { name: '', photo: '', theme: 'light', accent: '#f4c53a', gradeSystem: 'numeric', clockFormat: '24', language: 'en', discoverySource: '' },
+    profile: { name: '', photo: '', theme: 'light', accent: '#f4c53a', gradeSystem: 'numeric', clockFormat: '24', language: 'en', languagePreference: 'auto', discoverySource: '', seenReleaseVersion: '' },
     subjects: [
-      { id: 'math', name: 'Mathematics', color: '#6c63ff', icon: '∑' },
-      { id: 'english', name: 'English', color: '#ec4899', icon: 'A' },
-      { id: 'science', name: 'Science', color: '#10b981', icon: '⚗' }
+      { id: 'math', name: 'Mathematics', color: '#6c63ff', icon: 'math' },
+      { id: 'english', name: 'English', color: '#ec4899', icon: 'language' },
+      { id: 'science', name: 'Science', color: '#10b981', icon: 'science' }
     ],
-    homework: [], reminders: [], notes: [], notebooks: [], noteHighlights: [], grades: [], events: [], goals: [], friends: [], widgets: [],
+    homework: [], reminders: [], reminderGroups: [], notes: [], notebooks: [], noteHighlights: [], grades: [], events: [], goals: [], friends: [], widgets: [],
     timer: { study: 25, break: 5, longBreak: 15, custom: 30, completedSessions: 0 },
     stats: { studyMinutes: 0, completedHomework: 0, lastStudyDate: '', dailyStudy: {} }
   });
@@ -296,17 +371,19 @@
         stats: { ...fresh.stats, ...(parsed.stats || {}) },
         subjects: Array.isArray(parsed.subjects) ? parsed.subjects : fresh.subjects,
         reminders: Array.isArray(parsed.reminders) ? parsed.reminders : [],
+        reminderGroups: Array.isArray(parsed.reminderGroups) ? parsed.reminderGroups : [],
         widgets: Array.isArray(parsed.widgets) ? parsed.widgets : [],
         notebooks: Array.isArray(parsed.notebooks) ? parsed.notebooks : [],
         noteHighlights: Array.isArray(parsed.noteHighlights) ? parsed.noteHighlights : []
       };
       if (merged.profile.gradeSystem === 'german') merged.profile.gradeSystem = 'numeric';
       if (!LANGUAGE_OPTIONS.some(([code]) => code === merged.profile.language)) merged.profile.language = 'en';
+      if (!LANGUAGE_PREFERENCES.has(merged.profile.languagePreference)) merged.profile.languagePreference = 'manual';
       return merged;
     } catch { return defaultData(); }
   };
   let data = defaultData();
-  const ui = { page: 'dashboard', homeworkFilter: 'all', month: new Date(new Date().getFullYear(), new Date().getMonth(), 1), selectedDate: todayISO(), timerMode: 'study', timerRemaining: 0, timerRunning: false, timerActive: false, timerInterval: null, widgetsExpanded: false, datePickerMonth: new Date(), datePickerTarget: '', timePickerTarget: '', timePickerMeridiem: 'am', languageTransitioning: false, setupLanguage: data.profile.language || 'en', setupStep: 'welcome', setupDiscovery: data.profile.discoverySource || '', notesView: 'library', activeNotebookId: '', activeNoteId: '', noteTool: 'text', noteBrush: 'pen', noteDrawColor: '#25223a', noteDrawWidth: 4, noteDrawingData: [], noteDrawingSelectionIds: [], noteDrawingInteraction: null, noteDrawingClipboard: [], noteDrawingPastePending: false, noteCanvasObserver: null, noteEditorRange: null };
+  const ui = { page: 'dashboard', homeworkFilter: 'all', month: new Date(new Date().getFullYear(), new Date().getMonth(), 1), selectedDate: todayISO(), timerMode: 'study', timerRemaining: 0, timerRunning: false, timerActive: false, timerInterval: null, widgetsExpanded: false, datePickerMonth: new Date(), datePickerTarget: '', timePickerTarget: '', timePickerMeridiem: 'am', languageTransitioning: false, setupLanguage: data.profile.language || 'en', setupStep: 'welcome', setupDiscovery: data.profile.discoverySource || '', notesView: 'library', activeNotebookId: '', activeNoteId: '', noteTool: 'text', noteBrush: 'pen', noteDrawColor: '#25223a', noteDrawWidth: 4, noteDrawingData: [], noteDrawingSelectionIds: [], noteDrawingInteraction: null, noteDrawingClipboard: [], noteDrawingPastePending: false, noteCanvasObserver: null, noteEditorRange: null, releaseNotesVisible: false };
 
   let workspaceSaveTimer = null;
   let workspaceSaveRequest = Promise.resolve();
@@ -337,10 +414,18 @@
     data = load(payload.data);
   }
   const language = () => data.profile.language || 'en';
+  const deviceLanguage = () => {
+    const deviceLanguages = Array.isArray(navigator.languages) && navigator.languages.length ? navigator.languages : [navigator.language];
+    return deviceLanguages
+      .map(value => String(value || '').toLowerCase().split('-')[0])
+      .find(code => LANGUAGE_OPTIONS.some(([supported]) => supported === code)) || 'en';
+  };
   const locale = () => LOCALE_CODES[language()] || LOCALE_CODES.en;
   const t = (key, variables = {}) => String((TRANSLATIONS[language()] || {})[key] || key).replace(/\{(\w+)\}/g, (_, name) => variables[name] ?? `{${name}}`);
   const brandText = value => String(value || '').replace(/StudyFlow/g, APP_NAME);
   const languageOptions = (selected = language()) => LANGUAGE_OPTIONS.map(([code, label]) => `<option value="${code}" ${code === selected ? 'selected' : ''}>${t(label)}</option>`).join('');
+  const languageName = code => t(LANGUAGE_OPTIONS.find(([supported]) => supported === code)?.[1] || 'English');
+  const settingsLanguageOptions = () => `<option value="auto" ${data.profile.languagePreference === 'auto' ? 'selected' : ''}>${t('Device language')} (${languageName(deviceLanguage())})</option>${languageOptions(language())}`;
   function localizeText(value) {
     const source = String(value || ''); const match = source.match(/^(\s*)([\s\S]*?)(\s*)$/);
     const translated = t(match[2]);
@@ -366,8 +451,8 @@
   function applyLanguageContent() {
     document.documentElement.lang = language();
     els('#setupLanguage, #languageSelect').forEach(select => {
-      const selected = select.id === 'setupLanguage' ? (ui.setupLanguage || language()) : language();
-      select.innerHTML = languageOptions(selected); select.value = selected;
+      const selected = select.id === 'setupLanguage' ? (ui.setupLanguage || language()) : (data.profile.languagePreference === 'auto' ? 'auto' : language());
+      select.innerHTML = select.id === 'setupLanguage' ? languageOptions(selected) : settingsLanguageOptions(); select.value = selected;
     });
     localizeTree(document.body);
   }
@@ -378,9 +463,7 @@
     if (!subject) return '';
     return DEFAULT_SUBJECT_NAMES[subject.id] === subject.name ? t(subject.name) : subject.name;
   };
-  const avatarMarkup = (className = '') => data.profile.photo
-    ? `<img class="${className}" src="${escape(data.profile.photo)}" alt="${escape(data.profile.name || 'Profile')} profile picture">`
-    : escape(initials(data.profile.name));
+  const avatarMarkup = () => escape(initials(data.profile.name));
   const subjectChip = id => {
     const subject = subjectById(id);
     return subject ? `<span class="chip" style="--chip:${subject.color}"><i></i>${escape(subjectName(subject))}</span>` : '';
@@ -442,12 +525,12 @@
   function renderNav() {
     const incomplete = data.homework.filter(item => !item.done).length;
     el('#mainNav').innerHTML = NAV.map(([id, icon, label]) => `
-      <button class="nav-link ${ui.page === id ? 'active' : ''}" data-page="${id}"><span>${icon}</span>${label}${id === 'homework' && incomplete ? `<b class="nav-badge">${incomplete}</b>` : ''}</button>
+      <button class="nav-link ${ui.page === id ? 'active' : ''}" data-page="${id}"><span class="nav-icon">${appIcon(icon)}</span><span>${t(label)}</span>${id === 'homework' && incomplete ? `<b class="nav-badge">${incomplete}</b>` : ''}</button>
     `).join('');
-    const primaryPhoneTabs = [['dashboard', '⌂', 'Dashboard'], ['homework', '✓', 'Homework'], ['calendar', '□', 'Calendar'], ['notes', '▤', 'Notes'], ['grades', 'A+', 'Grades']];
-    const morePhoneTabs = [['timer', '◷', 'Focus'], ['reminders', '⊙', 'Reminders'], ['statistics', '↗', 'Stats'], ['goals', '◎', 'Goals'], ['subjects', '▦', 'Subjects'], ['widgets', '◫', 'Widgets'], ['settings', SETTINGS_NAV_ICON, 'Settings']];
+    const primaryPhoneTabs = [['dashboard', 'dashboard', 'Dashboard'], ['homework', 'homework', 'Homework'], ['calendar', 'calendar', 'Calendar'], ['notes', 'notes', 'Notes'], ['grades', 'grades', 'Grades']];
+    const morePhoneTabs = [['timer', 'timer', 'Focus'], ['reminders', 'reminders', 'Reminders'], ['statistics', 'statistics', 'Stats'], ['goals', 'goals', 'Goals'], ['subjects', 'subjects', 'Subjects'], ['widgets', 'widgets', 'Widgets'], ['settings', 'settings', 'Settings']];
     const phoneNav = el('#mobileBottomNav');
-    phoneNav.innerHTML = [...primaryPhoneTabs, ...morePhoneTabs].map(([id, icon, label], index) => `<button class="phone-tab ${index < primaryPhoneTabs.length ? 'primary-phone-tab' : ''} ${ui.page === id ? 'active' : ''}" data-page="${id}"><span>${id === 'settings' ? icon : escape(icon)}</span><small>${label}</small></button>`).join('');
+    phoneNav.innerHTML = [...primaryPhoneTabs, ...morePhoneTabs].map(([id, icon, label], index) => `<button class="phone-tab ${index < primaryPhoneTabs.length ? 'primary-phone-tab' : ''} ${ui.page === id ? 'active' : ''}" data-page="${id}"><span class="nav-icon">${appIcon(icon)}</span><small>${t(label)}</small></button>`).join('');
     window.requestAnimationFrame(() => phoneNav.querySelector('.phone-tab.active')?.scrollIntoView({ block: 'nearest', inline: 'nearest' }));
     els('[data-page="settings"]').forEach(item => item.classList.toggle('active', ui.page === 'settings'));
     el('#profileName').textContent = data.profile.name || 'Student';
@@ -470,7 +553,7 @@
     renderNav();
     syncFloatingTimer();
     syncFloatingWidgets();
-    if (ui.page === 'settings') { const versionLabel = el('.eyebrow', pageRoot); if (versionLabel) versionLabel.textContent = `${t('Version').toLocaleUpperCase(locale())} 1.0`; renderAccentChoices(el('#settingsAccents')); renderSettingsPhotoPicker(); }
+    if (ui.page === 'settings') { const versionLabel = el('.eyebrow', pageRoot); if (versionLabel) versionLabel.textContent = `${t('Version').toLocaleUpperCase(locale())} ${APP_VERSION}`; renderAccentChoices(el('#settingsAccents')); }
     if (ui.page === 'timer') updateTimerView();
     applyLanguageContent();
     if (ui.page === 'notes' && ui.notesView === 'editor') setupNoteDrawingCanvas();
@@ -479,11 +562,6 @@
     ui.page = page;
     closeSidebar();
     renderPage();
-  }
-  function renderSettingsPhotoPicker() {
-    const input = el('#settingsPhoto'); if (!input) return;
-    input.hidden = true;
-    input.insertAdjacentHTML('afterend', '<div class="photo-picker-row"><button class="button secondary" type="button" data-action="choose-settings-photo">Choose from Photos</button><span class="help">Select an image from your device</span></div>');
   }
   /* dashboard */
   function renderDashboard() {
@@ -601,6 +679,8 @@
   }
   function reminderRepeatLabel(repeat) { return t(({ daily: 'Repeats daily', weekly: 'Repeats weekly', monthly: 'Repeats monthly' })[repeat] || ''); }
   function reminderScheduleLabel(item) { return `${item.date ? relativeDate(item.date) : t('No reminder date')}${item.time ? ` · ${timeLabel(item.time)}` : ''}${reminderRepeatLabel(item.repeat) ? ` · ${reminderRepeatLabel(item.repeat)}` : ''}`; }
+  const reminderGroupById = id => data.reminderGroups.find(group => group.id === id);
+  const reminderGroupOptions = (selected = '') => `<option value="">${t('No reminder group')}</option>${data.reminderGroups.map(group => `<option value="${group.id}" ${group.id === selected ? 'selected' : ''}>${escape(group.name)}</option>`).join('')}`;
   function daysTo(value) { return value ? Math.max(0, Math.round((localDate(value) - localDate(todayISO())) / 86400000)) : null; }
   function countdownLabel(value) { const days = daysTo(value); return days === null ? t('No date set') : `${days} ${t(days === 1 ? 'day' : 'days')}`; }
   function reminderRow(item, compact = false) {
@@ -609,7 +689,15 @@
   function renderReminders() {
     const reminders = [...data.reminders].sort(sortReminders);
     const openCount = reminders.filter(item => !item.done).length;
-    return `${pageHeader('DON’T FORGET', 'Reminders', 'Keep small but important things in view before they slip your mind.', button('＋ Add reminder', 'add-reminder'))}<section class="overview-grid"><article class="card"><span class="overview-label">OPEN REMINDERS</span><strong class="overview-number">${openCount}</strong><span class="overview-label">Still to remember</span></article><article class="card"><span class="overview-label">DUE TODAY</span><strong class="overview-number">${reminders.filter(item => !item.done && item.date === todayISO()).length}</strong><span class="overview-label">Worth a quick check</span></article><article class="card"><span class="overview-label">COMPLETED</span><strong class="overview-number">${reminders.filter(item => item.done).length}</strong><span class="overview-label">Already handled</span></article></section><article class="card reminder-list-card" style="margin-top:14px"><div class="card-head"><h2>All reminders</h2><span class="chip">${t('{count} open', { count: openCount })}</span></div>${reminders.length ? `<div class="reminder-list">${reminders.map(item => reminderRow(item)).join('')}</div>` : empty('Nothing to remember yet', 'Add a reminder for tasks, forms, deadlines, or anything else.', 'add-reminder', 'Add reminder')}</article>`;
+    const ungrouped = reminders.filter(item => !item.groupId || !reminderGroupById(item.groupId));
+    return `${pageHeader('DON’T FORGET', 'Reminders', 'Keep small but important things in view before they slip your mind.', `${button('＋ New group', 'add-reminder-group', 'secondary')}${button('＋ Add reminder', 'add-reminder')}`)}
+      <section class="overview-grid"><article class="card"><span class="overview-label">OPEN REMINDERS</span><strong class="overview-number">${openCount}</strong><span class="overview-label">Still to remember</span></article><article class="card"><span class="overview-label">DUE TODAY</span><strong class="overview-number">${reminders.filter(item => !item.done && item.date === todayISO()).length}</strong><span class="overview-label">Worth a quick check</span></article><article class="card"><span class="overview-label">COMPLETED</span><strong class="overview-number">${reminders.filter(item => item.done).length}</strong><span class="overview-label">Already handled</span></article></section>
+      <section class="reminder-group-grid">${data.reminderGroups.map(group => renderReminderGroup(group, reminders.filter(item => item.groupId === group.id))).join('')}</section>
+      <article class="card reminder-list-card" style="margin-top:14px"><div class="card-head"><h2>${data.reminderGroups.length ? t('Ungrouped reminders') : t('All reminders')}</h2><span class="chip">${t('{count} open', { count: ungrouped.filter(item => !item.done).length })}</span></div>${ungrouped.length ? `<div class="reminder-list">${ungrouped.map(item => reminderRow(item)).join('')}</div>` : data.reminderGroups.length ? empty(t('Everything is grouped'), t('Create a reminder here or add one directly inside a group.'), 'add-reminder', t('Add reminder')) : empty(t('Nothing to remember yet'), t('Add a reminder for tasks, forms, deadlines, or anything else.'), 'add-reminder', t('Add reminder'))}</article>`;
+  }
+  function renderReminderGroup(group, reminders) {
+    const open = reminders.filter(item => !item.done).length;
+    return `<article class="card reminder-group-card" style="--group-color:${escape(group.color || data.profile.accent)}"><div class="reminder-group-head"><span class="reminder-group-icon">${subjectIcon(group.icon || 'bell')}</span><div><h2>${escape(group.name)}</h2><p>${t('{count} open', { count: open })}</p></div><div class="row-menu"><button class="mini-button" data-action="add-group-reminder" data-id="${group.id}" aria-label="${t('Add reminder')}">+</button><button class="mini-button" data-action="edit-reminder-group" data-id="${group.id}" aria-label="${t('Edit group')}">✎</button><button class="mini-button delete" data-action="delete-reminder-group" data-id="${group.id}" aria-label="${t('Delete group')}">×</button></div></div>${reminders.length ? `<div class="reminder-list">${reminders.map(item => reminderRow(item)).join('')}</div>` : `<div class="reminder-group-empty"><p>${t('No reminders in this group yet.')}</p>${button(t('Add reminder'), 'add-group-reminder', 'secondary', `data-id="${group.id}"`)}</div>`}</article>`;
   }
 
   /* calendar */
@@ -687,7 +775,7 @@
     const values = data.grades.map(gradeNumeric).filter(value => Number.isFinite(value));
     const average = values.length ? values.reduce((total, value) => total + value, 0) / values.length : null;
     const best = values.length ? (data.profile.gradeSystem === 'numeric' ? Math.min(...values) : Math.max(...values)) : null;
-    return `${pageHeader('ACADEMICS', 'Grades', 'Track your results and notice patterns over time.', button('＋ Add grade', 'add-grade'))}<section class="overview-grid"><article class="card"><span class="overview-label">OVERALL AVERAGE</span><strong class="overview-number">${average === null ? '—' : displayGrade(average)}</strong><span class="overview-label">${gradeSystemLabel()}</span></article><article class="card"><span class="overview-label">RECORDED GRADES</span><strong class="overview-number">${data.grades.length}</strong><span class="overview-label">Across all subjects</span></article><article class="card"><span class="overview-label">BEST RESULT</span><strong class="overview-number">${best === null ? '—' : displayGrade(best)}</strong><span class="overview-label">Your personal high point</span></article></section><article class="card" style="margin-top:14px"><div class="card-head"><h2>Grade history</h2></div>${data.grades.length ? `<div class="grade-list">${[...data.grades].sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(grade => `<div class="grade-row"><span class="subject-icon" style="--subject-color:${subjectById(grade.subjectId)?.color || data.profile.accent}">${escape(subjectById(grade.subjectId)?.icon || '•')}</span><div class="grade-info"><b>${escape(grade.title)}</b><small>${escape(subjectName(subjectById(grade.subjectId)) || t('No subject'))} · ${grade.date ? formatDate(grade.date) : t('No date')}</small></div><strong class="grade-value">${escape(grade.value)}</strong><div class="row-menu"><button class="mini-button" data-action="edit-grade" data-id="${grade.id}">✎</button><button class="mini-button delete" data-action="delete-grade" data-id="${grade.id}">×</button></div></div>`).join('')}</div>` : empty('No grades recorded', 'Add a result to start seeing your average.', 'add-grade', 'Add grade')}</article>`;
+    return `${pageHeader('ACADEMICS', 'Grades', 'Track your results and notice patterns over time.', button('＋ Add grade', 'add-grade'))}<section class="overview-grid"><article class="card"><span class="overview-label">OVERALL AVERAGE</span><strong class="overview-number">${average === null ? '—' : displayGrade(average)}</strong><span class="overview-label">${gradeSystemLabel()}</span></article><article class="card"><span class="overview-label">RECORDED GRADES</span><strong class="overview-number">${data.grades.length}</strong><span class="overview-label">Across all subjects</span></article><article class="card"><span class="overview-label">BEST RESULT</span><strong class="overview-number">${best === null ? '—' : displayGrade(best)}</strong><span class="overview-label">Your personal high point</span></article></section><article class="card" style="margin-top:14px"><div class="card-head"><h2>Grade history</h2></div>${data.grades.length ? `<div class="grade-list">${[...data.grades].sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(grade => `<div class="grade-row"><span class="subject-icon" style="--subject-color:${subjectById(grade.subjectId)?.color || data.profile.accent}">${subjectIcon(subjectById(grade.subjectId)?.icon || 'book')}</span><div class="grade-info"><b>${escape(grade.title)}</b><small>${escape(subjectName(subjectById(grade.subjectId)) || t('No subject'))} · ${grade.date ? formatDate(grade.date) : t('No date')}</small></div><strong class="grade-value">${escape(grade.value)}</strong><div class="row-menu"><button class="mini-button" data-action="edit-grade" data-id="${grade.id}">✎</button><button class="mini-button delete" data-action="delete-grade" data-id="${grade.id}">×</button></div></div>`).join('')}</div>` : empty('No grades recorded', 'Add a result to start seeing your average.', 'add-grade', 'Add grade')}</article>`;
   }
   function gradeNumeric(grade) {
     const value = String(grade.value).trim().toUpperCase();
@@ -700,7 +788,7 @@
   }
   function gradeSystemLabel() { return t({ numeric: 'Number scale', percentage: 'Percentage', letter: 'Letter grades' }[data.profile.gradeSystem] || 'Number scale'); }
   function renderSubjects() {
-    return `${pageHeader('ORGANIZE', 'Subjects', 'Create reusable subjects for homework, notes, grades, and events.', button('＋ Add subject', 'add-subject'))}<section class="subject-grid">${data.subjects.length ? data.subjects.map(subject => { const count = data.homework.filter(item => item.subjectId === subject.id && !item.done).length; return `<article class="card subject-card"><span class="subject-icon" style="--subject-color:${subject.color}">${escape(subject.icon || '•')}</span><div><h3>${escape(subjectName(subject))}</h3><small>${t('{count} open tasks', { count })}</small></div><div class="row-menu"><button class="mini-button" data-action="edit-subject" data-id="${subject.id}">✎</button><button class="mini-button delete" data-action="delete-subject" data-id="${subject.id}">×</button></div></article>`; }).join('') : empty('No subjects yet', 'Add a subject to organize your work.', 'add-subject', 'Add subject')}</section>`;
+    return `${pageHeader('ORGANIZE', 'Subjects', 'Create reusable subjects for homework, notes, grades, and events.', button('＋ Add subject', 'add-subject'))}<section class="subject-grid">${data.subjects.length ? data.subjects.map(subject => { const count = data.homework.filter(item => item.subjectId === subject.id && !item.done).length; return `<article class="card subject-card"><span class="subject-icon" style="--subject-color:${subject.color}">${subjectIcon(subject.icon || 'book')}</span><div><h3>${escape(subjectName(subject))}</h3><small>${t('{count} open tasks', { count })}</small></div><div class="row-menu"><button class="mini-button" data-action="edit-subject" data-id="${subject.id}">✎</button><button class="mini-button delete" data-action="delete-subject" data-id="${subject.id}">×</button></div></article>`; }).join('') : empty('No subjects yet', 'Add a subject to organize your work.', 'add-subject', 'Add subject')}</section>`;
   }
 
   /* goals, friends, timer, statistics */
@@ -724,7 +812,7 @@
     const stage = rot === 0 ? 'fresh' : rot < 35 ? 'speckled' : rot < 70 ? 'bruised' : 'rotten';
     return { issues, rot, stage };
   }
-  function renderGoalHealth() {
+  function renderBananaHealth() {
     const health = bananaHealth();
     const freshness = 100 - health.rot;
     const status = health.stage === 'fresh' ? 'Fresh and ready' : health.stage === 'speckled' ? 'A few spots need attention' : health.stage === 'bruised' ? 'Time for a reset' : 'Needs attention now';
@@ -733,10 +821,10 @@
       : 'Everything is up to date. Keep this rhythm going and your banana will stay fresh.';
     const actionButtons = health.issues.slice(0, 4).map(issue => `<button class="banana-health-action ${issue.kind}" data-action="${issue.action}" data-id="${escape(issue.id)}" title="${escape(issue.title)}"><span>${issue.kind === 'grade' ? '↗' : '✓'}</span><b>${issue.label}</b><small>${escape(issue.title)}</small></button>`).join('');
     const remaining = health.issues.length - 4;
-    return `<article class="card goal-health goal-health-${health.stage}" style="--banana-rot:${(health.rot / 100).toFixed(2)}"><div class="goal-health-copy"><p class="eyebrow">GOAL HEALTH</p><h2>${status}</h2><p>${summary}</p><div class="banana-health-meter"><div><span>Freshness</span><b>${freshness}%</b></div><div class="progress" style="--progress:${freshness}%"><span></span></div></div>${health.issues.length ? `<div class="banana-health-actions" aria-label="Items that affect banana health">${actionButtons}${remaining > 0 ? `<span class="banana-health-more">+${remaining} more to review</span>` : ''}</div>` : '<span class="banana-health-clear">✓ No overdue work or weak grades</span>'}</div><div class="goal-banana-stage" role="img" aria-label="${escape(`Banana freshness is ${freshness} percent: ${status}`)}"><svg class="goal-banana-art" viewBox="0 0 560 280" focusable="false" aria-hidden="true"><defs><linearGradient id="goalBananaFresh" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff59a"/><stop offset=".32" stop-color="#ffd847"/><stop offset="1" stop-color="#f0aa12"/></linearGradient><linearGradient id="goalBananaBruised" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#e6cb63"/><stop offset=".42" stop-color="#a77924"/><stop offset="1" stop-color="#6d451d"/></linearGradient><linearGradient id="goalBananaRotten" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#997936"/><stop offset=".48" stop-color="#5f4023"/><stop offset="1" stop-color="#38271d"/></linearGradient></defs><path class="goal-banana-shadow" d="M58 95C119 178 227 208 335 180c73-19 126-62 158-124l19 11c-27 78-92 137-174 160-114 33-235-6-294-96Z"/><path class="goal-banana-stem" d="m471 56 20-35 24 10-18 37"/><path class="goal-banana-skin" d="M55 81c46 69 137 113 231 105 86-7 159-56 192-129l29 13c-24 84-93 153-182 180-109 33-227-2-286-91-15-23-24-50-27-79Z"/><path class="goal-banana-highlight" d="M85 94c43 61 126 93 204 87 56-4 109-28 145-68-42 53-105 83-177 86-70 2-134-27-172-79Z"/><g class="goal-banana-spots"><circle cx="188" cy="164" r="13"/><circle cx="263" cy="184" r="10"/><circle cx="342" cy="159" r="16"/><circle cx="406" cy="124" r="9"/><circle cx="123" cy="131" r="7"/></g></svg></div></article>`;
+    return `<article class="card banana-health banana-health-${health.stage}" style="--banana-rot:${(health.rot / 100).toFixed(2)}"><div class="banana-health-copy"><p class="eyebrow">${t('STUDY RHYTHM')}</p><h2>${t(status)}</h2><p>${t(summary)}</p><div class="banana-health-meter"><div><span>${t('Freshness')}</span><b>${freshness}%</b></div><div class="progress" style="--progress:${freshness}%"><span></span></div></div>${health.issues.length ? `<div class="banana-health-actions" aria-label="${t('Items that affect banana health')}">${actionButtons}${remaining > 0 ? `<span class="banana-health-more">+${remaining} ${t('more to review')}</span>` : ''}</div>` : `<span class="banana-health-clear">✓ ${t('No overdue work or weak grades')}</span>`}</div><div class="banana-stage" role="img" aria-label="${escape(t('Banana freshness is {freshness} percent: {status}', { freshness, status: t(status) }))}"><svg class="banana-art" viewBox="0 0 560 280" focusable="false" aria-hidden="true"><defs><linearGradient id="bananaFresh" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff7a9"/><stop offset=".4" stop-color="#ffda47"/><stop offset="1" stop-color="#e9a018"/></linearGradient><linearGradient id="bananaBruised" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#d6c566"/><stop offset=".45" stop-color="#b17d2e"/><stop offset="1" stop-color="#6c4622"/></linearGradient><linearGradient id="bananaRotten" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#91723b"/><stop offset=".45" stop-color="#5f4229"/><stop offset="1" stop-color="#2f241e"/></linearGradient><radialGradient id="bananaRotPatch"><stop stop-color="#241b17" stop-opacity=".88"/><stop offset=".6" stop-color="#57351f" stop-opacity=".65"/><stop offset="1" stop-color="#724524" stop-opacity="0"/></radialGradient></defs><path class="banana-shadow" d="M58 95C119 178 227 208 335 180c73-19 126-62 158-124l19 11c-27 78-92 137-174 160-114 33-235-6-294-96Z"/><path class="banana-stem" d="m471 56 20-35 24 10-18 37"/><path class="banana-skin" d="M55 81c46 69 137 113 231 105 86-7 159-56 192-129l29 13c-24 84-93 153-182 180-109 33-227-2-286-91-15-23-24-50-27-79Z"/><path class="banana-highlight" d="M85 94c43 61 126 93 204 87 56-4 109-28 145-68-42 53-105 83-177 86-70 2-134-27-172-79Z"/><g class="banana-spots"><circle cx="188" cy="164" r="13"/><circle cx="263" cy="184" r="10"/><circle cx="342" cy="159" r="16"/><circle cx="406" cy="124" r="9"/><circle cx="123" cy="131" r="7"/></g><g class="banana-decay"><ellipse cx="327" cy="155" rx="50" ry="33"/><ellipse cx="199" cy="168" rx="27" ry="20"/><path d="M351 126c14 16 14 35 1 52M310 127c-10 16-11 34-2 50"/></g></svg></div></article>`;
   }
   function renderGoals() {
-    return `${pageHeader('MILESTONES', 'Goals', 'Turn the things you want to achieve into visible progress.', button('＋ Add goal', 'add-goal'))}${renderGoalHealth()}<article class="card goal-list-card"><div class="card-head"><h2>In progress</h2></div>${data.goals.length ? `<div class="goal-list">${data.goals.map(goal => `<div class="goal-row"><button class="check ${Number(goal.progress) >= 100 ? 'done' : ''}" data-action="goal-complete" data-id="${goal.id}">✓</button><div><b>${escape(goal.title)}</b><small>${goal.targetDate ? t('Target {date}', { date: formatDate(goal.targetDate) }) : t('No target date')}</small><div class="progress" style="--progress:${clamp(goal.progress,0,100)}%"><span></span></div></div><span class="goal-percent">${clamp(goal.progress,0,100)}%</span><div class="row-menu"><button class="mini-button" data-action="edit-goal" data-id="${goal.id}">✎</button><button class="mini-button delete" data-action="delete-goal" data-id="${goal.id}">×</button></div></div>`).join('')}</div>` : empty('Set your first goal', 'A goal can be as small as revising one chapter.', 'add-goal', 'Add goal')}</article>`;
+    return `${pageHeader('MILESTONES', 'Goals', 'Turn the things you want to achieve into visible progress.', button('＋ Add goal', 'add-goal'))}${renderBananaHealth()}<article class="card goal-list-card"><div class="card-head"><h2>In progress</h2></div>${data.goals.length ? `<div class="goal-list">${data.goals.map(goal => `<div class="goal-row"><button class="check ${Number(goal.progress) >= 100 ? 'done' : ''}" data-action="goal-complete" data-id="${goal.id}">✓</button><div><b>${escape(goal.title)}</b><small>${goal.targetDate ? t('Target {date}', { date: formatDate(goal.targetDate) }) : t('No target date')}</small><div class="progress" style="--progress:${clamp(goal.progress,0,100)}%"><span></span></div></div><span class="goal-percent">${clamp(goal.progress,0,100)}%</span><div class="row-menu"><button class="mini-button" data-action="edit-goal" data-id="${goal.id}">✎</button><button class="mini-button delete" data-action="delete-goal" data-id="${goal.id}">×</button></div></div>`).join('')}</div>` : empty('Set your first goal', 'A goal can be as small as revising one chapter.', 'add-goal', 'Add goal')}</article>`;
   }
   function renderFriends() {
     const friendsById = new Map(data.friends.map(friend => [friend.id, friend]));
@@ -762,7 +850,20 @@
     return `${pageHeader('YOUR PROGRESS', 'Statistics', 'Small habits leave a useful trail.')}<section class="overview-grid"><article class="card"><span class="overview-label">TOTAL FOCUS</span><strong class="overview-number">${formatMinutes(data.stats.studyMinutes)}</strong><span class="overview-label">All recorded sessions</span></article><article class="card"><span class="overview-label">TASK COMPLETION</span><strong class="overview-number">${rate}%</strong><span class="overview-label">${t('{count} tasks complete', { count: data.homework.filter(item => item.done).length })}</span></article><article class="card"><span class="overview-label">FOCUS SESSIONS</span><strong class="overview-number">${data.timer.completedSessions || 0}</strong><span class="overview-label">Keep the streak alive</span></article></section><article class="card" style="margin-top:14px"><div class="card-head"><h2>Focus time this week</h2><span class="chip">Minutes</span></div><div class="stat-bars">${days.map(day => `<div class="bar-row"><span>${day.label}</span><div class="progress" style="--progress:${Math.round(day.minutes / max * 100)}%"><span></span></div><b>${day.minutes}m</b></div>`).join('')}</div></article>`;
   }
   function renderSettings() {
-    return `${pageHeader('PREFERENCES', 'Settings', 'Every change on this page saves automatically.')}<section class="settings-layout"><article class="card settings-card"><h2>Appearance</h2><p>Changes appear immediately, so you can see what feels right.</p><div class="setting-row"><div><b>Theme</b><small>Light, dark, or match your device</small></div><select id="themeSelect" class="input" style="max-width:120px"><option value="light" ${data.profile.theme === 'light' ? 'selected' : ''}>Light</option><option value="dark" ${data.profile.theme === 'dark' ? 'selected' : ''}>Dark</option><option value="system" ${data.profile.theme === 'system' ? 'selected' : ''}>System</option></select></div><div class="setting-row"><div><b>Accent color</b><small>Applied across the whole app</small></div></div><div id="settingsAccents" class="accent-row"></div><div class="setting-row"><div><b>Clock format</b><small>Dashboard local time</small></div><select id="clockFormatSelect" class="input" style="max-width:120px"><option value="24" ${data.profile.clockFormat === '24' ? 'selected' : ''}>24-hour</option><option value="12" ${data.profile.clockFormat === '12' ? 'selected' : ''}>12-hour</option></select></div></article><article class="card settings-card language-settings-card"><h2>Language preference</h2><p>Choose the language used throughout BananaBoard.</p><label class="field-label" for="languageSelect">Language</label><select id="languageSelect" class="input">${languageOptions()}</select><p class="help">Changes are applied after a short setup moment.</p></article><article class="card settings-card"><h2>Profile & grades</h2><p>Your profile and grade preferences are saved securely to your account.</p><label class="field-label" for="profileNameInput">Display name</label><input id="profileNameInput" class="input" maxlength="40" value="${escape(data.profile.name)}"><label class="field-label" for="settingsPhoto">Profile picture</label><input id="settingsPhoto" class="input photo-input" type="file" accept="image/*"><label class="field-label" for="gradeSystemSelect">Grade system</label><select id="gradeSystemSelect" class="input"><option value="numeric" ${data.profile.gradeSystem === 'numeric' ? 'selected' : ''}>Number scale (1 is best · 6 is worst)</option><option value="percentage" ${data.profile.gradeSystem === 'percentage' ? 'selected' : ''}>Percentage (0–100%)</option><option value="letter" ${data.profile.gradeSystem === 'letter' ? 'selected' : ''}>Letter (A–F)</option></select><p class="help">Changes save automatically.</p></article><article class="card settings-card"><h2>Account</h2><p>Change your email address, display name, or password.</p>${button('Manage account', 'manage-account', 'secondary full')}<button class="button danger full account-logout" data-action="log-out">Log out</button></article><article class="card settings-card"><h2>Backup</h2><p>Export your dashboard to a private JSON file, or import it later in the same account.</p><div class="setting-row"><div><b>Export data</b><small>Download all BananaBoard data</small></div>${button('Export','export-data','secondary')}</div><div class="setting-row"><div><b>Import data</b><small>Replace data from a previous export</small></div>${button('Import','import-data','secondary')}</div></article><article class="card settings-card"><h2>Reset</h2><p>Clear this account’s board. This cannot be undone.</p>${button('Clear all data','reset-data','danger full')}</article></section>`;
+    const gradeOptions = `<option value="numeric" ${data.profile.gradeSystem === 'numeric' ? 'selected' : ''}>${t('Number scale (1 is best · 6 is worst)')}</option><option value="percentage" ${data.profile.gradeSystem === 'percentage' ? 'selected' : ''}>${t('Percentage (0–100%)')}</option><option value="letter" ${data.profile.gradeSystem === 'letter' ? 'selected' : ''}>${t('Letter (A–F)')}</option>`;
+    return `${pageHeader(t('PREFERENCES'), t('Settings'), t('Every change on this page saves automatically.'))}
+      <section class="settings-layout">
+        <article class="card settings-card"><h2>${t('Appearance')}</h2><p>${t('Changes appear immediately, so you can see what feels right.')}</p>
+          <div class="setting-row"><div><b>${t('Theme')}</b><small>${t('Light, dark, or match your device')}</small></div><select id="themeSelect" class="input" style="max-width:120px"><option value="light" ${data.profile.theme === 'light' ? 'selected' : ''}>${t('Light')}</option><option value="dark" ${data.profile.theme === 'dark' ? 'selected' : ''}>${t('Dark')}</option><option value="system" ${data.profile.theme === 'system' ? 'selected' : ''}>${t('System')}</option></select></div>
+          <div class="setting-row"><div><b>${t('Accent color')}</b><small>${t('Applied across the whole app')}</small></div></div><div id="settingsAccents" class="accent-row"></div>
+          <div class="setting-row"><div><b>${t('Clock format')}</b><small>${t('Dashboard local time')}</small></div><select id="clockFormatSelect" class="input" style="max-width:120px"><option value="24" ${data.profile.clockFormat === '24' ? 'selected' : ''}>${t('24-hour')}</option><option value="12" ${data.profile.clockFormat === '12' ? 'selected' : ''}>${t('12-hour')}</option></select></div>
+        </article>
+        <article class="card settings-card language-settings-card"><h2>${t('Language preference')}</h2><p>${t('Choose the language used throughout BananaBoard.')}</p><label class="field-label" for="languageSelect">${t('Language')}</label><select id="languageSelect" class="input">${settingsLanguageOptions()}</select><p class="help">${t('Changes are applied after a short setup moment.')}</p></article>
+        <article class="card settings-card"><h2>${t('Profile & grades')}</h2><p>${t('Your profile and grade preferences are saved securely to your account.')}</p><label class="field-label" for="profileNameInput">${t('Display name')}</label><input id="profileNameInput" class="input" maxlength="40" value="${escape(data.profile.name)}"><label class="field-label" for="gradeSystemSelect">${t('Grade system')}</label><select id="gradeSystemSelect" class="input">${gradeOptions}</select><p class="help">${t('Choose a language and grade system during account creation, or update them here any time.')}</p></article>
+        <article class="card settings-card"><h2>${t('Account')}</h2><p>${t('Change your email address, display name, or password.')}</p>${button(t('Manage account'), 'manage-account', 'secondary full')}<button class="button danger full account-logout" data-action="log-out">${t('Log out')}</button></article>
+        <article class="card settings-card"><h2>${t('Backup')}</h2><p>${t('Export your dashboard to a private JSON file, or import it later in the same account.')}</p><div class="setting-row"><div><b>${t('Export data')}</b><small>${t('Download all BananaBoard data')}</small></div>${button(t('Export'), 'export-data', 'secondary')}</div><div class="setting-row"><div><b>${t('Import data')}</b><small>${t('Replace data from a previous export')}</small></div>${button(t('Import'), 'import-data', 'secondary')}</div></article>
+        <article class="card settings-card"><h2>${t('Reset')}</h2><p>${t('Clear this account’s board. This cannot be undone.')}</p>${button(t('Clear all data'), 'reset-data', 'danger full')}</article>
+      </section>`;
   }
   function renderSearch() {
     const query = ui.searchQuery?.trim().toLowerCase() || '';
@@ -783,11 +884,19 @@
   function parseTime(value) { const [hours = '0', minutes = '0'] = String(value || '00:00').split(':'); return { hours: clamp(Number(hours) || 0, 0, 23), minutes: clamp(Number(minutes) || 0, 0, 59) }; }
   function timeLabel(value) { if (!value) return t('Add a time'); const { hours, minutes } = parseTime(value); if (data.profile.clockFormat === '12') { const hour = hours % 12 || 12; return `${hour}:${String(minutes).padStart(2, '0')} ${hours >= 12 ? 'PM' : 'AM'}`; } return `${String(hours || 24).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`; }
   function timeField(name, label, value = '') { return `<div class="field-label"><span class="field-control-title">${label} <span class="help">(optional)</span></span><input type="hidden" name="${name}" value="${escape(value)}"><button class="value-picker ${value ? 'selected' : ''}" type="button" data-action="time-picker" data-target="${name}" data-time-target="${name}"><span>${timeLabel(value)}</span><b>⌄</b></button></div>`; }
-  function iconField(value = '•') { return `<div class="field-label"><span class="field-control-title">Icon</span><input type="hidden" name="icon" value="${escape(value)}"><button class="value-picker icon-value-picker selected" type="button" data-action="icon-picker" data-icon-target="icon"><span class="icon-value">${escape(value)}</span><span>${escape(value)}</span><b>⌄</b></button></div>`; }
+  function iconField(value = 'book', label = 'Icon') {
+    const iconLabel = subjectIconOptions.find(([id]) => id === value)?.[1] || value || 'book';
+    return `<div class="field-label"><span class="field-control-title">${t(label)}</span><input type="hidden" name="icon" value="${escape(value)}"><button class="value-picker icon-value-picker selected" type="button" data-action="icon-picker" data-icon-target="icon"><span class="icon-value">${subjectIcon(value)}</span><span>${escape(t(iconLabel))}</span><b>⌄</b></button></div>`;
+  }
   function openModal(title, body, formName, submitText = 'Save') {
     modalRoot.innerHTML = `<div class="modal-backdrop"><form class="modal" data-form="${formName}"><div class="modal-head"><h2>${title}</h2><button class="icon-button" type="button" data-action="close-modal" aria-label="Close">×</button></div>${body}<div id="datePickerHolder"></div><div id="timePickerHolder"></div><div id="iconPickerHolder"></div><div class="modal-actions"><button class="button secondary" type="button" data-action="close-modal">Cancel</button><button class="button primary" type="submit">${submitText}</button></div></form></div>`;
     localizeTree(modalRoot);
     const firstInput = el('input:not([type="hidden"]), textarea, select', modalRoot); if (firstInput) window.setTimeout(() => firstInput.focus(), 40);
+  }
+  function showReleaseNotes() {
+    if (data.profile.seenReleaseVersion === APP_VERSION || ui.releaseNotesVisible || modalRoot.children.length) return;
+    ui.releaseNotesVisible = true;
+    modalRoot.innerHTML = `<div class="modal-backdrop release-notes-backdrop"><section class="modal release-notes-modal" role="dialog" aria-modal="true" aria-labelledby="releaseNotesTitle"><div class="modal-head"><div><p class="eyebrow">BANANABOARD ${APP_VERSION}</p><h2 id="releaseNotesTitle">What’s new</h2></div><button class="icon-button" type="button" data-action="dismiss-release-notes" aria-label="Close release notes">×</button></div><p class="release-notes-intro">A more organized, more personal BananaBoard is here.</p><ul class="release-notes-list"><li><b>Reminder groups</b><span>Organize related reminders together, give each group its own color and icon, and add reminders directly where they belong.</span></li><li><b>Language that follows you</b><span>Choose your language and grade system when creating an account, then keep BananaBoard matched to your device language or set it manually.</span></li><li><b>Clearer, native icons</b><span>Navigation, subjects, and settings now use crisp built-in icons instead of emoji.</span></li><li><b>Better on every screen</b><span>Phone agenda cards, calendar markers, the vertical Banana health view, and note controls have all been refined for smaller displays.</span></li></ul><div class="modal-actions"><button class="button primary" type="button" data-action="dismiss-release-notes">Explore BananaBoard</button></div></section></div>`;
   }
   async function openAccountModal() {
     try {
@@ -813,7 +922,14 @@
       window.location.assign('/auth');
     } catch (error) { toast(error.message || 'Could not log out.', 'error'); }
   }
-  function closeModal() { modalRoot.innerHTML = ''; }
+  function closeModal() {
+    if (ui.releaseNotesVisible) {
+      data.profile.seenReleaseVersion = APP_VERSION;
+      ui.releaseNotesVisible = false;
+      save();
+    }
+    modalRoot.innerHTML = '';
+  }
   function openDatePicker(target) {
     const input = el(`[name="${target}"]`, modalRoot);
     ui.datePickerTarget = target;
@@ -863,11 +979,10 @@
   }
   function renderIconPicker() {
     const holder = el('#iconPickerHolder'); if (!holder) return;
-    const icons = ['•','∑','π','√','∞','A','あ','⚗','⚛','⌘','⌁','♜','♟','✦','★','◈','◇','♫','♪','⚽','⌂','✎','✐','⚙','☼','☾','☁','☂','☘','✿','☕','✈','⚑','⌛','◷','☑','⚡','♥','☮','☯','✉','☏','☠','♞','♛','⚓','♬'];
-    holder.innerHTML = `<div class="icon-picker-panel"><b>Choose a subject icon</b><div class="icon-choice-grid">${icons.map(icon => `<button type="button" class="icon-choice" data-action="icon-select" data-icon="${icon}">${icon}</button>`).join('')}</div><div class="custom-icon-row"><input id="customIconInput" class="input" maxlength="8" placeholder="Custom emoji, letter, or symbol"><button type="button" class="button secondary" data-action="icon-custom">Use custom</button></div></div>`;
+    holder.innerHTML = `<div class="icon-picker-panel"><b>${t('Choose a subject icon')}</b><div class="icon-choice-grid">${subjectIconOptions.map(([icon, label]) => `<button type="button" class="icon-choice" data-action="icon-select" data-icon="${icon}" title="${escape(t(label))}" aria-label="${escape(t(label))}">${subjectIcon(icon)}</button>`).join('')}</div><div class="custom-icon-row"><input id="customIconInput" class="input" maxlength="8" placeholder="${escape(t('Custom letter or symbol'))}"><button type="button" class="button secondary" data-action="icon-custom">${t('Use custom')}</button></div></div>`;
     localizeTree(holder);
   }
-  function selectIcon(icon) { const chosen = String(icon || '•').trim() || '•'; const input = el('[name="icon"]', modalRoot); if (input) input.value = chosen; const button = el('[data-icon-target="icon"]', modalRoot); if (button) { const preview = el('.icon-value', button); const label = preview?.nextElementSibling; if (preview) preview.textContent = chosen; if (label) label.textContent = chosen; } const holder = el('#iconPickerHolder'); if (holder) holder.innerHTML = ''; }
+  function selectIcon(icon) { const chosen = String(icon || 'book').trim() || 'book'; const input = el('[name="icon"]', modalRoot); if (input) input.value = chosen; const button = el('[data-icon-target="icon"]', modalRoot); if (button) { const preview = el('.icon-value', button); const label = preview?.nextElementSibling; if (preview) preview.innerHTML = subjectIcon(chosen); if (label) label.textContent = t(subjectIconOptions.find(([id]) => id === chosen)?.[1] || chosen); } const holder = el('#iconPickerHolder'); if (holder) holder.innerHTML = ''; }
   function openHomeworkModal(item) {
     item = item || { title: '', subjectId: '', due: '', priority: 'medium', description: '' };
     openModal(item.id ? 'Edit homework' : 'New homework', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Title<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="e.g. Finish algebra worksheet"></label><label class="field-label">Subject<select class="input" name="subjectId">${subjectOptions(item.subjectId)}</select></label>${dateField('due', 'Due date', item.due || '', false, true)}<label class="field-label">Priority<select class="input" name="priority"><option value="low" ${item.priority === 'low' ? 'selected' : ''}>Low</option><option value="medium" ${item.priority === 'medium' ? 'selected' : ''}>Medium</option><option value="high" ${item.priority === 'high' ? 'selected' : ''}>High</option></select></label><label class="field-label wide">Details <span class="help">(optional)</span><textarea class="textarea" name="description" placeholder="What do you need to do?">${escape(item.description || '')}</textarea></label></div>`, 'homework');
@@ -876,9 +991,13 @@
     item = item || { title: '', date: '', time: '', subjectId: '', color: data.profile.accent, description: '' };
     openModal(item.id ? 'Edit event' : 'New event', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Title<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="e.g. Biology test"></label>${dateField('date', 'Date', item.date || '', false, true)}<label class="field-label">Time <span class="help">(optional)</span><input class="input" name="time" type="time" value="${item.time || ''}"></label><label class="field-label">Subject<select class="input" name="subjectId">${subjectOptions(item.subjectId)}</select></label><label class="field-label">Color<input class="input" name="color" type="color" value="${item.color || data.profile.accent}"></label><label class="field-label wide">Details <span class="help">(optional)</span><textarea class="textarea" name="description">${escape(item.description || '')}</textarea></label></div>`, 'event');
   }
-  function openReminderModal(item) {
-    item = item || { title: '', date: '', time: '', repeat: 'never', note: '' };
-    openModal(item.id ? 'Edit reminder' : 'New reminder', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Reminder<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="e.g. Bring calculator to class"></label>${dateField('date', 'Reminder date', item.date || '', false, true)}${timeField('time', 'Time', item.time || '')}<label class="field-label">Repeat<select class="input" name="repeat"><option value="never" ${(item.repeat || 'never') === 'never' ? 'selected' : ''}>Does not repeat</option><option value="daily" ${item.repeat === 'daily' ? 'selected' : ''}>Every day</option><option value="weekly" ${item.repeat === 'weekly' ? 'selected' : ''}>Every week</option><option value="monthly" ${item.repeat === 'monthly' ? 'selected' : ''}>Every month</option></select></label><label class="field-label wide">Note <span class="help">(optional)</span><textarea class="textarea" name="note" placeholder="Add anything useful to remember…">${escape(item.note || '')}</textarea></label></div>`, 'reminder');
+  function openReminderModal(item, groupId = '') {
+    item = item || { title: '', date: '', time: '', repeat: 'never', note: '', groupId };
+    openModal(item.id ? 'Edit reminder' : 'New reminder', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Reminder<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="e.g. Bring calculator to class"></label><label class="field-label">${t('Reminder group')}<select class="input" name="groupId">${reminderGroupOptions(item.groupId || groupId)}</select></label>${dateField('date', 'Reminder date', item.date || '', false, true)}${timeField('time', 'Time', item.time || '')}<label class="field-label">Repeat<select class="input" name="repeat"><option value="never" ${(item.repeat || 'never') === 'never' ? 'selected' : ''}>Does not repeat</option><option value="daily" ${item.repeat === 'daily' ? 'selected' : ''}>Every day</option><option value="weekly" ${item.repeat === 'weekly' ? 'selected' : ''}>Every week</option><option value="monthly" ${item.repeat === 'monthly' ? 'selected' : ''}>Every month</option></select></label><label class="field-label wide">Note <span class="help">(optional)</span><textarea class="textarea" name="note" placeholder="Add anything useful to remember…">${escape(item.note || '')}</textarea></label></div>`, 'reminder');
+  }
+  function openReminderGroupModal(item) {
+    item = item || { name: '', icon: 'bell', color: data.profile.accent };
+    openModal(item.id ? t('Edit reminder group') : t('New reminder group'), `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">${t('Group name')}<input class="input" name="name" required maxlength="40" value="${escape(item.name)}" placeholder="${escape(t('e.g. School mornings'))}"></label>${iconField(item.icon || 'bell')}<label class="field-label">${t('Color')}<input class="input" name="color" type="color" value="${escape(item.color || data.profile.accent)}"></label></div><p class="help">${t('Add reminders to this group now or whenever you create one.')}</p>`, 'reminder-group', item.id ? t('Save') : t('Create group'));
   }
   function openNoteModal(item) {
     const note = item ? { ...item } : { id: uid(), title: '', subjectId: '', homeworkId: '', notebookId: ui.activeNotebookId || '', content: '', updatedAt: Date.now() };
@@ -1196,8 +1315,8 @@
     openModal(item.id ? 'Edit grade' : 'Add grade', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Assessment<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="e.g. Unit test"></label><label class="field-label">Subject<select class="input" name="subjectId">${subjectOptions(item.subjectId)}</select></label><label class="field-label">Grade<input class="input" name="value" required maxlength="10" value="${escape(item.value)}" placeholder="${gradePlaceholder()}"></label>${dateField('date', 'Date', item.date || '', true)}</div>`, 'grade');
   }
   function openSubjectModal(item) {
-    item = item || { name: '', icon: '•', color: data.profile.accent };
-    openModal(item.id ? 'Edit subject' : 'New subject', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Name<input class="input" name="name" required maxlength="40" value="${escape(item.name)}" placeholder="e.g. History"></label>${iconField(item.icon || '•')}<label class="field-label">Color<input class="input" name="color" type="color" value="${item.color || data.profile.accent}"></label></div>`, 'subject');
+    item = item || { name: '', icon: 'book', color: data.profile.accent };
+    openModal(item.id ? 'Edit subject' : 'New subject', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Name<input class="input" name="name" required maxlength="40" value="${escape(item.name)}" placeholder="e.g. History"></label>${iconField(item.icon || 'book')}<label class="field-label">Color<input class="input" name="color" type="color" value="${item.color || data.profile.accent}"></label></div>`, 'subject');
   }
   function openGoalModal(item) {
     item = item || { title: '', progress: 0, targetDate: '' };
@@ -1279,6 +1398,7 @@
       const scheduleChanged = !existing || existing.date !== payload.date || (existing.time || '') !== (payload.time || '');
       upsert('reminders', { ...payload, id: existingId, done: existing ? existing.done : false, notifiedKey: scheduleChanged ? '' : (existing?.notifiedKey || '') });
     }
+    if (form.dataset.form === 'reminder-group') upsert('reminderGroups', { ...payload, id: existingId, icon: payload.icon || 'bell', color: payload.color || data.profile.accent });
     if (form.dataset.form === 'note') upsert('notes', { ...payload, id: existingId, updatedAt: Date.now() });
     if (form.dataset.form === 'notebook') upsert('notebooks', { ...payload, id: existingId, name: payload.name.trim() || t('Untitled Notebook'), updatedAt: Date.now() });
     if (form.dataset.form === 'grade') {
@@ -1311,9 +1431,16 @@
     }
     save(); renderPage(); toast('Item deleted.');
   }
+  function deleteReminderGroup(id) {
+    const group = reminderGroupById(id); if (!group) return;
+    if (!window.confirm(t('Delete “{name}”? Its reminders will be kept without a group.', { name: group.name }))) return;
+    data.reminderGroups = data.reminderGroups.filter(item => item.id !== id);
+    data.reminders.forEach(reminder => { if (reminder.groupId === id) reminder.groupId = ''; });
+    save(); renderPage(); toast('Reminder group deleted.');
+  }
   function editItem(collection, id) {
     const item = data[collection].find(entry => entry.id === id); if (!item) return;
-    ({ homework: openHomeworkModal, events: openEventModal, reminders: openReminderModal, notes: openNoteModal, grades: openGradeModal, subjects: openSubjectModal, goals: openGoalModal, friends: openFriendModal, widgets: openWidgetModal }[collection])(item);
+    ({ homework: openHomeworkModal, events: openEventModal, reminders: openReminderModal, reminderGroups: openReminderGroupModal, notes: openNoteModal, grades: openGradeModal, subjects: openSubjectModal, goals: openGoalModal, friends: openFriendModal, widgets: openWidgetModal }[collection])(item);
   }
   function toggleHomework(id) {
     const item = data.homework.find(task => task.id === id); if (!item) return;
@@ -1346,7 +1473,7 @@
     if (document.visibilityState !== 'visible' || el('#app')?.classList.contains('hidden')) return false;
     if (els('.banana-notice', toastRoot).some(notice => notice.dataset.noticeTag === tag)) return true;
     const notice = document.createElement('article'); notice.className = 'banana-notice'; notice.dataset.noticeTag = tag;
-    notice.innerHTML = `<img src="/static/icon-192.png?v=20260822-4" alt=""><div><small>BananaBoard</small><b>${escape(brandText(t(title)))}</b><p>${escape(brandText(t(body)))}</p></div><button type="button" aria-label="${escape(t('Close'))}">×</button>`;
+    notice.innerHTML = `<img src="/static/icon-192.png?v=20260918-1" alt=""><div><small>BananaBoard</small><b>${escape(brandText(t(title)))}</b><p>${escape(brandText(t(body)))}</p></div><button type="button" aria-label="${escape(t('Close'))}">×</button>`;
     notice.querySelector('button')?.addEventListener('click', () => notice.remove()); toastRoot.append(notice); window.setTimeout(() => notice.remove(), 9000);
     return true;
   }
@@ -1444,7 +1571,7 @@
         if (!window.confirm(`Replace the current ${APP_NAME} data with this backup?`)) return;
         const defaults = defaultData();
         const { notificationsEnabled: _legacyNotifications, ...incomingProfile } = incoming.profile;
-        data = { ...defaults, ...Object.fromEntries(Object.entries(incoming).filter(([key]) => key !== 'account')), profile: { ...defaults.profile, ...incomingProfile }, timer: { ...defaults.timer, ...(incoming.timer || {}) }, stats: { ...defaults.stats, ...(incoming.stats || {}) }, reminders: Array.isArray(incoming.reminders) ? incoming.reminders : [], widgets: Array.isArray(incoming.widgets) ? incoming.widgets : [], notebooks: Array.isArray(incoming.notebooks) ? incoming.notebooks : [], noteHighlights: Array.isArray(incoming.noteHighlights) ? incoming.noteHighlights : [] };
+        data = { ...defaults, ...Object.fromEntries(Object.entries(incoming).filter(([key]) => key !== 'account')), profile: { ...defaults.profile, ...incomingProfile }, timer: { ...defaults.timer, ...(incoming.timer || {}) }, stats: { ...defaults.stats, ...(incoming.stats || {}) }, reminders: Array.isArray(incoming.reminders) ? incoming.reminders : [], reminderGroups: Array.isArray(incoming.reminderGroups) ? incoming.reminderGroups : [], widgets: Array.isArray(incoming.widgets) ? incoming.widgets : [], notebooks: Array.isArray(incoming.notebooks) ? incoming.notebooks : [], noteHighlights: Array.isArray(incoming.noteHighlights) ? incoming.noteHighlights : [] };
         if (data.profile.gradeSystem === 'german') data.profile.gradeSystem = 'numeric';
         save(); applyAppearance(); ui.page = 'dashboard'; resetTimer(false); renderPage(); toast('Backup imported successfully.', 'success');
       } catch { toast('That file is not a valid StudyFlow backup.', 'error'); }
@@ -1473,34 +1600,30 @@
     const id = target.dataset.id;
     if (!action) return false;
     const maps = {
-      'add-homework': () => openHomeworkModal(), 'add-event': () => openEventModal(), 'add-reminder': () => openReminderModal(), 'add-note': () => openNoteModal(), 'add-grade': () => openGradeModal(), 'add-subject': () => openSubjectModal(), 'add-goal': () => openGoalModal(), 'add-friend': () => openFriendModal(),
+      'add-homework': () => openHomeworkModal(), 'add-event': () => openEventModal(), 'add-reminder': () => openReminderModal(), 'add-reminder-group': () => openReminderGroupModal(), 'add-group-reminder': () => openReminderModal(null, id), 'edit-reminder-group': () => openReminderGroupModal(reminderGroupById(id)), 'add-note': () => openNoteModal(), 'add-grade': () => openGradeModal(), 'add-subject': () => openSubjectModal(), 'add-goal': () => openGoalModal(), 'add-friend': () => openFriendModal(),
       'new-notebook': () => openNotebookModal(), 'edit-notebook': () => openNotebookModal(notebookById(id)), 'open-notebook': () => openNotebook(id), 'open-loose-notes': () => openNotebook(''), 'back-notes-library': backToNotes, 'new-notebook-note': newNotebookNote, 'open-note-editor': () => { const note = data.notes.find(entry => entry.id === id); if (note) openNoteModal(note); }, 'exit-note-editor': exitNoteEditor, 'save-rich-note': saveRichNote, 'show-note-highlights': showNoteHighlights, 'back-to-notes': backToNotes, 'editor-command': () => runEditorCommand(target.dataset.command, target.dataset.value), 'editor-marker': saveEditorHighlight, 'editor-photo': openNoteImageModal, 'note-draw-tool': () => setNoteDrawingTool(target.dataset.tool), 'copy-lasso-drawing': copySelectedDrawing, 'paste-lasso-drawing': requestDrawingPaste, 'clear-note-drawing': clearNoteDrawing,
       'toggle-homework': () => toggleHomework(id), 'view-homework-photo': () => openHomeworkPhotoPreview(data.homework.find(item => item.id === id)), 'open-homework-note': () => openHomeworkNote(id), 'toggle-reminder': () => toggleReminder(id), 'homework-filter': () => { ui.homeworkFilter = target.dataset.filter; renderPage(); },
       'calendar-previous': () => { ui.month = new Date(ui.month.getFullYear(), ui.month.getMonth() - 1, 1); renderPage(); }, 'calendar-next': () => { ui.month = new Date(ui.month.getFullYear(), ui.month.getMonth() + 1, 1); renderPage(); }, 'calendar-today': () => { ui.month = new Date(new Date().getFullYear(), new Date().getMonth(), 1); ui.selectedDate = todayISO(); renderPage(); }, 'select-date': () => { ui.selectedDate = target.dataset.date; ui.month = new Date(`${ui.selectedDate}T12:00:00`); ui.month.setDate(1); renderPage(); },
       'timer-mode': () => changeTimerMode(target.dataset.mode), 'timer-start': toggleTimer, 'timer-reset': resetTimer, 'timer-skip': () => completeTimer(false), 'save-timer-settings': saveTimerSettings,
       'accent': () => applyAccent(target.dataset.color), 'setup-accent': () => { data.profile.accent = target.dataset.color; applyAppearance(); renderAccentChoices(el('#setupAccents'), true); },
       'date-picker': () => openDatePicker(target.dataset.target), 'date-picker-previous': () => { ui.datePickerMonth = new Date(ui.datePickerMonth.getFullYear(), ui.datePickerMonth.getMonth() - 1, 1); renderDatePicker(); }, 'date-picker-next': () => { ui.datePickerMonth = new Date(ui.datePickerMonth.getFullYear(), ui.datePickerMonth.getMonth() + 1, 1); renderDatePicker(); }, 'date-select': () => selectPickerDate(target.dataset.date), 'date-picker-close': () => { const holder = el('#datePickerHolder'); if (holder) holder.innerHTML = ''; }, 'icon-picker': renderIconPicker, 'icon-select': () => selectIcon(target.dataset.icon), 'icon-custom': () => selectIcon(el('#customIconInput', modalRoot)?.value),
-      'send-request': () => sendFriendRequest(id), 'cancel-request': () => cancelFriendRequest(id), 'create-widget': () => openWidgetModal(), 'add-widget': () => addWidget(target.dataset.widget), 'edit-widget': () => editItem('widgets', id), 'toggle-widget': () => toggleWidget(id), 'toggle-widget-stack': toggleWidgetStack, 'move-widget': () => moveWidget(id, target.dataset.position), 'choose-settings-photo': () => el('#settingsPhoto').click(),
+      'send-request': () => sendFriendRequest(id), 'cancel-request': () => cancelFriendRequest(id), 'create-widget': () => openWidgetModal(), 'add-widget': () => addWidget(target.dataset.widget), 'edit-widget': () => editItem('widgets', id), 'toggle-widget': () => toggleWidget(id), 'toggle-widget-stack': toggleWidgetStack, 'move-widget': () => moveWidget(id, target.dataset.position),
       'manage-account': openAccountModal, 'log-out': logOut,
       'export-data': exportData, 'import-data': () => el('#importInput').click(), 'reset-data': () => { if (window.confirm(`Clear every ${APP_NAME} item and start again?`)) { const profile = { ...data.profile }; data = defaultData(); data.profile = profile; save(); resetTimer(false); applyAppearance(); renderPage(); toast(`Your ${APP_NAME} data was cleared.`); } },
-      'close-modal': closeModal, 'goal-complete': () => { const goal = data.goals.find(entry => entry.id === id); if (goal) { goal.progress = Number(goal.progress) >= 100 ? 0 : 100; save(); renderPage(); toast(Number(goal.progress) ? 'Goal marked complete!' : 'Goal reopened.'); } }
+      'close-modal': closeModal, 'dismiss-release-notes': closeModal, 'goal-complete': () => { const goal = data.goals.find(entry => entry.id === id); if (goal) { goal.progress = Number(goal.progress) >= 100 ? 0 : 100; save(); renderPage(); toast(Number(goal.progress) ? 'Goal marked complete!' : 'Goal reopened.'); } }
     };
     if (action === 'delete-widget') { deleteItem('widgets', id); return true; }
+    if (action === 'delete-reminder-group') { deleteReminderGroup(id); return true; }
     if (action === 'delete-notebook') { deleteNotebook(id); return true; }
     if (action === 'edit-notebook') { openNotebookModal(notebookById(id)); return true; }
     if (action === 'delete-rich-note') { deleteRichNote(id); return true; }
     if (action === 'delete-note-highlight') { deleteNoteHighlight(id); return true; }
     if (action.startsWith('delete-')) { deleteItem({ 'delete-homework': 'homework', 'delete-event': 'events', 'delete-reminder': 'reminders', 'delete-note': 'notes', 'delete-grade': 'grades', 'delete-subject': 'subjects', 'delete-goal': 'goals', 'delete-friend': 'friends' }[action], id); return true; }
-    if (action.startsWith('edit-')) { editItem({ 'edit-homework': 'homework', 'edit-event': 'events', 'edit-reminder': 'reminders', 'edit-note': 'notes', 'edit-grade': 'grades', 'edit-subject': 'subjects', 'edit-goal': 'goals', 'edit-friend': 'friends', 'edit-widget': 'widgets' }[action], id); return true; }
+    if (action.startsWith('edit-')) { editItem({ 'edit-homework': 'homework', 'edit-event': 'events', 'edit-reminder': 'reminders', 'edit-reminder-group': 'reminderGroups', 'edit-note': 'notes', 'edit-grade': 'grades', 'edit-subject': 'subjects', 'edit-goal': 'goals', 'edit-friend': 'friends', 'edit-widget': 'widgets' }[action], id); return true; }
     if (maps[action]) { maps[action](); return true; }
     return false;
   }
   function closeSidebar() { el('#sidebar').classList.remove('open'); el('#scrim').classList.remove('open'); }
-  function readPhoto(file) {
-    if (!file) return Promise.resolve('');
-    if (!file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) return Promise.reject(new Error('Choose an image smaller than 2 MB.'));
-    return uploadImage(file);
-  }
   function setSetupStep(step) {
     if (!['welcome', 'discovery', 'personalize'].includes(step)) return;
     ui.setupStep = step;
@@ -1533,7 +1656,7 @@
   function setSetupLanguage(nextLanguage) {
     if (!LANGUAGE_OPTIONS.some(([code]) => code === nextLanguage)) return;
     ui.setupLanguage = nextLanguage;
-    data.profile.language = nextLanguage; save();
+    data.profile.language = nextLanguage; data.profile.languagePreference = 'manual'; save();
     applyLanguageContent();
     el('#setupLanguage').value = nextLanguage;
   }
@@ -1543,8 +1666,12 @@
     void spinner.offsetWidth;
     spinner.style.setProperty('animation', 'languageSpin .82s linear infinite', 'important');
   }
-  function setLanguageFromSettings(nextLanguage) {
-    if (!LANGUAGE_OPTIONS.some(([code]) => code === nextLanguage) || nextLanguage === language() || ui.languageTransitioning) return;
+  function setLanguageFromSettings(nextPreference) {
+    const automatic = nextPreference === 'auto';
+    const nextLanguage = automatic ? deviceLanguage() : nextPreference;
+    if ((!automatic && !LANGUAGE_OPTIONS.some(([code]) => code === nextLanguage)) || ui.languageTransitioning) return;
+    const nextLanguagePreference = automatic ? 'auto' : 'manual';
+    if (nextLanguage === language() && data.profile.languagePreference === nextLanguagePreference) return;
     ui.languageTransitioning = true;
     const screen = el('#languageScreen');
     el('#languageLoadingTitle').textContent = t('Setting language');
@@ -1552,7 +1679,7 @@
     screen.classList.remove('hidden');
     restartLanguageSpinner(screen);
     window.setTimeout(() => {
-      data.profile.language = nextLanguage; save();
+      data.profile.language = nextLanguage; data.profile.languagePreference = nextLanguagePreference; save();
       document.documentElement.lang = language();
       renderPage();
       el('#languageLoadingTitle').textContent = t('Setting language');
@@ -1571,10 +1698,7 @@
     el('#setupScreen').classList.add('hidden'); el('#personalizingScreen').classList.remove('hidden');
     const lines = ['Organizing your subjects…', 'Preparing your focus tools…', 'Making this space feel like yours…'].map(t); let index = 0;
     const cycle = window.setInterval(() => { index = (index + 1) % lines.length; el('#personalizingText').textContent = lines[index]; }, 620);
-    window.setTimeout(() => { window.clearInterval(cycle); el('#personalizingScreen').classList.add('hidden'); el('#app').classList.remove('hidden'); renderPage(); }, 1700);
-  }
-  async function updateProfilePhoto(file) {
-    try { data.profile.photo = await readPhoto(file); save(); renderNav(); toast('Profile picture updated.', 'success'); } catch (error) { toast(error.message || 'Could not update the picture.', 'error'); }
+    window.setTimeout(() => { window.clearInterval(cycle); el('#personalizingScreen').classList.add('hidden'); el('#app').classList.remove('hidden'); renderPage(); showReleaseNotes(); }, 1700);
   }
   function saveSettingFromControl(target) {
     if (target.id === 'themeSelect') { data.profile.theme = target.value; save(); applyAppearance(); toast('Theme updated.', 'success'); }
@@ -1634,7 +1758,6 @@
     el('#globalSearch').addEventListener('keydown', event => { if (event.key === 'Enter' && event.currentTarget.value.trim()) { event.preventDefault(); ui.page = 'search'; renderPage(); el('#globalSearch').value = ui.searchQuery; } });
     document.addEventListener('change', event => {
       saveSettingFromControl(event.target);
-      if (event.target.id === 'settingsPhoto') updateProfilePhoto(event.target.files[0]);
       if (event.target.id === 'noteBrushSelect') { ui.noteBrush = event.target.value; if (ui.noteBrush !== 'eraser') updateSelectedDrawingStyle('brush', ui.noteBrush); setNoteDrawingTool(ui.noteBrush === 'eraser' ? 'draw' : ui.noteTool); }
       if (event.target.id === 'noteDrawColor') { ui.noteDrawColor = event.target.value; updateSelectedDrawingStyle('color', ui.noteDrawColor); }
       if (event.target.id === 'noteDrawWidth') { ui.noteDrawWidth = clamp(Number(event.target.value) || 4, 1, 18); updateSelectedDrawingStyle('width', ui.noteDrawWidth); }
@@ -1674,8 +1797,9 @@
       root.innerHTML = `<main class="load-error"><h1>BananaBoard could not load</h1><p>${escape(error.message || 'Please refresh and try again.')}</p><a class="button primary" href="/auth">Sign in again</a></main>`;
       return;
     }
+    if (data.profile.languagePreference === 'auto' && data.profile.language !== deviceLanguage()) { data.profile.language = deviceLanguage(); save(); }
     applyAppearance(); applyLanguageContent(); initTimer(); bindEvents();
-    if (isNewUser()) { el('#setupScreen').classList.remove('hidden'); setupScreen(); } else { el('#setupScreen').classList.add('hidden'); el('#app').classList.remove('hidden'); renderPage(); }
+    if (isNewUser()) { el('#setupScreen').classList.remove('hidden'); setupScreen(); } else { el('#setupScreen').classList.add('hidden'); el('#app').classList.remove('hidden'); renderPage(); showReleaseNotes(); }
     tickClock(); window.setInterval(tickClock, 1000);
     checkScheduledNotifications(); window.setInterval(checkScheduledNotifications, 60000);
   }

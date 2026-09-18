@@ -5,46 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f4c53a">
     <title>Sign in · BananaBoard</title>
-    <link rel="icon" href="/static/favicon-32x32.png?v=20260822-5" sizes="32x32" type="image/png">
-    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=20260822-4">
-    <link rel="stylesheet" href="/static/style.css?v=20260822-4">
-    <style>#displayNameField[hidden], #passwordHelp[hidden], #authError[hidden] { display: none !important; }</style>
+    <link rel="icon" href="/static/favicon-32x32.png?v=20260918-1" sizes="32x32" type="image/png">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=20260918-1">
+    <link rel="stylesheet" href="/static/style.css?v=20260918-1">
+    <style>#displayNameField[hidden], #accountPreferences[hidden], #passwordHelp[hidden], #authError[hidden] { display: none !important; }</style>
   </head>
   <body class="auth-page">
     <main class="auth-shell">
       <section class="auth-brand" aria-label="BananaBoard">
-        <div class="auth-logo-orbit" aria-hidden="true"><img src="/static/icon-192.png?v=20260822-4" alt=""></div>
-        <p class="eyebrow">YOUR CALM STUDY SPACE</p>
+        <div class="auth-logo-orbit" aria-hidden="true"><img src="/static/icon-192.png?v=20260918-1" alt=""></div>
+        <p class="eyebrow" data-i18n="YOUR CALM STUDY SPACE">YOUR CALM STUDY SPACE</p>
         <h1>BananaBoard</h1>
-        <p>Plan your work, keep your notes together, and make steady progress.</p>
+        <p data-i18n="Plan your work, keep your notes together, and make steady progress.">Plan your work, keep your notes together, and make steady progress.</p>
       </section>
       <section class="auth-card card" aria-labelledby="authTitle">
-        <div class="auth-mode-tabs" role="tablist" aria-label="Account access">
-          <button type="button" class="auth-mode active" data-auth-mode="login" role="tab" aria-selected="true">Sign in</button>
-          <button type="button" class="auth-mode" data-auth-mode="register" role="tab" aria-selected="false">Create account</button>
+        <div class="auth-mode-tabs" role="tablist" aria-label="Account access" data-i18n-aria-label="Account access">
+          <button type="button" class="auth-mode active" data-auth-mode="login" role="tab" aria-selected="true" data-i18n="Sign in">Sign in</button>
+          <button type="button" class="auth-mode" data-auth-mode="register" role="tab" aria-selected="false" data-i18n="Create account">Create account</button>
         </div>
         <h2 id="authTitle">Welcome back</h2>
         <p id="authIntro" class="muted">Sign in to open your personal BananaBoard.</p>
         <form id="authForm" novalidate>
           <label id="displayNameField" class="field-label" hidden>
-            Display name
-            <input id="displayName" class="input" name="displayName" type="text" autocomplete="nickname" maxlength="40" placeholder="What should we call you?">
+            <span data-i18n="Display name">Display name</span>
+            <input id="displayName" class="input" name="displayName" type="text" autocomplete="nickname" maxlength="40" placeholder="What should we call you?" data-i18n-placeholder="What should we call you?">
           </label>
+          <div id="accountPreferences" class="auth-preferences" hidden>
+            <p class="field-control-title" data-i18n="Set your language and grade system now; you can change them later.">Set your language and grade system now; you can change them later.</p>
+            <div class="form-grid">
+              <label class="field-label">
+                <span data-i18n="Language">Language</span>
+                <select id="accountLanguage" class="input" name="language">
+                  <option value="en">English</option><option value="de">Deutsch</option><option value="tr">Türkçe</option><option value="ru">Русский</option><option value="uk">Українська</option><option value="es">Español</option>
+                </select>
+              </label>
+              <label class="field-label">
+                <span data-i18n="Grade system">Grade system</span>
+                <select id="accountGradeSystem" class="input" name="gradeSystem">
+                  <option value="numeric" data-i18n="Number scale (1 is best · 6 is worst)">Number scale (1 is best · 6 is worst)</option>
+                  <option value="percentage" data-i18n="Percentage (0–100%)">Percentage (0–100%)</option>
+                  <option value="letter" data-i18n="Letter (A–F)">Letter (A–F)</option>
+                </select>
+              </label>
+            </div>
+          </div>
           <label class="field-label">
-            Email address
+            <span data-i18n="Email address">Email address</span>
             <input id="email" class="input" name="email" type="email" autocomplete="email" inputmode="email" maxlength="320" required placeholder="you@example.com">
           </label>
           <label class="field-label">
-            Password
-            <input id="password" class="input" name="password" type="password" autocomplete="current-password" minlength="12" required placeholder="Your password">
+            <span data-i18n="Password">Password</span>
+            <input id="password" class="input" name="password" type="password" autocomplete="current-password" minlength="12" required placeholder="Your password" data-i18n-placeholder="Your password">
           </label>
-          <p id="passwordHelp" class="help" hidden>Use at least 12 characters to protect your account.</p>
+          <p id="passwordHelp" class="help" hidden data-i18n="Use at least 12 characters to protect your account.">Use at least 12 characters to protect your account.</p>
           <p id="authError" class="auth-error" role="alert" hidden></p>
           <button id="authSubmit" class="button primary full" type="submit">Sign in</button>
         </form>
-        <p class="auth-footnote">BananaBoard does not offer password recovery yet. Keep your password somewhere safe.</p>
+        <p class="auth-footnote" data-i18n="BananaBoard does not offer password recovery yet. Keep your password somewhere safe.">BananaBoard does not offer password recovery yet. Keep your password somewhere safe.</p>
       </section>
     </main>
-    <script src="/static/auth.js?v=20260822-4"></script>
+    <script src="/static/auth.js?v=20260918-1"></script>
   </body>
 </html>

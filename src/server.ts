@@ -29,7 +29,9 @@ const sessionUser = async (request: FastifyRequest, reply: FastifyReply): Promis
 const registrationSchema = z.object({
   email: z.string().trim().email().max(320),
   displayName: z.string().trim().min(1, 'Display name is required.').max(40),
-  password: z.string().min(12, 'Use at least 12 characters for your password.').max(256)
+  password: z.string().min(12, 'Use at least 12 characters for your password.').max(256),
+  language: z.enum(['en', 'de', 'tr', 'ru', 'uk', 'es']).optional(),
+  gradeSystem: z.enum(['numeric', 'percentage', 'letter']).optional()
 });
 const loginSchema = z.object({
   email: z.string().trim().email().max(320),
@@ -142,7 +144,7 @@ export function buildServer() {
       updatedAt: new Date()
     };
     await db.insert(users).values(user);
-    await createWorkspace(user);
+    await createWorkspace(user, { language: parsed.data.language, gradeSystem: parsed.data.gradeSystem });
     await createSession(reply, user.id);
     return reply.code(201).send({ user: { email: user.email, displayName: user.displayName } });
   });

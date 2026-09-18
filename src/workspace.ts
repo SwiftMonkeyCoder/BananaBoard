@@ -9,6 +9,7 @@ export interface WorkspaceData {
   subjects: WorkspaceRecord[];
   homework: WorkspaceRecord[];
   reminders: WorkspaceRecord[];
+  reminderGroups: WorkspaceRecord[];
   notes: WorkspaceRecord[];
   notebooks: WorkspaceRecord[];
   noteHighlights: WorkspaceRecord[];
@@ -21,7 +22,7 @@ export interface WorkspaceData {
   stats: JsonObject;
 }
 
-const collections = ['subjects', 'homework', 'reminders', 'notes', 'notebooks', 'noteHighlights', 'grades', 'events', 'goals', 'friends', 'widgets'] as const;
+const collections = ['subjects', 'homework', 'reminders', 'reminderGroups', 'notes', 'notebooks', 'noteHighlights', 'grades', 'events', 'goals', 'friends', 'widgets'] as const;
 type Collection = typeof collections[number];
 
 const isObject = (value: unknown): value is JsonObject => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -30,15 +31,25 @@ const recordArray = (value: unknown): WorkspaceRecord[] => Array.isArray(value)
   ? value.filter(isObject).filter(item => typeof item.id === 'string' && item.id.length > 0).map(item => ({ ...item, id: String(item.id) }))
   : [];
 
-export function defaultWorkspace(displayName: string): WorkspaceData {
+export type InitialWorkspacePreferences = {
+  language?: string;
+  gradeSystem?: string;
+};
+
+const supportedLanguages = new Set(['en', 'de', 'tr', 'ru', 'uk', 'es']);
+const supportedGradeSystems = new Set(['numeric', 'percentage', 'letter']);
+
+export function defaultWorkspace(displayName: string, preferences: InitialWorkspacePreferences = {}): WorkspaceData {
+  const language = supportedLanguages.has(preferences.language || '') ? preferences.language! : 'en';
+  const gradeSystem = supportedGradeSystems.has(preferences.gradeSystem || '') ? preferences.gradeSystem! : 'numeric';
   return {
-    profile: { name: displayName, photo: '', theme: 'light', accent: '#f4c53a', gradeSystem: 'numeric', clockFormat: '24', language: 'en', discoverySource: '' },
+    profile: { name: displayName, photo: '', theme: 'light', accent: '#f4c53a', gradeSystem, clockFormat: '24', language, languagePreference: 'manual', discoverySource: '' },
     subjects: [
-      { id: 'math', name: 'Mathematics', color: '#6c63ff', icon: '∑' },
-      { id: 'english', name: 'English', color: '#ec4899', icon: 'A' },
-      { id: 'science', name: 'Science', color: '#10b981', icon: '⚗' }
+      { id: 'math', name: 'Mathematics', color: '#6c63ff', icon: 'math' },
+      { id: 'english', name: 'English', color: '#ec4899', icon: 'language' },
+      { id: 'science', name: 'Science', color: '#10b981', icon: 'science' }
     ],
-    homework: [], reminders: [], notes: [], notebooks: [], noteHighlights: [], grades: [], events: [], goals: [], friends: [], widgets: [],
+    homework: [], reminders: [], reminderGroups: [], notes: [], notebooks: [], noteHighlights: [], grades: [], events: [], goals: [], friends: [], widgets: [],
     timer: { study: 25, break: 5, longBreak: 15, custom: 30, completedSessions: 0 },
     stats: { studyMinutes: 0, completedHomework: 0, lastStudyDate: '', dailyStudy: {} }
   };
@@ -47,7 +58,12 @@ export function defaultWorkspace(displayName: string): WorkspaceData {
 export function normalizeWorkspace(input: unknown, displayName: string): WorkspaceData {
   const fallback = defaultWorkspace(displayName);
   const candidate = object(input);
-  const profile = { ...fallback.profile, ...object(candidate.profile), name: String(object(candidate.profile).name || displayName).slice(0, 40) };
+  const requestedProfile = object(candidate.profile);
+  const savedLanguagePreference = requestedProfile.languagePreference;
+  const languagePreference = savedLanguagePreference === 'auto' || savedLanguagePreference === 'manual'
+    ? savedLanguagePreference
+    : Object.keys(requestedProfile).length ? 'manual' : 'auto';
+  const profile = { ...fallback.profile, ...requestedProfile, languagePreference, name: String(requestedProfile.name || displayName).slice(0, 40) };
   const timer = { ...fallback.timer, ...object(candidate.timer) };
   const stats = { ...fallback.stats, ...object(candidate.stats) };
   const data = { ...fallback, profile, timer, stats } as WorkspaceData;
@@ -58,8 +74,8 @@ export function normalizeWorkspace(input: unknown, displayName: string): Workspa
   return data;
 }
 
-export async function createWorkspace(user: User) {
-  await saveWorkspace(user, defaultWorkspace(user.displayName));
+export async function createWorkspace(user: User, preferences?: InitialWorkspacePreferences) {
+  await saveWorkspace(user, defaultWorkspace(user.displayName, preferences));
 }
 
 export async function loadWorkspace(user: User): Promise<WorkspaceData> {
