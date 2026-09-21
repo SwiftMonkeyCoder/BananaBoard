@@ -7,7 +7,7 @@
     <title>Sign in · BananaBoard</title>
     <link rel="icon" href="/static/favicon-32x32.png?v=20260918-1" sizes="32x32" type="image/png">
     <link rel="apple-touch-icon" href="/static/apple-touch-icon.png?v=20260918-1">
-    <link rel="stylesheet" href="/static/style.css?v=20260918-1">
+    <link rel="stylesheet" href="/static/style.css?v=20260921-9">
     <style>#displayNameField[hidden], #accountPreferences[hidden], #passwordHelp[hidden], #authError[hidden] { display: none !important; }</style>
   </head>
   <body class="auth-page">
@@ -25,29 +25,27 @@
         </div>
         <h2 id="authTitle">Welcome back</h2>
         <p id="authIntro" class="muted">Sign in to open your personal BananaBoard.</p>
+        <label class="field-label auth-language-selector">
+          <span data-i18n="Language">Language</span>
+          <select id="authLanguage" class="input" name="language" aria-label="Language" data-i18n-aria-label="Language">
+            <option value="en">English</option><option value="de">Deutsch</option><option value="tr">Türkçe</option><option value="ru">Русский</option><option value="uk">Українська</option><option value="es">Español</option>
+          </select>
+        </label>
         <form id="authForm" novalidate>
           <label id="displayNameField" class="field-label" hidden>
             <span data-i18n="Display name">Display name</span>
             <input id="displayName" class="input" name="displayName" type="text" autocomplete="nickname" maxlength="40" placeholder="What should we call you?" data-i18n-placeholder="What should we call you?">
           </label>
           <div id="accountPreferences" class="auth-preferences" hidden>
-            <p class="field-control-title" data-i18n="Set your language and grade system now; you can change them later.">Set your language and grade system now; you can change them later.</p>
-            <div class="form-grid">
-              <label class="field-label">
-                <span data-i18n="Language">Language</span>
-                <select id="accountLanguage" class="input" name="language">
-                  <option value="en">English</option><option value="de">Deutsch</option><option value="tr">Türkçe</option><option value="ru">Русский</option><option value="uk">Українська</option><option value="es">Español</option>
-                </select>
-              </label>
-              <label class="field-label">
-                <span data-i18n="Grade system">Grade system</span>
-                <select id="accountGradeSystem" class="input" name="gradeSystem">
-                  <option value="numeric" data-i18n="Number scale (1 is best · 6 is worst)">Number scale (1 is best · 6 is worst)</option>
-                  <option value="percentage" data-i18n="Percentage (0–100%)">Percentage (0–100%)</option>
-                  <option value="letter" data-i18n="Letter (A–F)">Letter (A–F)</option>
-                </select>
-              </label>
-            </div>
+            <p class="field-control-title" data-i18n="Choose your grade system now; you can change it later.">Choose your grade system now; you can change it later.</p>
+            <label class="field-label">
+              <span data-i18n="Grade system">Grade system</span>
+              <select id="accountGradeSystem" class="input" name="gradeSystem">
+                <option value="numeric" data-i18n="Number scale (1 is best · 6 is worst)">Number scale (1 is best · 6 is worst)</option>
+                <option value="percentage" data-i18n="Percentage (0–100%)">Percentage (0–100%)</option>
+                <option value="letter" data-i18n="Letter (A–F)">Letter (A–F)</option>
+              </select>
+            </label>
           </div>
           <label class="field-label">
             <span data-i18n="Email address">Email address</span>
@@ -64,6 +62,6 @@
         <p class="auth-footnote" data-i18n="BananaBoard does not offer password recovery yet. Keep your password somewhere safe.">BananaBoard does not offer password recovery yet. Keep your password somewhere safe.</p>
       </section>
     </main>
-    <script src="/static/auth.js?v=20260918-1"></script>
+    <script src="/static/auth.js?v=20260921-9"></script>
   </body>
 </html>

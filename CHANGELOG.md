@@ -2,6 +2,26 @@
 
 All notable application changes are documented here. BananaBoard uses `0.01` increments for fixes and small improvements, and `0.1` increments for releases that add new functionality.
 
+## [0.2] — 2026-09-21
+
+### Added
+
+- A switchable calendar week view with timed event placement and completion controls.
+- School-day schedules that combine reusable subjects, lesson times, and selected weekdays.
+- Expanded native subject-icon choices and clearer grade pickers for numeric, percentage, and letter systems.
+- Dedicated fresh, speckled, bruised, and rotten Banana-health illustrations.
+
+### Changed
+
+- Added a language selector to the account screen; an explicit choice becomes a manual preference, otherwise BananaBoard follows the device language.
+- Updated legacy workspaces so the default Mathematics subject is displayed as Math and older language settings adopt device-language mode.
+- Improved notes for stylus input, homework-photo interactions, localized controls, and development asset cache behavior.
+- Added a once-per-version in-app update notice for `0.2` and refreshed app bundle cache keys.
+
+### Verification
+
+- JavaScript syntax checks, TypeScript validation, the automated test suite, and the production build pass locally.
+
 ## [0.1] — 2026-09-18
 
 ### Added

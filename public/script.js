@@ -3,8 +3,11 @@
   'use strict';
 
   const APP_NAME = 'BananaBoard';
-  const APP_VERSION = '0.1';
+  const APP_VERSION = '0.2';
   const ACCENTS = ['#f4c53a', '#6c63ff', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
+  const SCHOOL_EVENT_COLOR = '#5c6fd1';
+  const WEEK_HOUR_HEIGHT = 52;
+  const DAY_MINUTES = 24 * 60;
   const NAV = [
     ['dashboard', 'dashboard', 'Dashboard'], ['homework', 'homework', 'Homework'], ['calendar', 'calendar', 'Calendar'],
     ['reminders', 'reminders', 'Reminders'], ['notes', 'notes', 'Notes'], ['grades', 'grades', 'Grades'], ['timer', 'timer', 'Study Timer'],
@@ -33,10 +36,19 @@
     computer: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8M12 16v5"/>',
     sport: '<circle cx="12" cy="12" r="9"/><path d="m5.5 5.5 4 3.5 5-1 3.5 4-2.5 5.5-5.5.5-3-4.5Z"/>',
     business: '<path d="M4 20V4M4 20h17M8 16l4-5 3 2 5-7"/><path d="M16 6h4v4"/>',
+    biology: '<path d="M20 4C10 4 5 8.5 5 15c0 3 2 5 5 5 6.5 0 10-6.4 10-16Z"/><path d="M5 20c3-4 6-6 11-10"/>',
+    chemistry: '<circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="m8.2 10.8 7.5-3.6M8.2 13.2l7.5 3.6"/>',
+    physics: '<ellipse cx="12" cy="12" rx="9" ry="3.8"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(120 12 12)"/><circle cx="12" cy="12" r="1.6"/>',
+    coding: '<path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/>',
+    economics: '<circle cx="12" cy="12" r="8"/><path d="M12 7v10M15 9.5c0-1.2-1.3-2-3-2s-3 .8-3 2 1.3 2 3 2 3 .8 3 2-1.3 2-3 2-3-.8-3-2"/>',
+    law: '<path d="M12 4v16M6 7h12M5 7l-3 6h6L5 7ZM19 7l-3 6h6l-3-6ZM6 20h12"/>',
+    health: '<path d="M3 12h4l2-5 4 10 2-5h6"/><path d="M20.5 5.5a5 5 0 0 0-7.1 0L12 7l-1.4-1.5a5 5 0 0 0-7.1 7L12 21l8.5-8.5a5 5 0 0 0 0-7Z"/>',
+    engineering: '<path d="M5 19 19 5M7 5h12v12M5 9h4M5 13h4M11 19v-4M15 19v-4"/>',
+    media: '<rect x="3" y="6" width="14" height="12" rx="2"/><path d="m17 10 4-2v8l-4-2M7 10h5M7 14h3"/>',
     book: '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5zM4 5.5v16M8 7h8M8 11h6"/>',
     bell: '<path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 22h4"/>'
   };
-  const subjectIconOptions = [['math', 'Math'], ['language', 'Languages'], ['science', 'Science'], ['history', 'History'], ['geography', 'Geography'], ['art', 'Art'], ['music', 'Music'], ['computer', 'Computer science'], ['sport', 'Sport'], ['business', 'Business'], ['book', 'Literature']];
+  const subjectIconOptions = [['math', 'Math'], ['language', 'Languages'], ['science', 'Science'], ['biology', 'Biology'], ['chemistry', 'Chemistry'], ['physics', 'Physics'], ['history', 'History'], ['geography', 'Geography'], ['art', 'Art'], ['music', 'Music'], ['computer', 'Computer science'], ['coding', 'Coding'], ['economics', 'Economics'], ['business', 'Business'], ['law', 'Law'], ['health', 'Health'], ['engineering', 'Engineering'], ['media', 'Media'], ['sport', 'Sport'], ['book', 'Literature']];
   const appIcon = (name, className = '') => APP_ICON_PATHS[name]
     ? `<svg class="app-icon ${className}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${APP_ICON_PATHS[name]}</svg>`
     : `<span class="app-icon app-icon-custom" aria-hidden="true">${escape(name || '•')}</span>`;
@@ -56,6 +68,7 @@
   ];
   const LANGUAGE_OPTIONS = [['en', 'English'], ['de', 'German'], ['tr', 'Turkish'], ['ru', 'Russian'], ['uk', 'Ukrainian'], ['es', 'Spanish']];
   const LANGUAGE_PREFERENCES = new Set(['auto', 'manual']);
+  const DEVICE_LOCALE_VERSION = 1;
   const LOCALE_CODES = { en: 'en-GB', de: 'de-DE', tr: 'tr-TR', ru: 'ru-RU', uk: 'uk-UA', es: 'es-ES' };
   const TRANSLATIONS = {
     de: {
@@ -142,35 +155,35 @@
   Object.assign(TRANSLATIONS.ru, { Spanish: 'Испанский' });
   Object.assign(TRANSLATIONS.uk, { Spanish: 'Іспанська' });
   Object.assign(TRANSLATIONS.de, {
-    'Mathematics': 'Mathematik', 'Science': 'Naturwissenschaften', 'Number scale': 'Zahlenskala', 'Percentage': 'Prozent', 'Letter grades': 'Buchstabennoten',
+    'Math': 'Mathe', 'Science': 'Naturwissenschaften', 'Number scale': 'Zahlenskala', 'Percentage': 'Prozent', 'Letter grades': 'Buchstabennoten',
     'focused so far.': 'bisher fokussiert.', 'One small session is a win.': 'Eine kurze Einheit ist ein Erfolg.', '{count} completed sessions': '{count} abgeschlossene Einheiten',
     'Small steps every day become big results.': 'Kleine Schritte jeden Tag führen zu großen Ergebnissen.', 'The secret of getting ahead is getting started.': 'Das Geheimnis des Vorankommens ist, anzufangen.', 'Focus on progress, not perfection.': 'Konzentriere dich auf Fortschritt, nicht auf Perfektion.', 'You do not have to be great to start, but you have to start to be great.': 'Du musst nicht großartig sein, um anzufangen, aber du musst anfangen, um großartig zu werden.',
     'Add reminder': 'Erinnerung hinzufügen', 'Add goal': 'Ziel hinzufügen', 'YOUR PROGRESS': 'DEIN FORTSCHRITT', 'Small habits leave a useful trail.': 'Kleine Gewohnheiten hinterlassen eine wertvolle Spur.', 'TOTAL FOCUS': 'GESAMTFOKUS', 'All recorded sessions': 'Alle aufgezeichneten Einheiten', 'TASK COMPLETION': 'AUFGABENERLEDIGUNG', '{count} tasks complete': '{count} Aufgaben erledigt', 'FOCUS SESSIONS': 'FOKUSEINHEITEN', 'Keep the streak alive': 'Halte die Serie am Leben', 'Focus time this week': 'Fokuszeit diese Woche', 'Minutes': 'Minuten', '{count} open': '{count} offen', '{count} open tasks': '{count} offene Aufgaben', 'Target {date}': 'Ziel {date}', '{count} on': '{count} an', 'off': 'aus', 'on screen': 'auf dem Bildschirm',
     'Keep your closest homework task in sight': 'Behalte deine nächste Hausaufgabe im Blick', 'See the next thing you need to remember': 'Sieh das Nächste, woran du dich erinnern musst', 'Count the days to any test or event': 'Zähle die Tage bis zu einem Test oder Ereignis', 'Show your next events and tests': 'Zeige deine nächsten Ereignisse und Tests', 'Display focused time and completed work': 'Zeige Fokuszeit und erledigte Arbeit', 'Focus session complete. Take a well-earned break!': 'Fokuseinheit abgeschlossen. Mach eine wohlverdiente Pause!'
   });
   Object.assign(TRANSLATIONS.tr, {
-    'Mathematics': 'Matematik', 'Science': 'Fen', 'Number scale': 'Sayı sistemi', 'Percentage': 'Yüzde', 'Letter grades': 'Harf notları',
+    'Math': 'Matematik', 'Science': 'Fen', 'Number scale': 'Sayı sistemi', 'Percentage': 'Yüzde', 'Letter grades': 'Harf notları',
     'focused so far.': 'şu ana kadar odaklanıldı.', 'One small session is a win.': 'Küçük bir oturum bile kazançtır.', '{count} completed sessions': '{count} tamamlanan oturum',
     'Small steps every day become big results.': 'Her günkü küçük adımlar büyük sonuçlara dönüşür.', 'The secret of getting ahead is getting started.': 'İlerlemek için başlamanın sırrı başlamaktır.', 'Focus on progress, not perfection.': 'Mükemmelliğe değil, ilerlemeye odaklan.', 'You do not have to be great to start, but you have to start to be great.': 'Başlamak için harika olmak zorunda değilsin; harika olmak için başlamalısın.',
     'Add reminder': 'Hatırlatıcı ekle', 'Add goal': 'Hedef ekle', 'YOUR PROGRESS': 'İLERLEMEN', 'Small habits leave a useful trail.': 'Küçük alışkanlıklar faydalı bir iz bırakır.', 'TOTAL FOCUS': 'TOPLAM ODAK', 'All recorded sessions': 'Tüm kaydedilen oturumlar', 'TASK COMPLETION': 'GÖREV TAMAMLAMA', '{count} tasks complete': '{count} görev tamamlandı', 'FOCUS SESSIONS': 'ODAK OTURUMLARI', 'Keep the streak alive': 'Seriyi sürdür', 'Focus time this week': 'Bu haftaki odaklanma süresi', 'Minutes': 'Dakikalar', '{count} open': '{count} açık', '{count} open tasks': '{count} açık görev', 'Target {date}': 'Hedef {date}', '{count} on': '{count} açık', 'off': 'kapalı', 'on screen': 'ekranda',
     'Keep your closest homework task in sight': 'En yakın ödevini göz önünde tut', 'See the next thing you need to remember': 'Hatırlaman gereken sıradaki şeyi gör', 'Count the days to any test or event': 'Herhangi bir test veya etkinliğe kalan günleri say', 'Show your next events and tests': 'Yaklaşan etkinliklerini ve testlerini göster', 'Display focused time and completed work': 'Odaklanma süresini ve tamamlanan işleri göster', 'Focus session complete. Take a well-earned break!': 'Odak oturumu tamamlandı. Hak ettiğin molayı ver!'
   });
   Object.assign(TRANSLATIONS.ru, {
-    'Mathematics': 'Математика', 'Science': 'Естественные науки', 'Number scale': 'Числовая шкала', 'Percentage': 'Проценты', 'Letter grades': 'Буквенные оценки',
+    'Math': 'Математика', 'Science': 'Естественные науки', 'Number scale': 'Числовая шкала', 'Percentage': 'Проценты', 'Letter grades': 'Буквенные оценки',
     'focused so far.': 'сосредоточенно за это время.', 'One small session is a win.': 'Даже одна небольшая сессия — победа.', '{count} completed sessions': '{count} завершённых сессий',
     'Small steps every day become big results.': 'Маленькие шаги каждый день дают большие результаты.', 'The secret of getting ahead is getting started.': 'Секрет движения вперёд — начать.', 'Focus on progress, not perfection.': 'Сосредоточься на прогрессе, а не на совершенстве.', 'You do not have to be great to start, but you have to start to be great.': 'Не нужно быть великим, чтобы начать, но нужно начать, чтобы стать великим.',
     'Add reminder': 'Добавить напоминание', 'Add goal': 'Добавить цель', 'YOUR PROGRESS': 'ВАШ ПРОГРЕСС', 'Small habits leave a useful trail.': 'Маленькие привычки оставляют полезный след.', 'TOTAL FOCUS': 'ОБЩЕЕ ВРЕМЯ ФОКУСА', 'All recorded sessions': 'Все записанные сессии', 'TASK COMPLETION': 'ВЫПОЛНЕНИЕ ЗАДАЧ', '{count} tasks complete': 'Выполнено задач: {count}', 'FOCUS SESSIONS': 'СЕССИИ ФОКУСА', 'Keep the streak alive': 'Не прерывайте серию', 'Focus time this week': 'Время фокуса на этой неделе', 'Minutes': 'Минуты', '{count} open': 'Открыто: {count}', '{count} open tasks': 'Открытых задач: {count}', 'Target {date}': 'Цель: {date}', '{count} on': 'Включено: {count}', 'off': 'выкл.', 'on screen': 'на экране',
     'Keep your closest homework task in sight': 'Держите ближайшее задание на виду', 'See the next thing you need to remember': 'Посмотрите, о чём нужно помнить дальше', 'Count the days to any test or event': 'Считайте дни до любого теста или события', 'Show your next events and tests': 'Покажите ближайшие события и тесты', 'Display focused time and completed work': 'Покажите время фокуса и выполненную работу', 'Focus session complete. Take a well-earned break!': 'Сессия фокуса завершена. Сделайте заслуженный перерыв!'
   });
   Object.assign(TRANSLATIONS.uk, {
-    'Mathematics': 'Математика', 'Science': 'Природничі науки', 'Number scale': 'Числова шкала', 'Percentage': 'Відсотки', 'Letter grades': 'Літерні оцінки',
+    'Math': 'Математика', 'Science': 'Природничі науки', 'Number scale': 'Числова шкала', 'Percentage': 'Відсотки', 'Letter grades': 'Літерні оцінки',
     'focused so far.': 'зосереджено за цей час.', 'One small session is a win.': 'Навіть коротка сесія — це перемога.', '{count} completed sessions': '{count} завершених сесій',
     'Small steps every day become big results.': 'Маленькі кроки щодня дають великі результати.', 'The secret of getting ahead is getting started.': 'Секрет руху вперед — почати.', 'Focus on progress, not perfection.': 'Зосередься на прогресі, а не на досконалості.', 'You do not have to be great to start, but you have to start to be great.': 'Не потрібно бути великим, щоб почати, але потрібно почати, щоб стати великим.',
     'Add reminder': 'Додати нагадування', 'Add goal': 'Додати ціль', 'YOUR PROGRESS': 'ВАШ ПРОГРЕС', 'Small habits leave a useful trail.': 'Маленькі звички залишають корисний слід.', 'TOTAL FOCUS': 'ЗАГАЛЬНИЙ ФОКУС', 'All recorded sessions': 'Усі записані сесії', 'TASK COMPLETION': 'ВИКОНАННЯ ЗАВДАНЬ', '{count} tasks complete': '{count} завдань виконано', 'FOCUS SESSIONS': 'СЕСІЇ ФОКУСУ', 'Keep the streak alive': 'Підтримуй серію', 'Focus time this week': 'Час фокусу цього тижня', 'Minutes': 'Хвилини', '{count} open': 'Відкрито: {count}', '{count} open tasks': '{count} відкритих завдань', 'Target {date}': 'Ціль: {date}', '{count} on': 'Увімкнено: {count}', 'off': 'вимк.', 'on screen': 'на екрані',
     'Keep your closest homework task in sight': 'Тримай найближче завдання на виду', 'See the next thing you need to remember': 'Подивись, про що потрібно пам’ятати далі', 'Count the days to any test or event': 'Відлічуй дні до будь-якого тесту чи події', 'Show your next events and tests': 'Показуй найближчі події та тести', 'Display focused time and completed work': 'Показуй час фокусу й виконану роботу', 'Focus session complete. Take a well-earned break!': 'Сесію фокусу завершено. Зроби заслужену перерву!'
   });
   Object.assign(TRANSLATIONS.es, {
-    'Mathematics': 'Matemáticas', 'Science': 'Ciencias', 'Number scale': 'Escala numérica', 'Percentage': 'Porcentaje', 'Letter grades': 'Calificaciones por letras',
+    'Math': 'Mates', 'Science': 'Ciencias', 'Number scale': 'Escala numérica', 'Percentage': 'Porcentaje', 'Letter grades': 'Calificaciones por letras',
     'focused so far.': 'con concentración hasta ahora.', 'One small session is a win.': 'Una sesión corta ya es una victoria.', '{count} completed sessions': '{count} sesiones completadas',
     'Small steps every day become big results.': 'Los pequeños pasos diarios dan grandes resultados.', 'The secret of getting ahead is getting started.': 'El secreto para avanzar es empezar.', 'Focus on progress, not perfection.': 'Céntrate en el progreso, no en la perfección.', 'You do not have to be great to start, but you have to start to be great.': 'No tienes que ser genial para empezar, pero tienes que empezar para llegar a serlo.',
     'Add reminder': 'Añadir recordatorio', 'Add goal': 'Añadir meta', 'YOUR PROGRESS': 'TU PROGRESO', 'Small habits leave a useful trail.': 'Los pequeños hábitos dejan un rastro útil.', 'TOTAL FOCUS': 'ENFOQUE TOTAL', 'All recorded sessions': 'Todas las sesiones registradas', 'TASK COMPLETION': 'COMPLETADO DE TAREAS', '{count} tasks complete': '{count} tareas completadas', 'FOCUS SESSIONS': 'SESIONES DE ENFOQUE', 'Keep the streak alive': 'Mantén la racha', 'Focus time this week': 'Tiempo de enfoque esta semana', 'Minutes': 'Minutos', '{count} open': '{count} pendientes', '{count} open tasks': '{count} tareas pendientes', 'Target {date}': 'Meta: {date}', '{count} on': '{count} activados', 'off': 'desactivado', 'on screen': 'en pantalla',
@@ -248,6 +261,14 @@
   Object.entries(DRAWING_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
   const ERASER_TRANSLATIONS = { de: { Eraser: 'Radierer' }, tr: { Eraser: 'Silgi' }, ru: { Eraser: 'Ластик' }, uk: { Eraser: 'Гумка' }, es: { Eraser: 'Borrador' } };
   Object.entries(ERASER_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+  const STYLUS_TRANSLATIONS = {
+    de: { 'Stylus only': 'Nur Stift', 'Finger drawing is off. Use a stylus or Apple Pencil.': 'Fingerzeichnen ist aus. Nutze einen Stift oder Apple Pencil.' },
+    tr: { 'Stylus only': 'Yalnızca kalem', 'Finger drawing is off. Use a stylus or Apple Pencil.': 'Parmakla çizim kapalı. Kalem veya Apple Pencil kullan.' },
+    ru: { 'Stylus only': 'Только стилус', 'Finger drawing is off. Use a stylus or Apple Pencil.': 'Рисование пальцем выключено. Используйте стилус или Apple Pencil.' },
+    uk: { 'Stylus only': 'Лише стилус', 'Finger drawing is off. Use a stylus or Apple Pencil.': 'Малювання пальцем вимкнено. Використовуйте стилус або Apple Pencil.' },
+    es: { 'Stylus only': 'Solo lápiz táctil', 'Finger drawing is off. Use a stylus or Apple Pencil.': 'El dibujo con el dedo está desactivado. Usa un lápiz táctil o Apple Pencil.' }
+  };
+  Object.entries(STYLUS_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
   const HOMEWORK_CAMERA_TRANSLATIONS = {
     de: { 'Take photo': 'Foto aufnehmen', 'Choose from photos': 'Aus Fotos auswählen', 'Choose or take a homework photo before continuing.': 'Wähle oder fotografiere ein Hausaufgabenfoto, bevor du fortfährst.' },
     tr: { 'Take photo': 'Fotoğraf çek', 'Choose from photos': 'Fotoğraflardan seç', 'Choose or take a homework photo before continuing.': 'Devam etmeden önce bir ödev fotoğrafı çekin veya seçin.' },
@@ -316,6 +337,78 @@
   };
   Object.entries(REMINDER_GROUP_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
 
+  // Keep every interface label in one of the supported languages. User-created
+  // content deliberately remains untouched.
+  const COMPLETE_UI_TRANSLATIONS = {
+    de: {
+      'Student': 'Schüler:in', 'You are all caught up.': 'Du bist auf dem neuesten Stand.', 'No upcoming events or tests.': 'Keine kommenden Ereignisse oder Tests.', 'Add a test or event to start a countdown.': 'Füge einen Test oder ein Ereignis hinzu, um einen Countdown zu starten.', '{count} {unit} to {title}': '{count} {unit} bis {title}', 'focus time': 'Fokuszeit', 'tasks done': 'Aufgaben erledigt', 'sessions': 'Einheiten', 'Manage widgets': 'Widgets verwalten', 'No homework due': 'Keine Hausaufgaben fällig', 'Nothing to remember': 'Nichts zu merken', 'Set a date or choose an event': 'Lege ein Datum fest oder wähle ein Ereignis', 'Your calendar is clear': 'Dein Kalender ist frei', 'tasks completed': 'Aufgaben erledigt', 'Open {title}': '{title} öffnen', 'Turn off {title}': '{title} ausschalten', 'View {count} widgets': '{count} Widgets anzeigen', '{count} Widgets': '{count} Widgets', 'Press to view': 'Zum Anzeigen drücken', 'Hide': 'Ausblenden', 'Mark {title} as {state}': '{title} als {state} markieren', 'incomplete': 'nicht erledigt', 'complete': 'erledigt', 'Edit reminder': 'Erinnerung bearbeiten', 'Delete reminder': 'Erinnerung löschen', 'OPEN REMINDERS': 'OFFENE ERINNERUNGEN', 'DUE TODAY': 'HEUTE FÄLLIG', 'COMPLETED': 'ERLEDIGT', 'Still to remember': 'Noch zu merken', 'Worth a quick check': 'Einen kurzen Blick wert', 'Already handled': 'Schon erledigt', 'Previous month': 'Vorheriger Monat', 'Next month': 'Nächster Monat', 'More…': 'Mehr…', 'What’s new': 'Neuigkeiten', 'Close release notes': 'Versionshinweise schließen', 'A more organized, more personal BananaBoard is here.': 'Ein organisierteres, persönlicheres BananaBoard ist da.', 'Reminder groups': 'Erinnerungsgruppen', 'Organize related reminders together, give each group its own color and icon, and add reminders directly where they belong.': 'Ordne zusammengehörige Erinnerungen, gib jeder Gruppe ihre eigene Farbe und ihr eigenes Symbol und füge Erinnerungen direkt dort hinzu.', 'Language that follows you': 'Sprache, die dir folgt', 'Choose your language and grade system when creating an account, then keep BananaBoard matched to your device language or set it manually.': 'Wähle beim Erstellen deines Kontos Sprache und Notensystem und lasse BananaBoard danach deiner Gerätesprache folgen oder stelle sie manuell ein.', 'Clearer, native icons': 'Klare, eigene Symbole', 'Navigation, subjects, and settings now use crisp built-in icons instead of emoji.': 'Navigation, Fächer und Einstellungen verwenden jetzt klare integrierte Symbole statt Emojis.', 'Better on every screen': 'Besser auf jedem Bildschirm', 'Phone agenda cards, calendar markers, the Study snapshot, and note controls have all been refined for smaller displays.': 'Tageskarten, Kalendermarkierungen, die Lernübersicht und Notizwerkzeuge wurden für kleinere Bildschirme verbessert.', 'Explore BananaBoard': 'BananaBoard entdecken', 'Current password': 'Aktuelles Passwort', 'Email address': 'E-Mail-Adresse', 'New password': 'Neues Passwort', 'Enter your current password only when changing your email address or password.': 'Gib dein aktuelles Passwort nur ein, wenn du deine E-Mail-Adresse oder dein Passwort änderst.', 'Use at least 12 characters for a new password.': 'Verwende mindestens 12 Zeichen für ein neues Passwort.', 'Save account': 'Konto speichern', 'Could not load your account.': 'Dein Konto konnte nicht geladen werden.', 'Could not update your account.': 'Dein Konto konnte nicht aktualisiert werden.', 'Account updated.': 'Konto aktualisiert.', 'Could not log out.': 'Abmelden nicht möglich.', 'Custom letter or symbol': 'Eigener Buchstabe oder Symbol', 'Freshness': 'Frische', 'Items that affect banana health': 'Einträge, die den Bananenstatus beeinflussen', 'more to review': 'weitere zu prüfen', 'No overdue work or weak grades': 'Keine überfälligen Aufgaben oder schwachen Noten', 'Banana freshness is {freshness} percent: {status}': 'Bananenfrische: {freshness} Prozent – {status}', 'STUDY RHYTHM': 'LERNÜBERBLICK', 'Fresh and ready': 'Frisch und bereit', 'A few spots need attention': 'Ein paar Punkte brauchen Aufmerksamkeit', 'Time for a reset': 'Zeit für einen Neustart', 'Needs attention now': 'Braucht jetzt Aufmerksamkeit', 'Finish overdue homework and goals to freshen your banana. Review any weak grades to keep it healthy.': 'Erledige überfällige Hausaufgaben und Ziele, damit deine Banane frisch bleibt. Prüfe schwache Noten, um sie gesund zu halten.', 'Everything is up to date. Keep this rhythm going and your banana will stay fresh.': 'Alles ist aktuell. Behalte diesen Rhythmus bei, dann bleibt deine Banane frisch.', 'Finish homework': 'Hausaufgabe erledigen', 'Complete goal': 'Ziel abschließen', 'Review grade': 'Note prüfen', 'MARKED TEXT': 'MARKIERTER TEXT', 'What is coming up': 'Was als Nächstes ansteht', 'AM': 'vorm.', 'PM': 'nachm.'
+    },
+    tr: {
+      'Student': 'Öğrenci', 'You are all caught up.': 'Her şeyi hallettin.', 'No upcoming events or tests.': 'Yaklaşan etkinlik veya sınav yok.', 'Add a test or event to start a countdown.': 'Geri sayım başlatmak için bir sınav veya etkinlik ekle.', '{count} {unit} to {title}': '{title} için {count} {unit}', 'focus time': 'odak süresi', 'tasks done': 'tamamlanan görev', 'sessions': 'oturum', 'Manage widgets': 'Araçları yönet', 'No homework due': 'Teslim ödev yok', 'Nothing to remember': 'Hatırlanacak bir şey yok', 'Set a date or choose an event': 'Bir tarih belirle veya etkinlik seç', 'Your calendar is clear': 'Takvimin boş', 'tasks completed': 'tamamlanan görev', 'Open {title}': '{title} aç', 'Turn off {title}': '{title} kapat', 'View {count} widgets': '{count} aracı görüntüle', '{count} Widgets': '{count} araç', 'Press to view': 'Görüntülemek için bas', 'Hide': 'Gizle', 'Mark {title} as {state}': '{title} öğesini {state} olarak işaretle', 'incomplete': 'tamamlanmamış', 'complete': 'tamamlanmış', 'Edit reminder': 'Hatırlatıcıyı düzenle', 'Delete reminder': 'Hatırlatıcıyı sil', 'OPEN REMINDERS': 'AÇIK HATIRLATICILAR', 'DUE TODAY': 'BUGÜN TESLİM', 'COMPLETED': 'TAMAMLANDI', 'Still to remember': 'Hâlâ hatırlanacak', 'Worth a quick check': 'Kısa bir kontrol değer', 'Already handled': 'Zaten halledildi', 'Previous month': 'Önceki ay', 'Next month': 'Sonraki ay', 'More…': 'Daha fazla…', 'What’s new': 'Yenilikler', 'Close release notes': 'Sürüm notlarını kapat', 'A more organized, more personal BananaBoard is here.': 'Daha düzenli ve kişisel BananaBoard burada.', 'Reminder groups': 'Hatırlatıcı grupları', 'Organize related reminders together, give each group its own color and icon, and add reminders directly where they belong.': 'İlgili hatırlatıcıları birlikte düzenle, her gruba kendi rengini ve simgesini ver, sonra hatırlatıcıları doğrudan ait oldukları yere ekle.', 'Language that follows you': 'Seni takip eden dil', 'Choose your language and grade system when creating an account, then keep BananaBoard matched to your device language or set it manually.': 'Hesap oluştururken dilini ve not sistemini seç; sonra BananaBoard’u cihaz dilinle eşleştir veya elle ayarla.', 'Clearer, native icons': 'Daha net, yerleşik simgeler', 'Navigation, subjects, and settings now use crisp built-in icons instead of emoji.': 'Gezinme, dersler ve ayarlar artık emoji yerine net yerleşik simgeler kullanıyor.', 'Better on every screen': 'Her ekranda daha iyi', 'Phone agenda cards, calendar markers, the Study snapshot, and note controls have all been refined for smaller displays.': 'Telefon gündem kartları, takvim işaretleri, çalışma özeti ve not denetimleri küçük ekranlar için geliştirildi.', 'Explore BananaBoard': 'BananaBoard’u keşfet', 'Current password': 'Mevcut parola', 'Email address': 'E-posta adresi', 'New password': 'Yeni parola', 'Enter your current password only when changing your email address or password.': 'Mevcut parolanı yalnızca e-posta adresini veya parolanı değiştirirken gir.', 'Use at least 12 characters for a new password.': 'Yeni parola için en az 12 karakter kullan.', 'Save account': 'Hesabı kaydet', 'Could not load your account.': 'Hesabın yüklenemedi.', 'Could not update your account.': 'Hesabın güncellenemedi.', 'Account updated.': 'Hesap güncellendi.', 'Could not log out.': 'Çıkış yapılamadı.', 'Custom letter or symbol': 'Özel harf veya simge', 'Freshness': 'Tazelik', 'Items that affect banana health': 'Muzun durumunu etkileyen öğeler', 'more to review': 'daha gözden geçirilecek', 'No overdue work or weak grades': 'Gecikmiş iş veya düşük not yok', 'Banana freshness is {freshness} percent: {status}': 'Muz tazeliği yüzde {freshness}: {status}', 'STUDY RHYTHM': 'ÇALIŞMA ÖZETİ', 'Fresh and ready': 'Taze ve hazır', 'A few spots need attention': 'Birkaç nokta ilgi istiyor', 'Time for a reset': 'Sıfırlama zamanı', 'Needs attention now': 'Şimdi ilgi gerekiyor', 'Finish overdue homework and goals to freshen your banana. Review any weak grades to keep it healthy.': 'Muzunu tazelemek için gecikmiş ödevleri ve hedefleri tamamla. Sağlıklı kalması için düşük notları gözden geçir.', 'Everything is up to date. Keep this rhythm going and your banana will stay fresh.': 'Her şey güncel. Bu ritmi sürdür, muzun taze kalsın.', 'Finish homework': 'Ödevi bitir', 'Complete goal': 'Hedefi tamamla', 'Review grade': 'Notu gözden geçir', 'MARKED TEXT': 'İŞARETLİ METİN', 'What is coming up': 'Yaklaşanlar', 'AM': 'ÖÖ', 'PM': 'ÖS'
+    },
+    ru: {
+      'Student': 'Ученик', 'You are all caught up.': 'Всё выполнено.', 'No upcoming events or tests.': 'Нет предстоящих событий или тестов.', 'Add a test or event to start a countdown.': 'Добавьте тест или событие, чтобы начать отсчёт.', '{count} {unit} to {title}': 'До «{title}»: {count} {unit}', 'focus time': 'время фокуса', 'tasks done': 'задач выполнено', 'sessions': 'сессий', 'Manage widgets': 'Управлять виджетами', 'No homework due': 'Нет заданий со сроком', 'Nothing to remember': 'Нечего помнить', 'Set a date or choose an event': 'Задайте дату или выберите событие', 'Your calendar is clear': 'Ваш календарь свободен', 'tasks completed': 'задач выполнено', 'Open {title}': 'Открыть {title}', 'Turn off {title}': 'Выключить {title}', 'View {count} widgets': 'Показать виджеты: {count}', '{count} Widgets': 'Виджетов: {count}', 'Press to view': 'Нажмите, чтобы открыть', 'Hide': 'Скрыть', 'Mark {title} as {state}': 'Отметить «{title}» как {state}', 'incomplete': 'невыполненное', 'complete': 'выполненное', 'Edit reminder': 'Изменить напоминание', 'Delete reminder': 'Удалить напоминание', 'OPEN REMINDERS': 'АКТИВНЫЕ НАПОМИНАНИЯ', 'DUE TODAY': 'СРОК СЕГОДНЯ', 'COMPLETED': 'ВЫПОЛНЕНО', 'Still to remember': 'Ещё нужно помнить', 'Worth a quick check': 'Стоит быстро проверить', 'Already handled': 'Уже выполнено', 'Previous month': 'Предыдущий месяц', 'Next month': 'Следующий месяц', 'More…': 'Ещё…', 'What’s new': 'Что нового', 'Close release notes': 'Закрыть заметки о выпуске', 'A more organized, more personal BananaBoard is here.': 'Более организованный и личный BananaBoard уже здесь.', 'Reminder groups': 'Группы напоминаний', 'Organize related reminders together, give each group its own color and icon, and add reminders directly where they belong.': 'Объединяйте связанные напоминания, задавайте каждой группе свой цвет и значок, добавляйте напоминания прямо туда, где им место.', 'Language that follows you': 'Язык, который следует за вами', 'Choose your language and grade system when creating an account, then keep BananaBoard matched to your device language or set it manually.': 'Выберите язык и систему оценок при создании аккаунта, затем настройте BananaBoard по языку устройства или выберите язык вручную.', 'Clearer, native icons': 'Более понятные встроенные значки', 'Navigation, subjects, and settings now use crisp built-in icons instead of emoji.': 'Навигация, предметы и настройки теперь используют чёткие встроенные значки вместо эмодзи.', 'Better on every screen': 'Лучше на каждом экране', 'Phone agenda cards, calendar markers, the Study snapshot, and note controls have all been refined for smaller displays.': 'Карточки повестки на телефоне, маркеры календаря, учебная сводка и инструменты заметок улучшены для небольших экранов.', 'Explore BananaBoard': 'Открыть BananaBoard', 'Current password': 'Текущий пароль', 'Email address': 'Адрес электронной почты', 'New password': 'Новый пароль', 'Enter your current password only when changing your email address or password.': 'Введите текущий пароль только при изменении адреса электронной почты или пароля.', 'Use at least 12 characters for a new password.': 'Используйте не менее 12 символов для нового пароля.', 'Save account': 'Сохранить аккаунт', 'Could not load your account.': 'Не удалось загрузить аккаунт.', 'Could not update your account.': 'Не удалось обновить аккаунт.', 'Account updated.': 'Аккаунт обновлён.', 'Could not log out.': 'Не удалось выйти.', 'Custom letter or symbol': 'Свой символ или буква', 'Freshness': 'Свежесть', 'Items that affect banana health': 'Элементы, влияющие на состояние банана', 'more to review': 'ещё проверить', 'No overdue work or weak grades': 'Нет просроченных заданий или слабых оценок', 'Banana freshness is {freshness} percent: {status}': 'Свежесть банана: {freshness} % — {status}', 'STUDY RHYTHM': 'СВОДКА ПО УЧЁБЕ', 'Fresh and ready': 'Свежий и готов', 'A few spots need attention': 'Несколько моментов требуют внимания', 'Time for a reset': 'Пора перезагрузиться', 'Needs attention now': 'Требует внимания сейчас', 'Finish overdue homework and goals to freshen your banana. Review any weak grades to keep it healthy.': 'Завершите просроченные задания и цели, чтобы освежить банан. Проверьте слабые оценки, чтобы сохранить её здоровой.', 'Everything is up to date. Keep this rhythm going and your banana will stay fresh.': 'Всё актуально. Поддерживайте этот ритм, и банан останется свежим.', 'Finish homework': 'Завершить задание', 'Complete goal': 'Завершить цель', 'Review grade': 'Проверить оценку', 'MARKED TEXT': 'ВЫДЕЛЕННЫЙ ТЕКСТ', 'What is coming up': 'Что впереди', 'AM': 'ДП', 'PM': 'ПП'
+    },
+    uk: {
+      'Student': 'Учень', 'You are all caught up.': 'Усе виконано.', 'No upcoming events or tests.': 'Немає майбутніх подій або тестів.', 'Add a test or event to start a countdown.': 'Додайте тест або подію, щоб почати відлік.', '{count} {unit} to {title}': 'До «{title}»: {count} {unit}', 'focus time': 'час фокусу', 'tasks done': 'завдань виконано', 'sessions': 'сесій', 'Manage widgets': 'Керувати віджетами', 'No homework due': 'Немає завдань із терміном', 'Nothing to remember': 'Немає про що пам’ятати', 'Set a date or choose an event': 'Установіть дату або виберіть подію', 'Your calendar is clear': 'Ваш календар вільний', 'tasks completed': 'завдань виконано', 'Open {title}': 'Відкрити {title}', 'Turn off {title}': 'Вимкнути {title}', 'View {count} widgets': 'Показати віджети: {count}', '{count} Widgets': 'Віджетів: {count}', 'Press to view': 'Натисніть, щоб переглянути', 'Hide': 'Сховати', 'Mark {title} as {state}': 'Позначити «{title}» як {state}', 'incomplete': 'невиконане', 'complete': 'виконане', 'Edit reminder': 'Редагувати нагадування', 'Delete reminder': 'Видалити нагадування', 'OPEN REMINDERS': 'АКТИВНІ НАГАДУВАННЯ', 'DUE TODAY': 'ТЕРМІН СЬОГОДНІ', 'COMPLETED': 'ВИКОНАНО', 'Still to remember': 'Ще треба пам’ятати', 'Worth a quick check': 'Варто швидко перевірити', 'Already handled': 'Вже виконано', 'Previous month': 'Попередній місяць', 'Next month': 'Наступний місяць', 'More…': 'Ще…', 'What’s new': 'Що нового', 'Close release notes': 'Закрити нотатки про випуск', 'A more organized, more personal BananaBoard is here.': 'Більш організований і персональний BananaBoard уже тут.', 'Reminder groups': 'Групи нагадувань', 'Organize related reminders together, give each group its own color and icon, and add reminders directly where they belong.': 'Об’єднуйте пов’язані нагадування, задавайте кожній групі свій колір і значок та додавайте нагадування безпосередньо туди, де їм місце.', 'Language that follows you': 'Мова, що слідує за вами', 'Choose your language and grade system when creating an account, then keep BananaBoard matched to your device language or set it manually.': 'Виберіть мову та систему оцінювання під час створення облікового запису, а потім налаштуйте BananaBoard за мовою пристрою або вручну.', 'Clearer, native icons': 'Чіткіші вбудовані значки', 'Navigation, subjects, and settings now use crisp built-in icons instead of emoji.': 'Навігація, предмети та налаштування тепер використовують чіткі вбудовані значки замість емодзі.', 'Better on every screen': 'Краще на кожному екрані', 'Phone agenda cards, calendar markers, the Study snapshot, and note controls have all been refined for smaller displays.': 'Картки розкладу на телефоні, позначки календаря, навчальний огляд і елементи керування нотатками вдосконалено для малих екранів.', 'Explore BananaBoard': 'Відкрити BananaBoard', 'Current password': 'Поточний пароль', 'Email address': 'Електронна пошта', 'New password': 'Новий пароль', 'Enter your current password only when changing your email address or password.': 'Вводьте поточний пароль лише тоді, коли змінюєте електронну пошту або пароль.', 'Use at least 12 characters for a new password.': 'Використовуйте щонайменше 12 символів для нового пароля.', 'Save account': 'Зберегти обліковий запис', 'Could not load your account.': 'Не вдалося завантажити обліковий запис.', 'Could not update your account.': 'Не вдалося оновити обліковий запис.', 'Account updated.': 'Обліковий запис оновлено.', 'Could not log out.': 'Не вдалося вийти.', 'Custom letter or symbol': 'Власна літера або символ', 'Freshness': 'Свіжість', 'Items that affect banana health': 'Елементи, що впливають на стан банана', 'more to review': 'ще перевірити', 'No overdue work or weak grades': 'Немає прострочених завдань або слабких оцінок', 'Banana freshness is {freshness} percent: {status}': 'Свіжість банана: {freshness} % — {status}', 'STUDY RHYTHM': 'ОГЛЯД НАВЧАННЯ', 'Fresh and ready': 'Свіжий і готовий', 'A few spots need attention': 'Кілька моментів потребують уваги', 'Time for a reset': 'Час перезавантажитися', 'Needs attention now': 'Потребує уваги зараз', 'Finish overdue homework and goals to freshen your banana. Review any weak grades to keep it healthy.': 'Завершіть прострочені завдання й цілі, щоб освіжити банан. Перегляньте слабкі оцінки, щоб зберегти його здоровим.', 'Everything is up to date. Keep this rhythm going and your banana will stay fresh.': 'Усе актуально. Підтримуйте цей ритм, і банан залишиться свіжим.', 'Finish homework': 'Завершити завдання', 'Complete goal': 'Завершити ціль', 'Review grade': 'Перевірити оцінку', 'MARKED TEXT': 'ПОЗНАЧЕНИЙ ТЕКСТ', 'What is coming up': 'Що попереду', 'AM': 'ДП', 'PM': 'ПП'
+    },
+    es: {
+      'Student': 'Estudiante', 'You are all caught up.': 'Estás al día.', 'No upcoming events or tests.': 'No hay próximos eventos ni exámenes.', 'Add a test or event to start a countdown.': 'Añade un examen o evento para iniciar una cuenta atrás.', '{count} {unit} to {title}': '{count} {unit} hasta {title}', 'focus time': 'tiempo de enfoque', 'tasks done': 'tareas realizadas', 'sessions': 'sesiones', 'Manage widgets': 'Gestionar widgets', 'No homework due': 'No hay deberes pendientes', 'Nothing to remember': 'Nada que recordar', 'Set a date or choose an event': 'Establece una fecha o elige un evento', 'Your calendar is clear': 'Tu calendario está despejado', 'tasks completed': 'tareas completadas', 'Open {title}': 'Abrir {title}', 'Turn off {title}': 'Desactivar {title}', 'View {count} widgets': 'Ver {count} widgets', '{count} Widgets': '{count} widgets', 'Press to view': 'Pulsa para ver', 'Hide': 'Ocultar', 'Mark {title} as {state}': 'Marcar {title} como {state}', 'incomplete': 'incompleta', 'complete': 'completa', 'Edit reminder': 'Editar recordatorio', 'Delete reminder': 'Eliminar recordatorio', 'OPEN REMINDERS': 'RECORDATORIOS ABIERTOS', 'DUE TODAY': 'PARA HOY', 'COMPLETED': 'COMPLETADAS', 'Still to remember': 'Aún por recordar', 'Worth a quick check': 'Merece una comprobación rápida', 'Already handled': 'Ya resuelto', 'Previous month': 'Mes anterior', 'Next month': 'Mes siguiente', 'More…': 'Más…', 'What’s new': 'Novedades', 'Close release notes': 'Cerrar notas de la versión', 'A more organized, more personal BananaBoard is here.': 'Ya está aquí un BananaBoard más organizado y personal.', 'Reminder groups': 'Grupos de recordatorios', 'Organize related reminders together, give each group its own color and icon, and add reminders directly where they belong.': 'Organiza juntos los recordatorios relacionados, da a cada grupo su propio color e icono, y añade recordatorios directamente donde correspondan.', 'Language that follows you': 'Un idioma que te sigue', 'Choose your language and grade system when creating an account, then keep BananaBoard matched to your device language or set it manually.': 'Elige tu idioma y sistema de calificaciones al crear la cuenta; después puedes hacer que BananaBoard siga el idioma del dispositivo o configurarlo manualmente.', 'Clearer, native icons': 'Iconos nativos más claros', 'Navigation, subjects, and settings now use crisp built-in icons instead of emoji.': 'La navegación, las asignaturas y los ajustes ahora usan iconos integrados nítidos en lugar de emoji.', 'Better on every screen': 'Mejor en todas las pantallas', 'Phone agenda cards, calendar markers, the Study snapshot, and note controls have all been refined for smaller displays.': 'Las tarjetas de agenda del teléfono, los marcadores de calendario, el resumen de estudio y los controles de notas se han mejorado para pantallas pequeñas.', 'Explore BananaBoard': 'Explorar BananaBoard', 'Current password': 'Contraseña actual', 'Email address': 'Dirección de correo electrónico', 'New password': 'Nueva contraseña', 'Enter your current password only when changing your email address or password.': 'Introduce tu contraseña actual solo al cambiar el correo electrónico o la contraseña.', 'Use at least 12 characters for a new password.': 'Usa al menos 12 caracteres para una contraseña nueva.', 'Save account': 'Guardar cuenta', 'Could not load your account.': 'No se pudo cargar tu cuenta.', 'Could not update your account.': 'No se pudo actualizar tu cuenta.', 'Account updated.': 'Cuenta actualizada.', 'Could not log out.': 'No se pudo cerrar sesión.', 'Custom letter or symbol': 'Letra o símbolo personalizado', 'Freshness': 'Frescura', 'Items that affect banana health': 'Elementos que afectan al estado del plátano', 'more to review': 'más por revisar', 'No overdue work or weak grades': 'No hay trabajo atrasado ni calificaciones bajas', 'Banana freshness is {freshness} percent: {status}': 'La frescura del plátano es del {freshness} %: {status}', 'STUDY RHYTHM': 'RESUMEN DE ESTUDIO', 'Fresh and ready': 'Fresco y listo', 'A few spots need attention': 'Algunos puntos necesitan atención', 'Time for a reset': 'Hora de reiniciar', 'Needs attention now': 'Necesita atención ahora', 'Finish overdue homework and goals to freshen your banana. Review any weak grades to keep it healthy.': 'Termina los deberes y las metas atrasadas para refrescar tu plátano. Revisa las calificaciones bajas para mantenerlo sano.', 'Everything is up to date. Keep this rhythm going and your banana will stay fresh.': 'Todo está al día. Mantén este ritmo y tu plátano seguirá fresco.', 'Finish homework': 'Terminar deberes', 'Complete goal': 'Completar meta', 'Review grade': 'Revisar calificación', 'MARKED TEXT': 'TEXTO MARCADO', 'What is coming up': 'Qué viene después', 'AM': 'a. m.', 'PM': 'p. m.'
+    }
+  };
+  Object.entries(COMPLETE_UI_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+
+  const FORM_HINT_TRANSLATIONS = {
+    de: { 'Remove request': 'Anfrage entfernen', 'Remove widget': 'Widget entfernen', 'Reminder date': 'Erinnerungsdatum', 'e.g. Finish algebra worksheet': 'z. B. Algebra-Arbeitsblatt abschließen', 'What do you need to do?': 'Was musst du tun?', 'e.g. Biology test': 'z. B. Biologietest', 'e.g. Bring calculator to class': 'z. B. Taschenrechner zum Unterricht mitbringen', 'Add anything useful to remember…': 'Füge etwas Nützliches zum Merken hinzu…', 'e.g. Unit test': 'z. B. Klassenarbeit', 'e.g. History': 'z. B. Geschichte', 'e.g. Finish my biology revision': 'z. B. Meine Biologie-Wiederholung abschließen', "Friend's name": 'Name der Person', 'e.g. Revising chemistry': 'z. B. Chemie wiederholen' },
+    tr: { 'Remove request': 'İsteği kaldır', 'Remove widget': 'Aracı kaldır', 'Reminder date': 'Hatırlatıcı tarihi', 'e.g. Finish algebra worksheet': 'ör. Cebir çalışma sayfasını bitir', 'What do you need to do?': 'Ne yapman gerekiyor?', 'e.g. Biology test': 'ör. Biyoloji sınavı', 'e.g. Bring calculator to class': 'ör. Derse hesap makinesi getir', 'Add anything useful to remember…': 'Hatırlamak için yararlı bir şey ekle…', 'e.g. Unit test': 'ör. Ünite sınavı', 'e.g. History': 'ör. Tarih', 'e.g. Finish my biology revision': 'ör. Biyoloji tekrarımı bitir', "Friend's name": 'Kişinin adı', 'e.g. Revising chemistry': 'ör. Kimya tekrarı' },
+    ru: { 'Remove request': 'Удалить запрос', 'Remove widget': 'Удалить виджет', 'Reminder date': 'Дата напоминания', 'e.g. Finish algebra worksheet': 'например, закончить лист по алгебре', 'What do you need to do?': 'Что нужно сделать?', 'e.g. Biology test': 'например, тест по биологии', 'e.g. Bring calculator to class': 'например, принести калькулятор на урок', 'Add anything useful to remember…': 'Добавьте то, что полезно запомнить…', 'e.g. Unit test': 'например, контрольная по разделу', 'e.g. History': 'например, история', 'e.g. Finish my biology revision': 'например, закончить повторение биологии', "Friend's name": 'Имя человека', 'e.g. Revising chemistry': 'например, повторение химии' },
+    uk: { 'Remove request': 'Видалити запит', 'Remove widget': 'Видалити віджет', 'Reminder date': 'Дата нагадування', 'e.g. Finish algebra worksheet': 'наприклад, завершити аркуш з алгебри', 'What do you need to do?': 'Що потрібно зробити?', 'e.g. Biology test': 'наприклад, тест з біології', 'e.g. Bring calculator to class': 'наприклад, принести калькулятор на урок', 'Add anything useful to remember…': 'Додайте щось корисне для запам’ятовування…', 'e.g. Unit test': 'наприклад, тест за розділом', 'e.g. History': 'наприклад, історія', 'e.g. Finish my biology revision': 'наприклад, завершити повторення біології', "Friend's name": 'Ім’я людини', 'e.g. Revising chemistry': 'наприклад, повторення хімії' },
+    es: { 'Remove request': 'Eliminar solicitud', 'Remove widget': 'Eliminar widget', 'Reminder date': 'Fecha del recordatorio', 'e.g. Finish algebra worksheet': 'p. ej., terminar la hoja de álgebra', 'What do you need to do?': '¿Qué necesitas hacer?', 'e.g. Biology test': 'p. ej., examen de biología', 'e.g. Bring calculator to class': 'p. ej., llevar la calculadora a clase', 'Add anything useful to remember…': 'Añade algo útil para recordar…', 'e.g. Unit test': 'p. ej., examen de unidad', 'e.g. History': 'p. ej., historia', 'e.g. Finish my biology revision': 'p. ej., terminar mi repaso de biología', "Friend's name": 'Nombre de la persona', 'e.g. Revising chemistry': 'p. ej., repasar química' }
+  };
+  Object.entries(FORM_HINT_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+
+  const CALENDAR_AND_GRADE_TRANSLATIONS = {
+    de: {
+      'Month': 'Monat', 'Week': 'Woche', 'Calendar view': 'Kalenderansicht', 'Time format': 'Uhrzeitformat', 'Previous week': 'Vorherige Woche', 'Next week': 'Nächste Woche', 'Mark event complete': 'Ereignis als erledigt markieren', 'Reopen event': 'Ereignis wieder öffnen', 'Event marked complete.': 'Ereignis als erledigt markiert.', 'Event reopened.': 'Ereignis wieder geöffnet.',
+      'Open saved homework photo': 'Gespeichertes Hausaufgabenfoto öffnen', 'Save a picture of your finished homework?': 'Ein Foto deiner fertigen Hausaufgabe speichern?', 'Take a picture now or choose one from your photos.': 'Mache jetzt ein Foto oder wähle eines aus deinen Fotos.', 'We save the full photo exactly as you choose it.': 'Wir speichern das vollständige Foto genau so, wie du es auswählst.', 'Save photo': 'Foto speichern', 'Saved with your completed homework.': 'Mit deiner erledigten Hausaufgabe gespeichert.', 'Homework photo saved.': 'Hausaufgabenfoto gespeichert.', 'Choose or take a homework photo before continuing.': 'Wähle oder mache ein Hausaufgabenfoto, bevor du fortfährst.', 'Choose a grade': 'Note auswählen'
+    },
+    tr: {
+      'Month': 'Ay', 'Week': 'Hafta', 'Calendar view': 'Takvim görünümü', 'Time format': 'Saat biçimi', 'Previous week': 'Önceki hafta', 'Next week': 'Sonraki hafta', 'Mark event complete': 'Etkinliği tamamlandı olarak işaretle', 'Reopen event': 'Etkinliği yeniden aç', 'Event marked complete.': 'Etkinlik tamamlandı olarak işaretlendi.', 'Event reopened.': 'Etkinlik yeniden açıldı.',
+      'Open saved homework photo': 'Kaydedilen ödev fotoğrafını aç', 'Save a picture of your finished homework?': 'Bitirdiğin ödevin fotoğrafını kaydetmek ister misin?', 'Take a picture now or choose one from your photos.': 'Şimdi fotoğraf çek veya fotoğraflarından birini seç.', 'We save the full photo exactly as you choose it.': 'Fotoğrafı seçtiğin haliyle tamamen kaydederiz.', 'Save photo': 'Fotoğrafı kaydet', 'Saved with your completed homework.': 'Tamamlanan ödevinle birlikte kaydedildi.', 'Homework photo saved.': 'Ödev fotoğrafı kaydedildi.', 'Choose or take a homework photo before continuing.': 'Devam etmeden önce bir ödev fotoğrafı seç veya çek.', 'Choose a grade': 'Not seç'
+    },
+    ru: {
+      'Month': 'Месяц', 'Week': 'Неделя', 'Calendar view': 'Вид календаря', 'Time format': 'Формат времени', 'Previous week': 'Предыдущая неделя', 'Next week': 'Следующая неделя', 'Mark event complete': 'Отметить событие выполненным', 'Reopen event': 'Открыть событие снова', 'Event marked complete.': 'Событие отмечено выполненным.', 'Event reopened.': 'Событие снова открыто.',
+      'Open saved homework photo': 'Открыть сохранённое фото задания', 'Save a picture of your finished homework?': 'Сохранить фото выполненного задания?', 'Take a picture now or choose one from your photos.': 'Сделайте фото сейчас или выберите его из фотографий.', 'We save the full photo exactly as you choose it.': 'Мы сохраним полное фото именно в выбранном вами виде.', 'Save photo': 'Сохранить фото', 'Saved with your completed homework.': 'Сохранено вместе с выполненным заданием.', 'Homework photo saved.': 'Фото задания сохранено.', 'Choose or take a homework photo before continuing.': 'Выберите или сделайте фото задания перед продолжением.', 'Choose a grade': 'Выберите оценку'
+    },
+    uk: {
+      'Month': 'Місяць', 'Week': 'Тиждень', 'Calendar view': 'Вигляд календаря', 'Time format': 'Формат часу', 'Previous week': 'Попередній тиждень', 'Next week': 'Наступний тиждень', 'Mark event complete': 'Позначити подію виконаною', 'Reopen event': 'Відкрити подію знову', 'Event marked complete.': 'Подію позначено виконаною.', 'Event reopened.': 'Подію знову відкрито.',
+      'Open saved homework photo': 'Відкрити збережене фото завдання', 'Save a picture of your finished homework?': 'Зберегти фото виконаного завдання?', 'Take a picture now or choose one from your photos.': 'Зробіть фото зараз або виберіть його зі своїх фотографій.', 'We save the full photo exactly as you choose it.': 'Ми збережемо повне фото саме в тому вигляді, у якому ви його вибрали.', 'Save photo': 'Зберегти фото', 'Saved with your completed homework.': 'Збережено разом із виконаним завданням.', 'Homework photo saved.': 'Фото завдання збережено.', 'Choose or take a homework photo before continuing.': 'Виберіть або зробіть фото завдання перед продовженням.', 'Choose a grade': 'Виберіть оцінку'
+    },
+    es: {
+      'Month': 'Mes', 'Week': 'Semana', 'Calendar view': 'Vista del calendario', 'Time format': 'Formato de hora', 'Previous week': 'Semana anterior', 'Next week': 'Semana siguiente', 'Mark event complete': 'Marcar evento como completado', 'Reopen event': 'Reabrir evento', 'Event marked complete.': 'Evento marcado como completado.', 'Event reopened.': 'Evento reabierto.',
+      'Open saved homework photo': 'Abrir foto guardada de deberes', 'Save a picture of your finished homework?': '¿Guardar una foto de tus deberes terminados?', 'Take a picture now or choose one from your photos.': 'Haz una foto ahora o elige una de tus fotos.', 'We save the full photo exactly as you choose it.': 'Guardamos la foto completa exactamente como la elijas.', 'Save photo': 'Guardar foto', 'Saved with your completed homework.': 'Guardada con tus deberes terminados.', 'Homework photo saved.': 'Foto de deberes guardada.', 'Choose or take a homework photo before continuing.': 'Elige o toma una foto de los deberes antes de continuar.', 'Choose a grade': 'Elige una calificación'
+    }
+  };
+  Object.entries(CALENDAR_AND_GRADE_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+
+  const SCHOOL_EVENT_TRANSLATIONS = {
+    de: { 'School': 'Schule', 'Event': 'Ereignis', 'Event type': 'Ereignistyp', 'Start': 'Beginn', 'End': 'Ende', 'Remove lesson': 'Stunde entfernen', 'School lessons': 'Unterrichtsstunden', 'Add each lesson with its start, end, and an existing subject.': 'Füge jede Stunde mit Beginn, Ende und einem vorhandenen Fach hinzu.', 'Choose the days this school schedule repeats, then add each lesson in order.': 'Wähle die Tage aus, an denen sich dieser Stundenplan wiederholt, und füge dann die Stunden der Reihe nach hinzu.', 'Repeats on': 'Wiederholt sich am', 'Add lesson': 'Stunde hinzufügen', '{count} lessons': '{count} Stunden', 'A school day needs at least one lesson.': 'Ein Schultag braucht mindestens eine Stunde.', 'Every school lesson needs a subject, a start time, and a later end time.': 'Jede Schulstunde braucht ein Fach, eine Startzeit und eine spätere Endzeit.', 'Choose at least one day for this school schedule.': 'Wähle mindestens einen Tag für diesen Stundenplan aus.' },
+    tr: { 'School': 'Okul', 'Event': 'Etkinlik', 'Event type': 'Etkinlik türü', 'Start': 'Başlangıç', 'End': 'Bitiş', 'Remove lesson': 'Dersi kaldır', 'School lessons': 'Okul dersleri', 'Add each lesson with its start, end, and an existing subject.': 'Her dersi başlangıç, bitiş ve mevcut bir dersle ekle.', 'Choose the days this school schedule repeats, then add each lesson in order.': 'Bu okul programının tekrarlandığı günleri seç, ardından dersleri sırayla ekle.', 'Repeats on': 'Tekrar günleri', 'Add lesson': 'Ders ekle', '{count} lessons': '{count} ders', 'A school day needs at least one lesson.': 'Bir okul günü en az bir ders gerektirir.', 'Every school lesson needs a subject, a start time, and a later end time.': 'Her okul dersi bir ders adı, başlangıç saati ve daha sonraki bir bitiş saati gerektirir.', 'Choose at least one day for this school schedule.': 'Bu okul programı için en az bir gün seç.' },
+    ru: { 'School': 'Школа', 'Event': 'Событие', 'Event type': 'Тип события', 'Start': 'Начало', 'End': 'Конец', 'Remove lesson': 'Удалить урок', 'School lessons': 'Школьные уроки', 'Add each lesson with its start, end, and an existing subject.': 'Добавьте каждый урок с началом, окончанием и существующим предметом.', 'Choose the days this school schedule repeats, then add each lesson in order.': 'Выберите дни, в которые повторяется это школьное расписание, затем добавьте уроки по порядку.', 'Repeats on': 'Повторяется', 'Add lesson': 'Добавить урок', '{count} lessons': 'Уроков: {count}', 'A school day needs at least one lesson.': 'В школьном дне нужен хотя бы один урок.', 'Every school lesson needs a subject, a start time, and a later end time.': 'Для каждого урока нужны предмет, время начала и более позднее время окончания.', 'Choose at least one day for this school schedule.': 'Выберите хотя бы один день для этого школьного расписания.' },
+    uk: { 'School': 'Школа', 'Event': 'Подія', 'Event type': 'Тип події', 'Start': 'Початок', 'End': 'Кінець', 'Remove lesson': 'Видалити урок', 'School lessons': 'Шкільні уроки', 'Add each lesson with its start, end, and an existing subject.': 'Додайте кожен урок із початком, завершенням і наявним предметом.', 'Choose the days this school schedule repeats, then add each lesson in order.': 'Виберіть дні, коли цей шкільний розклад повторюється, а потім додайте уроки по черзі.', 'Repeats on': 'Повторюється', 'Add lesson': 'Додати урок', '{count} lessons': 'Уроків: {count}', 'A school day needs at least one lesson.': 'У шкільному дні має бути принаймні один урок.', 'Every school lesson needs a subject, a start time, and a later end time.': 'Для кожного уроку потрібні предмет, час початку та пізніший час завершення.', 'Choose at least one day for this school schedule.': 'Виберіть принаймні один день для цього шкільного розкладу.' },
+    es: { 'School': 'Escuela', 'Event': 'Evento', 'Event type': 'Tipo de evento', 'Start': 'Inicio', 'End': 'Fin', 'Remove lesson': 'Eliminar clase', 'School lessons': 'Clases escolares', 'Add each lesson with its start, end, and an existing subject.': 'Añade cada clase con su inicio, final y una asignatura existente.', 'Choose the days this school schedule repeats, then add each lesson in order.': 'Elige los días en los que se repite este horario escolar y añade después las clases en orden.', 'Repeats on': 'Se repite el', 'Add lesson': 'Añadir clase', '{count} lessons': '{count} clases', 'A school day needs at least one lesson.': 'Un día escolar necesita al menos una clase.', 'Every school lesson needs a subject, a start time, and a later end time.': 'Cada clase escolar necesita una asignatura, una hora de inicio y una hora de finalización posterior.', 'Choose at least one day for this school schedule.': 'Elige al menos un día para este horario escolar.' }
+  };
+  Object.entries(SCHOOL_EVENT_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+
+  const SUBJECT_ICON_TRANSLATIONS = {
+    de: { Biology: 'Biologie', Chemistry: 'Chemie', Physics: 'Physik', Coding: 'Programmieren', Economics: 'Wirtschaft', Law: 'Recht', Health: 'Gesundheit', Engineering: 'Technik', Media: 'Medien' },
+    tr: { Biology: 'Biyoloji', Chemistry: 'Kimya', Physics: 'Fizik', Coding: 'Programlama', Economics: 'Ekonomi', Law: 'Hukuk', Health: 'Sağlık', Engineering: 'Mühendislik', Media: 'Medya' },
+    ru: { Biology: 'Биология', Chemistry: 'Химия', Physics: 'Физика', Coding: 'Программирование', Economics: 'Экономика', Law: 'Право', Health: 'Здоровье', Engineering: 'Инженерия', Media: 'Медиа' },
+    uk: { Biology: 'Біологія', Chemistry: 'Хімія', Physics: 'Фізика', Coding: 'Програмування', Economics: 'Економіка', Law: 'Право', Health: 'Здоров’я', Engineering: 'Інженерія', Media: 'Медіа' },
+    es: { Biology: 'Biología', Chemistry: 'Química', Physics: 'Física', Coding: 'Programación', Economics: 'Economía', Law: 'Derecho', Health: 'Salud', Engineering: 'Ingeniería', Media: 'Medios' }
+  };
+  Object.entries(SUBJECT_ICON_TRANSLATIONS).forEach(([code, messages]) => Object.assign(TRANSLATIONS[code], messages));
+
   const el = (selector, parent = document) => parent.querySelector(selector);
   const els = (selector, parent = document) => [...parent.querySelectorAll(selector)];
   const pageRoot = el('#pageRoot');
@@ -348,9 +441,9 @@
   };
 
   const defaultData = () => ({
-    profile: { name: '', photo: '', theme: 'light', accent: '#f4c53a', gradeSystem: 'numeric', clockFormat: '24', language: 'en', languagePreference: 'auto', discoverySource: '', seenReleaseVersion: '' },
+    profile: { name: '', photo: '', theme: 'light', accent: '#f4c53a', gradeSystem: 'numeric', clockFormat: '24', language: 'en', languagePreference: 'auto', deviceLocaleVersion: DEVICE_LOCALE_VERSION, discoverySource: '', seenReleaseVersion: '' },
     subjects: [
-      { id: 'math', name: 'Mathematics', color: '#6c63ff', icon: 'math' },
+      { id: 'math', name: 'Math', color: '#6c63ff', icon: 'math' },
       { id: 'english', name: 'English', color: '#ec4899', icon: 'language' },
       { id: 'science', name: 'Science', color: '#10b981', icon: 'science' }
     ],
@@ -369,7 +462,7 @@
         profile: { ...fresh.profile, ...savedProfile },
         timer: { ...fresh.timer, ...(parsed.timer || {}) },
         stats: { ...fresh.stats, ...(parsed.stats || {}) },
-        subjects: Array.isArray(parsed.subjects) ? parsed.subjects : fresh.subjects,
+        subjects: Array.isArray(parsed.subjects) ? parsed.subjects.map(subject => subject?.id === 'math' && subject.name === 'Mathematics' ? { ...subject, name: 'Math' } : subject) : fresh.subjects,
         reminders: Array.isArray(parsed.reminders) ? parsed.reminders : [],
         reminderGroups: Array.isArray(parsed.reminderGroups) ? parsed.reminderGroups : [],
         widgets: Array.isArray(parsed.widgets) ? parsed.widgets : [],
@@ -383,7 +476,7 @@
     } catch { return defaultData(); }
   };
   let data = defaultData();
-  const ui = { page: 'dashboard', homeworkFilter: 'all', month: new Date(new Date().getFullYear(), new Date().getMonth(), 1), selectedDate: todayISO(), timerMode: 'study', timerRemaining: 0, timerRunning: false, timerActive: false, timerInterval: null, widgetsExpanded: false, datePickerMonth: new Date(), datePickerTarget: '', timePickerTarget: '', timePickerMeridiem: 'am', languageTransitioning: false, setupLanguage: data.profile.language || 'en', setupStep: 'welcome', setupDiscovery: data.profile.discoverySource || '', notesView: 'library', activeNotebookId: '', activeNoteId: '', noteTool: 'text', noteBrush: 'pen', noteDrawColor: '#25223a', noteDrawWidth: 4, noteDrawingData: [], noteDrawingSelectionIds: [], noteDrawingInteraction: null, noteDrawingClipboard: [], noteDrawingPastePending: false, noteCanvasObserver: null, noteEditorRange: null, releaseNotesVisible: false };
+  const ui = { page: 'dashboard', homeworkFilter: 'all', month: new Date(new Date().getFullYear(), new Date().getMonth(), 1), selectedDate: todayISO(), calendarView: 'month', timerMode: 'study', timerRemaining: 0, timerRunning: false, timerActive: false, timerInterval: null, widgetsExpanded: false, datePickerMonth: new Date(), datePickerTarget: '', timePickerTarget: '', timePickerMeridiem: 'am', languageTransitioning: false, setupLanguage: data.profile.language || 'en', setupStep: 'welcome', setupDiscovery: data.profile.discoverySource || '', notesView: 'library', activeNotebookId: '', activeNoteId: '', noteTool: 'text', noteBrush: 'pen', noteDrawColor: '#25223a', noteDrawWidth: 4, noteStylusOnly: false, noteDrawingData: [], noteDrawingSelectionIds: [], noteDrawingInteraction: null, noteDrawingClipboard: [], noteDrawingPastePending: false, noteCanvasObserver: null, noteEditorRange: null, releaseNotesVisible: false };
 
   let workspaceSaveTimer = null;
   let workspaceSaveRequest = Promise.resolve();
@@ -413,14 +506,25 @@
     const payload = await response.json();
     data = load(payload.data);
   }
-  const language = () => data.profile.language || 'en';
-  const deviceLanguage = () => {
-    const deviceLanguages = Array.isArray(navigator.languages) && navigator.languages.length ? navigator.languages : [navigator.language];
-    return deviceLanguages
-      .map(value => String(value || '').toLowerCase().split('-')[0])
-      .find(code => LANGUAGE_OPTIONS.some(([supported]) => supported === code)) || 'en';
+  const browserLocales = () => Array.isArray(navigator.languages) && navigator.languages.length ? navigator.languages : [navigator.language];
+  const languageCode = value => String(value || '').toLowerCase().split('-')[0];
+  const isSupportedLanguage = code => LANGUAGE_OPTIONS.some(([supported]) => supported === code);
+  const deviceLocale = () => {
+    const rawLocale = browserLocales().map(value => String(value || '').trim()).find(value => isSupportedLanguage(languageCode(value)));
+    if (!rawLocale) return LOCALE_CODES.en;
+    try { return Intl.getCanonicalLocales(rawLocale)[0] || LOCALE_CODES.en; }
+    catch { return rawLocale; }
   };
-  const locale = () => LOCALE_CODES[language()] || LOCALE_CODES.en;
+  const deviceLanguage = () => {
+    const currentDeviceLocale = deviceLocale();
+    const code = languageCode(currentDeviceLocale);
+    return isSupportedLanguage(code) ? code : 'en';
+  };
+  const language = () => data.profile.languagePreference === 'auto' ? deviceLanguage() : data.profile.language || 'en';
+  const locale = () => {
+    const preferredDeviceLocale = deviceLocale();
+    return languageCode(preferredDeviceLocale) === language() ? preferredDeviceLocale : LOCALE_CODES[language()] || LOCALE_CODES.en;
+  };
   const t = (key, variables = {}) => String((TRANSLATIONS[language()] || {})[key] || key).replace(/\{(\w+)\}/g, (_, name) => variables[name] ?? `{${name}}`);
   const brandText = value => String(value || '').replace(/StudyFlow/g, APP_NAME);
   const languageOptions = (selected = language()) => LANGUAGE_OPTIONS.map(([code, label]) => `<option value="${code}" ${code === selected ? 'selected' : ''}>${t(label)}</option>`).join('');
@@ -449,7 +553,7 @@
     });
   }
   function applyLanguageContent() {
-    document.documentElement.lang = language();
+    document.documentElement.lang = locale();
     els('#setupLanguage, #languageSelect').forEach(select => {
       const selected = select.id === 'setupLanguage' ? (ui.setupLanguage || language()) : (data.profile.languagePreference === 'auto' ? 'auto' : language());
       select.innerHTML = select.id === 'setupLanguage' ? languageOptions(selected) : settingsLanguageOptions(); select.value = selected;
@@ -458,10 +562,11 @@
   }
   const isNewUser = () => !data.profile.name;
   const subjectById = id => data.subjects.find(subject => subject.id === id);
-  const DEFAULT_SUBJECT_NAMES = { math: 'Mathematics', english: 'English', science: 'Science' };
+  const DEFAULT_SUBJECT_NAMES = { math: ['Math', 'Mathematics'], english: ['English'], science: ['Science'] };
   const subjectName = subject => {
     if (!subject) return '';
-    return DEFAULT_SUBJECT_NAMES[subject.id] === subject.name ? t(subject.name) : subject.name;
+    const defaults = DEFAULT_SUBJECT_NAMES[subject.id];
+    return defaults?.includes(subject.name) ? t(defaults[0]) : subject.name;
   };
   const avatarMarkup = () => escape(initials(data.profile.name));
   const subjectChip = id => {
@@ -479,8 +584,8 @@
     return note ? `<button class="homework-note-pin" data-action="open-homework-note" data-id="${note.id}" title="${t('Open note')}" aria-label="${t('Open note')}">▤</button>` : '';
   };
   const homeworkOptions = (selected = '') => `<option value="">${t('No linked homework')}</option>${[...data.homework].sort(sortHomework).map(homework => `<option value="${homework.id}" ${homework.id === selected ? 'selected' : ''}>${escape(homework.title)}${homework.done ? ' ✓' : ''}</option>`).join('')}`;
-  const empty = (title, detail, action, actionText) => `<div class="empty"><div><strong>${escape(title)}</strong><span>${escape(detail)}</span>${action ? `<br><button class="text-button" data-action="${action}">${escape(actionText)}</button>` : ''}</div></div>`;
-  const button = (text, action, classes = 'primary', extra = '') => `<button class="button ${classes}" data-action="${action}" ${extra}>${text}</button>`;
+  const empty = (title, detail, action, actionText) => `<div class="empty"><div><strong>${escape(t(title))}</strong><span>${escape(t(detail))}</span>${action ? `<br><button class="text-button" data-action="${action}">${escape(t(actionText))}</button>` : ''}</div></div>`;
+  const button = (text, action, classes = 'primary', extra = '') => `<button class="button ${classes}" data-action="${action}" ${extra}>${t(text)}</button>`;
 
   function applyAppearance() {
     const { theme, accent } = data.profile;
@@ -522,6 +627,13 @@
   function initTimer() { ui.timerRemaining = currentTimerDuration(); }
 
   /* app shell */
+  function renderQuickAddMenu() {
+    const quickAddItems = [
+      ['add-homework', 'homework', 'Homework'], ['add-event', 'calendar', 'Event or test'], ['add-reminder', 'reminders', 'Reminder'],
+      ['add-goal', 'goals', 'Goal'], ['add-subject', 'subjects', 'Subject'], ['add-grade', 'grades', 'Grade'], ['add-note', 'notes', 'Note']
+    ];
+    el('#quickAddMenu').innerHTML = quickAddItems.map(([action, icon, label]) => `<button data-action="${action}" role="menuitem"><span class="quick-add-icon">${appIcon(icon)}</span><span>${t(label)}</span></button>`).join('');
+  }
   function renderNav() {
     const incomplete = data.homework.filter(item => !item.done).length;
     el('#mainNav').innerHTML = NAV.map(([id, icon, label]) => `
@@ -531,14 +643,15 @@
     const morePhoneTabs = [['timer', 'timer', 'Focus'], ['reminders', 'reminders', 'Reminders'], ['statistics', 'statistics', 'Stats'], ['goals', 'goals', 'Goals'], ['subjects', 'subjects', 'Subjects'], ['widgets', 'widgets', 'Widgets'], ['settings', 'settings', 'Settings']];
     const phoneNav = el('#mobileBottomNav');
     phoneNav.innerHTML = [...primaryPhoneTabs, ...morePhoneTabs].map(([id, icon, label], index) => `<button class="phone-tab ${index < primaryPhoneTabs.length ? 'primary-phone-tab' : ''} ${ui.page === id ? 'active' : ''}" data-page="${id}"><span class="nav-icon">${appIcon(icon)}</span><small>${t(label)}</small></button>`).join('');
+    renderQuickAddMenu();
     window.requestAnimationFrame(() => phoneNav.querySelector('.phone-tab.active')?.scrollIntoView({ block: 'nearest', inline: 'nearest' }));
     els('[data-page="settings"]').forEach(item => item.classList.toggle('active', ui.page === 'settings'));
-    el('#profileName').textContent = data.profile.name || 'Student';
+    el('#profileName').textContent = data.profile.name || t('Student');
     el('#profileInitial').innerHTML = avatarMarkup('profile-photo');
     el('#todayLabel').textContent = new Date().toLocaleDateString(locale(), { weekday: 'long', month: 'short', day: 'numeric' });
   }
   function pageHeader(eyebrow, title, description, actions = '') {
-    return `<section class="page-header"><div><p class="eyebrow">${eyebrow}</p><h1>${title}</h1><p class="muted">${description}</p></div>${actions ? `<div class="header-actions">${actions}</div>` : ''}</section>`;
+    return `<section class="page-header"><div><p class="eyebrow">${t(eyebrow)}</p><h1>${t(title)}</h1><p class="muted">${t(description)}</p></div>${actions ? `<div class="header-actions">${actions}</div>` : ''}</section>`;
   }
   function renderPage() {
     ui.noteCanvasObserver?.disconnect();
@@ -568,7 +681,7 @@
     const open = data.homework.filter(item => !item.done);
     const completed = data.homework.filter(item => item.done).length;
     const dueWeek = open.filter(item => item.due && localDate(item.due) <= localDate(todayISO()).getTime() + 7 * 86400000).length;
-    const nextEvents = [...data.events].filter(event => event.date >= todayISO()).sort((a, b) => `${a.date}${a.time || ''}`.localeCompare(`${b.date}${b.time || ''}`)).slice(0, 4);
+    const nextEvents = [...data.events].filter(event => !event.done && event.date >= todayISO()).sort((a, b) => `${a.date}${a.time || ''}`.localeCompare(`${b.date}${b.time || ''}`)).slice(0, 4);
     const nextReminders = data.reminders.filter(item => !item.done).sort(sortReminders);
     const quote = QUOTES[new Date().getDate() % QUOTES.length];
     return `
@@ -597,8 +710,8 @@
   function greeting() { const hour = new Date().getHours(); return t(hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'); }
   function formatMinutes(minutes) { const total = Math.max(0, Number(minutes) || 0); return total >= 60 ? `${Math.floor(total / 60)}h ${total % 60}m` : `${total}m`; }
   function homeworkPhotoPin(item) { return item.completionPhoto?.source ? `<button class="homework-photo-pin" data-action="view-homework-photo" data-id="${item.id}" title="${t('View pinned homework photo')}" aria-label="${t('View pinned homework photo')}"><img src="${escape(item.completionPhoto.source)}" alt="${t('Pinned homework photo')}"></button>` : ''; }
-  function homeworkRow(item) { return `<div class="task-row"><button class="check ${item.done ? 'done' : ''}" data-action="toggle-homework" data-id="${item.id}" aria-label="Mark ${escape(item.title)} ${item.done ? 'incomplete' : 'complete'}">✓</button><div class="task-row-main"><b class="${item.done ? 'done' : ''}">${escape(item.title)}</b><small>${subjectChip(item.subjectId)} ${item.due ? ` · ${relativeDate(item.due)}` : ''}</small></div>${homeworkNoteButton(item)}${homeworkPhotoPin(item)}</div>`; }
-  function eventRow(event) { const date = localDate(event.date); return `<div class="event-row"><span class="agenda-date"><strong>${date.getDate()}</strong>${date.toLocaleDateString(locale(), { month: 'short' })}</span><span class="event-color" style="--event-color:${escape(event.color || data.profile.accent)}"></span><div><b>${escape(event.title)}</b><small>${event.time || t('All day')}${event.subjectId ? ` · ${escape(subjectName(subjectById(event.subjectId)))}` : ''}</small></div></div>`; }
+  function homeworkRow(item) { const content = `<b class="${item.done ? 'done' : ''}">${escape(item.title)}</b><small>${subjectChip(item.subjectId)} ${item.due ? ` · ${relativeDate(item.due)}` : ''}</small>`; return `<div class="task-row"><button class="check ${item.done ? 'done' : ''}" data-action="toggle-homework" data-id="${item.id}" aria-label="${escape(t('Mark {title} as {state}', { title: item.title, state: t(item.done ? 'incomplete' : 'complete') }))}">✓</button>${item.completionPhoto?.source ? `<button class="task-row-main homework-photo-open" data-action="view-homework-photo" data-id="${item.id}" aria-label="${escape(t('Open saved homework photo'))}">${content}</button>` : `<div class="task-row-main">${content}</div>`}${homeworkNoteButton(item)}${homeworkPhotoPin(item)}</div>`; }
+  function eventRow(event) { const date = localDate(event.date); const school = isSchoolEvent(event); return `<div class="event-row ${event.done ? 'done' : ''}"><span class="agenda-date"><strong>${date.getDate()}</strong>${date.toLocaleDateString(locale(), { month: 'short' })}</span><span class="event-color" style="--event-color:${escape(event.color || data.profile.accent)}"></span><div><b>${escape(schoolEventLabel(event))}</b><small>${school ? schoolLessons(event).map(lesson => `${timeLabel(lesson.start)} ${schoolLessonLabel(lesson)}`).join(' · ') : `${event.time ? timeLabel(event.time) : t('All day')}${event.subjectId ? ` · ${escape(subjectName(subjectById(event.subjectId)))}` : ''}`}</small></div></div>`; }
   function renderDashboardWidgets(position) {
     const widgets = data.widgets.filter(widget => widget.position === position);
     if (!widgets.length) return '';
@@ -606,26 +719,26 @@
   }
   function normalizedWidgetType(type) { return ({ reminders: 'next-task', calendar: 'upcoming-event' }[type] || type); }
   function widgetTitle(type) {
-    return ({ 'next-task': 'Next task', 'next-reminder': 'Next reminder', countdown: 'Test countdown', 'upcoming-event': 'Upcoming plans', stats: 'Study stats' })[normalizedWidgetType(type)] || 'Study widget';
+    return t(({ 'next-task': 'Next task', 'next-reminder': 'Next reminder', countdown: 'Test countdown', 'upcoming-event': 'Upcoming plans', stats: 'Study stats' })[normalizedWidgetType(type)] || 'Study widget');
   }
   function renderDashboardWidget(widget) {
     const open = data.homework.filter(item => !item.done).sort(sortHomework);
-    const upcoming = data.events.filter(event => event.date >= todayISO()).sort((a,b) => `${a.date}${a.time || ''}`.localeCompare(`${b.date}${b.time || ''}`));
+    const upcoming = data.events.filter(event => !event.done && event.date >= todayISO()).sort((a,b) => `${a.date}${a.time || ''}`.localeCompare(`${b.date}${b.time || ''}`));
     const reminders = data.reminders.filter(item => !item.done).sort(sortReminders);
     const type = normalizedWidgetType(widget.type);
     let content = '';
-    if (type === 'next-task') content = open.length ? homeworkRow(open[0]) : '<p class="muted">You are all caught up.</p>';
-    if (type === 'next-reminder') content = reminders.length ? reminderRow(reminders[0], true) : '<p class="muted">No open reminders.</p>';
-    if (type === 'upcoming-event') content = upcoming.length ? `<div class="event-list compact-list">${upcoming.slice(0,3).map(eventRow).join('')}</div>` : '<p class="muted">No upcoming events or tests.</p>';
-    if (type === 'countdown') { const target = data.events.find(event => event.id === widget.targetId) || upcoming[0]; const days = target ? Math.max(0, Math.round((localDate(target.date) - localDate(todayISO())) / 86400000)) : null; content = target ? `<div class="widget-countdown"><strong>${days}</strong><span>${days === 1 ? 'day' : 'days'} to ${escape(target.title)}</span><small>${formatDate(target.date)}${target.time ? ` · ${target.time}` : ''}</small></div>` : '<p class="muted">Add a test or event to start a countdown.</p>'; }
-    if (type === 'stats') content = `<div class="widget-stats"><span><b>${formatMinutes(data.stats.studyMinutes)}</b> focus time</span><span><b>${data.homework.filter(item => item.done).length}</b> tasks done</span><span><b>${data.timer.completedSessions || 0}</b> sessions</span></div>`;
-    return `<article class="card dashboard-widget"><div class="card-head"><h2>${escape(widget.title || widgetTitle(type))}</h2><button class="mini-button" data-page="widgets" aria-label="Manage widgets">⚙</button></div>${content}</article>`;
+    if (type === 'next-task') content = open.length ? homeworkRow(open[0]) : `<p class="muted">${t('You are all caught up.')}</p>`;
+    if (type === 'next-reminder') content = reminders.length ? reminderRow(reminders[0], true) : `<p class="muted">${t('No open reminders.')}</p>`;
+    if (type === 'upcoming-event') content = upcoming.length ? `<div class="event-list compact-list">${upcoming.slice(0,3).map(eventRow).join('')}</div>` : `<p class="muted">${t('No upcoming events or tests.')}</p>`;
+    if (type === 'countdown') { const target = data.events.find(event => event.id === widget.targetId) || upcoming[0]; const days = target ? Math.max(0, Math.round((localDate(target.date) - localDate(todayISO())) / 86400000)) : null; content = target ? `<div class="widget-countdown"><strong>${days}</strong><span>${t('{count} {unit} to {title}', { count: days, unit: t(days === 1 ? 'day' : 'days'), title: escape(target.title) })}</span><small>${formatDate(target.date)}${target.time ? ` · ${target.time}` : ''}</small></div>` : `<p class="muted">${t('Add a test or event to start a countdown.')}</p>`; }
+    if (type === 'stats') content = `<div class="widget-stats"><span><b>${formatMinutes(data.stats.studyMinutes)}</b> ${t('focus time')}</span><span><b>${data.homework.filter(item => item.done).length}</b> ${t('tasks done')}</span><span><b>${data.timer.completedSessions || 0}</b> ${t('sessions')}</span></div>`;
+    return `<article class="card dashboard-widget"><div class="card-head"><h2>${escape(widget.title || widgetTitle(type))}</h2><button class="mini-button" data-page="widgets" aria-label="${t('Manage widgets')}">⚙</button></div>${content}</article>`;
   }
   function widgetItems(widget) {
     const subjectId = widget.subjectId || '';
     const matchesSubject = item => !subjectId || item.subjectId === subjectId;
     const homework = data.homework.filter(item => !item.done && matchesSubject(item)).sort(sortHomework);
-    const events = data.events.filter(item => item.date >= todayISO() && matchesSubject(item)).sort((a, b) => `${a.date}${a.time || ''}`.localeCompare(`${b.date}${b.time || ''}`));
+    const events = data.events.filter(item => !item.done && item.date >= todayISO() && matchesSubject(item)).sort((a, b) => `${a.date}${a.time || ''}`.localeCompare(`${b.date}${b.time || ''}`));
     const reminders = data.reminders.filter(item => !item.done).sort(sortReminders);
     return { homework, events, reminders, target: data.events.find(item => item.id === widget.targetId) || events[0] };
   }
@@ -636,13 +749,13 @@
     const subject = subjectById(widget.subjectId); const subjectLabel = subject ? ` · ${subjectName(subject)}` : '';
     const widgetDate = widget.date || '';
     let title = widget.title || widgetTitle(type); let primary = ''; let detail = '';
-    if (type === 'next-task') { const item = homework[0]; primary = item ? countdownLabel(item.due) : 'No homework due'; detail = item ? item.title : 'You are all caught up'; }
-    if (type === 'next-reminder') { const item = reminders[0]; primary = item ? countdownLabel(item.date) : 'No open reminders'; detail = item ? `${item.title}${item.time ? ` · ${item.time}` : ''}` : 'Nothing to remember'; }
-    if (type === 'countdown') { const targetDate = widgetDate || target?.date; const days = targetDate ? Math.max(0, Math.round((localDate(targetDate) - localDate(todayISO())) / 86400000)) : null; primary = targetDate ? `${days} ${days === 1 ? 'day' : 'days'}` : 'No date set'; detail = target ? target.title : widgetDate ? formatDate(widgetDate) : 'Set a date or choose an event'; }
-    if (type === 'upcoming-event') { const item = events[0]; primary = item ? item.title : 'Nothing upcoming'; detail = item?.date ? `${formatDate(item.date)}${item.time ? ` · ${item.time}` : ''}` : 'Your calendar is clear'; }
-    if (type === 'stats') { primary = formatMinutes(data.stats.studyMinutes); detail = `${data.homework.filter(item => item.done).length} tasks completed`; }
+    if (type === 'next-task') { const item = homework[0]; primary = item ? countdownLabel(item.due) : t('No homework due'); detail = item ? item.title : t('You are all caught up.'); }
+    if (type === 'next-reminder') { const item = reminders[0]; primary = item ? countdownLabel(item.date) : t('No open reminders.'); detail = item ? `${item.title}${item.time ? ` · ${item.time}` : ''}` : t('Nothing to remember'); }
+    if (type === 'countdown') { const targetDate = widgetDate || target?.date; const days = targetDate ? Math.max(0, Math.round((localDate(targetDate) - localDate(todayISO())) / 86400000)) : null; primary = targetDate ? `${days} ${t(days === 1 ? 'day' : 'days')}` : t('No date set'); detail = target ? target.title : widgetDate ? formatDate(widgetDate) : t('Set a date or choose an event'); }
+    if (type === 'upcoming-event') { const item = events[0]; primary = item ? item.title : t('Nothing upcoming.'); detail = item?.date ? `${formatDate(item.date)}${item.time ? ` · ${item.time}` : ''}` : t('Your calendar is clear'); }
+    if (type === 'stats') { primary = formatMinutes(data.stats.studyMinutes); detail = `${data.homework.filter(item => item.done).length} ${t('tasks completed')}`; }
     if (widgetDate && type !== 'countdown') detail = `${detail} · ${formatDate(widgetDate)}`;
-    return `<article class="floating-widget"><button class="floating-widget-main" data-page="${widgetPage(type)}" aria-label="Open ${escape(title)}"><span class="floating-widget-icon">${widgetIcon(type)}</span><span class="floating-widget-copy"><small>${escape(title)}${escape(subjectLabel)}</small><b>${escape(primary)}</b><em>${escape(detail)}</em></span></button><button class="floating-widget-close" data-action="toggle-widget" data-id="${widget.id}" aria-label="Turn off ${escape(title)}">×</button></article>`;
+    return `<article class="floating-widget"><button class="floating-widget-main" data-page="${widgetPage(type)}" aria-label="${escape(t('Open {title}', { title }))}"><span class="floating-widget-icon">${widgetIcon(type)}</span><span class="floating-widget-copy"><small>${escape(title)}${escape(subjectLabel)}</small><b>${escape(primary)}</b><em>${escape(detail)}</em></span></button><button class="floating-widget-close" data-action="toggle-widget" data-id="${widget.id}" aria-label="${escape(t('Turn off {title}', { title }))}">×</button></article>`;
   }
   function syncFloatingWidgets() {
     const root = el('#floatingWidgets'); if (!root) return;
@@ -651,8 +764,8 @@
     root.classList.toggle('collapsed', collapsed);
     root.classList.toggle('expanded', widgets.length >= 3 && ui.widgetsExpanded);
     root.classList.toggle('timer-active', ui.timerActive && ui.page !== 'timer');
-    if (collapsed) root.innerHTML = `<button class="floating-widget-summary" data-action="toggle-widget-stack" aria-label="View ${widgets.length} widgets"><span>◫</span><span><b>${widgets.length} Widgets</b><em>Press to view</em></span></button>`;
-    else root.innerHTML = `${widgets.length >= 3 ? `<button class="floating-widget-stack-toggle" data-action="toggle-widget-stack">${widgets.length} Widgets · Hide</button>` : ''}${widgets.map(renderFloatingWidget).join('')}`;
+    if (collapsed) root.innerHTML = `<button class="floating-widget-summary" data-action="toggle-widget-stack" aria-label="${t('View {count} widgets', { count: widgets.length })}"><span>◫</span><span><b>${t('{count} Widgets', { count: widgets.length })}</b><em>${t('Press to view')}</em></span></button>`;
+    else root.innerHTML = `${widgets.length >= 3 ? `<button class="floating-widget-stack-toggle" data-action="toggle-widget-stack">${t('{count} Widgets', { count: widgets.length })} · ${t('Hide')}</button>` : ''}${widgets.map(renderFloatingWidget).join('')}`;
     root.classList.toggle('hidden', !widgets.length);
   }
 
@@ -668,8 +781,8 @@
     if (ui.homeworkFilter === 'done') items = items.filter(item => item.done);
     if (ui.homeworkFilter === 'overdue') items = items.filter(item => !item.done && item.due && item.due < todayISO());
     return `${pageHeader('TASKS', 'Homework', 'Keep every assignment in one calm, organized place.', button('＋ Add homework', 'add-homework'))}
-      <div class="filter-bar">${filters.map(([key, label]) => `<button class="filter-button ${ui.homeworkFilter === key ? 'active' : ''}" data-action="homework-filter" data-filter="${key}">${label}</button>`)}</div>
-      <article class="card list-card">${items.length ? items.sort(sortHomework).map(item => `<div class="homework-row"><button class="check ${item.done ? 'done' : ''}" data-action="toggle-homework" data-id="${item.id}">✓</button><div class="homework-info"><b class="${item.done ? 'done' : ''}">${escape(item.title)}</b><div class="chips">${subjectChip(item.subjectId)}${item.description ? '<span class="chip">Details</span>' : ''}${homeworkNoteButton(item)}</div></div><div class="due ${!item.done && item.due && item.due < todayISO() ? 'overdue' : ''}">${relativeDate(item.due)}</div><span class="priority ${item.priority || 'medium'}">${escape(item.priority || 'medium')}</span>${homeworkPhotoPin(item)}<div class="row-menu"><button class="mini-button" data-action="edit-homework" data-id="${item.id}" aria-label="Edit">✎</button><button class="mini-button delete" data-action="delete-homework" data-id="${item.id}" aria-label="Delete">×</button></div></div>`).join('') : empty('No homework here', 'Try another filter or add a new assignment.', 'add-homework', 'Add homework')}</article>`;
+      <div class="filter-bar">${filters.map(([key, label]) => `<button class="filter-button ${ui.homeworkFilter === key ? 'active' : ''}" data-action="homework-filter" data-filter="${key}">${t(label)}</button>`).join('')}</div>
+      <article class="card list-card">${items.length ? items.sort(sortHomework).map(item => `<div class="homework-row"><button class="check ${item.done ? 'done' : ''}" data-action="toggle-homework" data-id="${item.id}" aria-label="${escape(t('Mark {title} as {state}', { title: item.title, state: t(item.done ? 'incomplete' : 'complete') }))}">✓</button><div class="homework-info">${item.completionPhoto?.source ? `<button class="homework-title-button homework-photo-open" data-action="view-homework-photo" data-id="${item.id}" aria-label="${escape(t('Open saved homework photo'))}"><b class="${item.done ? 'done' : ''}">${escape(item.title)}</b></button>` : `<b class="${item.done ? 'done' : ''}">${escape(item.title)}</b>`}<div class="chips">${subjectChip(item.subjectId)}${item.description ? `<span class="chip">${t('Details')}</span>` : ''}${homeworkNoteButton(item)}</div></div><div class="due ${!item.done && item.due && item.due < todayISO() ? 'overdue' : ''}">${relativeDate(item.due)}</div><span class="priority ${item.priority || 'medium'}">${t((item.priority || 'medium').replace(/^./, letter => letter.toUpperCase()))}</span>${homeworkPhotoPin(item)}<div class="row-menu"><button class="mini-button" data-action="edit-homework" data-id="${item.id}" aria-label="${t('Edit')}">✎</button><button class="mini-button delete" data-action="delete-homework" data-id="${item.id}" aria-label="${t('Delete')}">×</button></div></div>`).join('') : empty('No homework here', 'Try another filter or add a new assignment.', 'add-homework', 'Add homework')}</article>`;
   }
 
   /* reminders */
@@ -684,14 +797,14 @@
   function daysTo(value) { return value ? Math.max(0, Math.round((localDate(value) - localDate(todayISO())) / 86400000)) : null; }
   function countdownLabel(value) { const days = daysTo(value); return days === null ? t('No date set') : `${days} ${t(days === 1 ? 'day' : 'days')}`; }
   function reminderRow(item, compact = false) {
-    return `<div class="reminder-row ${compact ? 'compact-reminder' : ''}"><button class="check ${item.done ? 'done' : ''}" data-action="toggle-reminder" data-id="${item.id}" aria-label="Mark ${escape(item.title)} ${item.done ? 'incomplete' : 'complete'}">✓</button><div class="reminder-info"><b class="${item.done ? 'done' : ''}">${escape(item.title)}</b><small>${reminderScheduleLabel(item)}${item.note ? ` · ${escape(item.note)}` : ''}</small></div>${compact ? '' : `<div class="row-menu"><button class="mini-button" data-action="edit-reminder" data-id="${item.id}" aria-label="Edit reminder">✎</button><button class="mini-button delete" data-action="delete-reminder" data-id="${item.id}" aria-label="Delete reminder">×</button></div>`}</div>`;
+    return `<div class="reminder-row ${compact ? 'compact-reminder' : ''}"><button class="check ${item.done ? 'done' : ''}" data-action="toggle-reminder" data-id="${item.id}" aria-label="${escape(t('Mark {title} as {state}', { title: item.title, state: t(item.done ? 'incomplete' : 'complete') }))}">✓</button><div class="reminder-info"><b class="${item.done ? 'done' : ''}">${escape(item.title)}</b><small>${reminderScheduleLabel(item)}${item.note ? ` · ${escape(item.note)}` : ''}</small></div>${compact ? '' : `<div class="row-menu"><button class="mini-button" data-action="edit-reminder" data-id="${item.id}" aria-label="${t('Edit reminder')}">✎</button><button class="mini-button delete" data-action="delete-reminder" data-id="${item.id}" aria-label="${t('Delete reminder')}">×</button></div>`}</div>`;
   }
   function renderReminders() {
     const reminders = [...data.reminders].sort(sortReminders);
     const openCount = reminders.filter(item => !item.done).length;
     const ungrouped = reminders.filter(item => !item.groupId || !reminderGroupById(item.groupId));
     return `${pageHeader('DON’T FORGET', 'Reminders', 'Keep small but important things in view before they slip your mind.', `${button('＋ New group', 'add-reminder-group', 'secondary')}${button('＋ Add reminder', 'add-reminder')}`)}
-      <section class="overview-grid"><article class="card"><span class="overview-label">OPEN REMINDERS</span><strong class="overview-number">${openCount}</strong><span class="overview-label">Still to remember</span></article><article class="card"><span class="overview-label">DUE TODAY</span><strong class="overview-number">${reminders.filter(item => !item.done && item.date === todayISO()).length}</strong><span class="overview-label">Worth a quick check</span></article><article class="card"><span class="overview-label">COMPLETED</span><strong class="overview-number">${reminders.filter(item => item.done).length}</strong><span class="overview-label">Already handled</span></article></section>
+      <section class="overview-grid"><article class="card"><span class="overview-label">${t('OPEN REMINDERS')}</span><strong class="overview-number">${openCount}</strong><span class="overview-label">${t('Still to remember')}</span></article><article class="card"><span class="overview-label">${t('DUE TODAY')}</span><strong class="overview-number">${reminders.filter(item => !item.done && item.date === todayISO()).length}</strong><span class="overview-label">${t('Worth a quick check')}</span></article><article class="card"><span class="overview-label">${t('COMPLETED')}</span><strong class="overview-number">${reminders.filter(item => item.done).length}</strong><span class="overview-label">${t('Already handled')}</span></article></section>
       <section class="reminder-group-grid">${data.reminderGroups.map(group => renderReminderGroup(group, reminders.filter(item => item.groupId === group.id))).join('')}</section>
       <article class="card reminder-list-card" style="margin-top:14px"><div class="card-head"><h2>${data.reminderGroups.length ? t('Ungrouped reminders') : t('All reminders')}</h2><span class="chip">${t('{count} open', { count: ungrouped.filter(item => !item.done).length })}</span></div>${ungrouped.length ? `<div class="reminder-list">${ungrouped.map(item => reminderRow(item)).join('')}</div>` : data.reminderGroups.length ? empty(t('Everything is grouped'), t('Create a reminder here or add one directly inside a group.'), 'add-reminder', t('Add reminder')) : empty(t('Nothing to remember yet'), t('Add a reminder for tasks, forms, deadlines, or anything else.'), 'add-reminder', t('Add reminder'))}</article>`;
   }
@@ -701,20 +814,107 @@
   }
 
   /* calendar */
-  function renderCalendar() {
-    const month = ui.month;
+  const calendarIso = date => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  const isSchoolEvent = event => event?.type === 'school';
+  const schoolLessons = event => (Array.isArray(event?.lessons) ? event.lessons.filter(lesson => lesson?.start && lesson?.end && lesson?.subjectId) : []).slice().sort((left, right) => `${left.start}|${left.end}`.localeCompare(`${right.start}|${right.end}`));
+  const schoolWeekdays = event => Array.isArray(event?.weekdays) ? [...new Set(event.weekdays.map(Number).filter(day => Number.isInteger(day) && day >= 0 && day <= 6))].sort((left, right) => left - right) : [];
+  const eventOccursOn = (event, iso) => {
+    if (!isSchoolEvent(event) || !schoolWeekdays(event).length) return event.date === iso;
+    return Boolean(event.date && iso >= event.date && schoolWeekdays(event).includes(localDate(iso).getDay()));
+  };
+  function schoolEventLabel(event) { return isSchoolEvent(event) ? `${t('School')} · ${t('{count} lessons', { count: schoolLessons(event).length })}` : event.title; }
+  function schoolLessonLabel(lesson) {
+    const subject = subjectById(lesson.subjectId);
+    return subject ? subjectName(subject) : t('No subject');
+  }
+  function eventSubject(event, lesson = null) {
+    if (lesson) return subjectById(lesson.subjectId);
+    if (event.subjectId) return subjectById(event.subjectId);
+    const lessons = schoolLessons(event);
+    return lessons.length === 1 ? subjectById(lessons[0].subjectId) : null;
+  }
+  function calendarEventMarker(event, lesson = null) {
+    const subject = eventSubject(event, lesson);
+    const color = isSchoolEvent(event) ? SCHOOL_EVENT_COLOR : (lesson ? (subject?.color || event.color || data.profile.accent) : (event.color || subject?.color || data.profile.accent));
+    return `<i class="calendar-event-marker ${subject ? 'has-subject' : ''}" style="--event-color:${escape(color)}">${subject ? subjectIcon(subject.icon) : ''}</i>`;
+  }
+  function calendarWeekStart(value = ui.selectedDate) {
+    const date = localDate(value) || localDate(todayISO());
+    date.setDate(date.getDate() - ((date.getDay() + 6) % 7));
+    return date;
+  }
+  function calendarWeekDates() {
+    const start = calendarWeekStart();
+    return Array.from({ length: 7 }, (_, index) => { const date = new Date(start); date.setDate(start.getDate() + index); return date; });
+  }
+  function calendarRangeLabel(dates) {
+    const first = dates[0]; const last = dates[dates.length - 1];
+    const firstLabel = first.toLocaleDateString(locale(), { month: 'short', day: 'numeric' });
+    const lastLabel = last.toLocaleDateString(locale(), { month: 'short', day: 'numeric', year: first.getFullYear() === last.getFullYear() ? undefined : 'numeric' });
+    return `${firstLabel} – ${lastLabel}`;
+  }
+  function eventCompleteButton(event) {
+    return `<button class="check event-complete ${event.done ? 'done' : ''}" data-action="toggle-event" data-id="${event.id}" aria-label="${escape(t(event.done ? 'Reopen event' : 'Mark event complete'))}">✓</button>`;
+  }
+  function selectedEvent(event) {
+    const lessons = schoolLessons(event);
+    const lessonList = isSchoolEvent(event) ? `<div class="school-lesson-summary">${lessons.map(lesson => `<span><b>${timeLabel(lesson.start)}–${timeLabel(lesson.end)}</b>${escape(schoolLessonLabel(lesson))}</span>`).join('')}</div>` : '';
+    const meta = isSchoolEvent(event) ? t('{count} lessons', { count: lessons.length }) : `${event.time ? timeLabel(event.time) : t('All day')}${event.subjectId ? ` · ${escape(subjectName(subjectById(event.subjectId)))}` : ''}${event.description ? ` · ${escape(event.description)}` : ''}`;
+    return `<div class="selected-event ${event.done ? 'done' : ''}">${eventCompleteButton(event)}<div class="selected-event-copy"><div class="selected-event-title">${calendarEventMarker(event)}<b>${escape(schoolEventLabel(event))}</b></div><small>${meta}</small>${lessonList}</div><div class="row-menu"><button class="mini-button" data-action="edit-event" data-id="${event.id}" aria-label="${t('Edit')}">✎</button><button class="mini-button delete" data-action="delete-event" data-id="${event.id}" aria-label="${t('Delete')}">×</button></div></div>`;
+  }
+  function renderCalendarMonth(month) {
     const first = new Date(month.getFullYear(), month.getMonth(), 1);
     const start = new Date(first); start.setDate(1 - ((first.getDay() + 6) % 7));
     const dates = Array.from({ length: 42 }, (_, index) => { const date = new Date(start); date.setDate(start.getDate() + index); return date; });
-    const selected = data.events.filter(event => event.date === ui.selectedDate).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+    const weekdays = Array.from({ length: 7 }, (_, index) => new Date(2024, 0, index + 1).toLocaleDateString(locale(), { weekday: 'short' }));
+    return `<div class="weekdays">${weekdays.map(day => `<span>${day}</span>`).join('')}</div><div class="calendar-days">${dates.map(date => calendarDay(date, month)).join('')}</div>`;
+  }
+  const timeMinutes = value => { const { hours, minutes } = parseTime(value); return clamp(hours * 60 + minutes, 0, DAY_MINUTES); };
+  function weekEvent(event, occurrenceDate = event.date) {
+    const start = event.time || '00:00';
+    const startMinutes = timeMinutes(start);
+    const duration = 60;
+    const top = Math.round((startMinutes / 60) * WEEK_HOUR_HEIGHT) + 3;
+    const height = Math.max(34, Math.min(DAY_MINUTES - startMinutes, duration) / 60 * WEEK_HOUR_HEIGHT - 5);
+    const subject = eventSubject(event);
+    const color = event.color || subject?.color || data.profile.accent;
+    return `<button class="week-event ${event.done ? 'done' : ''}" data-action="select-event-date" data-date="${occurrenceDate}" style="--event-color:${escape(color)};--event-top:${top}px;--event-height:${height}px">${calendarEventMarker(event)}<span class="week-event-copy"><b>${escape(event.title)}</b><small>${timeLabel(start)}</small></span></button>`;
+  }
+  function weekSchoolEvent(event, occurrenceDate) {
+    const lessons = schoolLessons(event);
+    if (!lessons.length) return '';
+    const startMinutes = Math.min(...lessons.map(lesson => timeMinutes(lesson.start)));
+    const endMinutes = Math.max(...lessons.map(lesson => timeMinutes(lesson.end)));
+    const top = Math.round((startMinutes / 60) * WEEK_HOUR_HEIGHT) + 3;
+    const timeHeight = Math.min(DAY_MINUTES - startMinutes, Math.max(30, endMinutes - startMinutes)) / 60 * WEEK_HOUR_HEIGHT + 20;
+    const contentHeight = 52 + lessons.length * 54 + Math.max(0, lessons.length - 1) * 6 + 19;
+    const height = Math.max(100, timeHeight, contentHeight);
+    return `<button class="week-school-event ${event.done ? 'done' : ''}" data-action="select-event-date" data-date="${occurrenceDate}" style="--school-top:${top}px;--school-height:${height}px"><span class="week-school-title">${t('School')}</span><span class="week-school-lessons">${lessons.map(lesson => { const subject = subjectById(lesson.subjectId); return `<span class="week-school-lesson" style="--lesson-color:${escape(subject?.color || SCHOOL_EVENT_COLOR)}"><b class="week-school-lesson-name">${escape(schoolLessonLabel(lesson))}</b><time>${timeLabel(lesson.start)}–${timeLabel(lesson.end)}</time></span>`; }).join('')}</span></button>`;
+  }
+  function weekHourLabel(hour) {
+    if (data.profile.clockFormat === '24') return String(hour).padStart(2, '0');
+    return new Date(2024, 0, 1, hour % 24).toLocaleTimeString(locale(), { hour: 'numeric', hour12: true });
+  }
+  function renderCalendarWeek() {
+    const dates = calendarWeekDates();
+    const hourLabels = Array.from({ length: 25 }, (_, hour) => `<span style="top:${hour === 24 ? 1240 : hour * WEEK_HOUR_HEIGHT}px">${weekHourLabel(hour)}</span>`).join('');
+    return `<div class="week-calendar-wrap"><div class="week-calendar"><div class="week-calendar-header"><span class="week-time-corner" aria-hidden="true"></span>${dates.map(date => { const iso = calendarIso(date); return `<button class="week-day-heading ${iso === ui.selectedDate ? 'selected' : ''} ${iso === todayISO() ? 'today' : ''}" data-action="select-date" data-date="${iso}"><small>${date.toLocaleDateString(locale(), { weekday: 'short' })}</small><b>${date.getDate()}</b></button>`; }).join('')}</div><div class="week-all-day-row"><span class="week-all-day-label">${t('All day')}</span>${dates.map(date => { const iso = calendarIso(date); const events = data.events.filter(event => eventOccursOn(event, iso) && !event.time && !isSchoolEvent(event)); return `<div class="week-all-day-cell ${iso === ui.selectedDate ? 'selected' : ''}">${events.map(event => `<button class="week-all-day-event ${event.done ? 'done' : ''}" data-action="select-event-date" data-date="${iso}" style="--event-color:${escape(event.color || eventSubject(event)?.color || data.profile.accent)}">${calendarEventMarker(event)}<span>${escape(event.title)}</span></button>`).join('')}</div>`; }).join('')}</div><div class="week-schedule"><div class="week-time-labels">${hourLabels}</div>${dates.map(date => { const iso = calendarIso(date); const events = data.events.filter(event => eventOccursOn(event, iso)); const schools = events.filter(isSchoolEvent); const timed = events.filter(event => !isSchoolEvent(event) && event.time).sort((left, right) => (left.time || '').localeCompare(right.time || '')); return `<div class="week-day-column ${iso === ui.selectedDate ? 'selected' : ''} ${iso === todayISO() ? 'today' : ''}">${schools.map(event => weekSchoolEvent(event, iso)).join('')}${timed.map(event => weekEvent(event, iso)).join('')}</div>`; }).join('')}</div></div></div>`;
+  }
+  function renderCalendar() {
+    const month = ui.month;
+    const selected = data.events.filter(event => eventOccursOn(event, ui.selectedDate)).sort((a, b) => (a.time || '').localeCompare(b.time || ''));
+    const weekDates = calendarWeekDates();
+    const week = ui.calendarView === 'week';
+    const title = week ? calendarRangeLabel(weekDates) : month.toLocaleDateString(locale(), { month: 'long', year: 'numeric' });
     return `${pageHeader('PLAN AHEAD', 'Calendar', 'See your events and study deadlines at a glance.', button('＋ Add event', 'add-event'))}
-      <section class="calendar-layout"><article class="card"><div class="card-head"><div class="calendar-controls"><button class="icon-button" data-action="calendar-previous" aria-label="Previous month">‹</button><button class="icon-button" data-action="calendar-next" aria-label="Next month">›</button></div><h2 class="calendar-title">${month.toLocaleDateString(locale(), { month: 'long', year: 'numeric' })}</h2><button class="text-button" data-action="calendar-today">Today</button></div><div class="weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div><div class="calendar-days">${dates.map(date => calendarDay(date, month)).join('')}</div></article>
-      <aside class="card selected-date-card"><p class="eyebrow">SELECTED DATE</p><h3>${formatDate(ui.selectedDate, { weekday: 'long', month: 'long', day: 'numeric' })}</h3><div class="selected-events">${selected.length ? selected.map(event => `<div class="selected-event"><div class="row-menu" style="float:right"><button class="mini-button" data-action="edit-event" data-id="${event.id}">✎</button><button class="mini-button delete" data-action="delete-event" data-id="${event.id}">×</button></div><b>${escape(event.title)}</b><small>${event.time || 'All day'}${event.description ? ` · ${escape(event.description)}` : ''}</small></div>`).join('') : empty('Nothing planned', 'This day is free.', '', '')}</div>${button('＋ Event on this day', 'add-event', 'secondary full')}</aside></section>`;
+      <section class="calendar-layout"><article class="card calendar-card"><div class="card-head calendar-head"><div class="calendar-controls"><button class="icon-button" data-action="calendar-previous" aria-label="${t(week ? 'Previous week' : 'Previous month')}">‹</button><button class="icon-button" data-action="calendar-next" aria-label="${t(week ? 'Next week' : 'Next month')}">›</button></div><h2 class="calendar-title">${title}</h2><div class="calendar-toolbar"><div class="calendar-view-toggle" role="group" aria-label="${t('Calendar view')}"><button class="filter-button ${!week ? 'active' : ''}" data-action="calendar-view" data-view="month">${t('Month')}</button><button class="filter-button ${week ? 'active' : ''}" data-action="calendar-view" data-view="week">${t('Week')}</button></div><div class="calendar-clock-toggle" role="group" aria-label="${t('Time format')}"><button class="filter-button ${data.profile.clockFormat === '24' ? 'active' : ''}" data-action="calendar-clock-format" data-format="24">24h</button><button class="filter-button ${data.profile.clockFormat === '12' ? 'active' : ''}" data-action="calendar-clock-format" data-format="12">12h</button></div><button class="text-button" data-action="calendar-today">${t('Today')}</button></div></div>${week ? renderCalendarWeek() : renderCalendarMonth(month)}</article>
+      <aside class="card selected-date-card"><p class="eyebrow">${t('SELECTED DATE')}</p><h3>${formatDate(ui.selectedDate, { weekday: 'long', month: 'long', day: 'numeric' })}</h3><div class="selected-events">${selected.length ? selected.map(selectedEvent).join('') : empty('Nothing planned', 'This day is free.', '', '')}</div>${button('＋ Event on this day', 'add-event', 'secondary full')}</aside></section>`;
   }
   function calendarDay(date, month) {
-    const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-    const events = data.events.filter(event => event.date === iso).slice(0, 2);
-    return `<button class="calendar-day ${date.getMonth() !== month.getMonth() ? 'outside' : ''} ${iso === todayISO() ? 'today' : ''} ${iso === ui.selectedDate ? 'selected' : ''}" data-action="select-date" data-date="${iso}"><span class="day-number">${date.getDate()}</span>${events.map(event => `<span class="day-event" style="--event-color:${escape(event.color || data.profile.accent)}">${escape(event.title)}</span>`).join('')}${data.events.filter(event => event.date === iso).length > 2 ? '<span class="day-event">More…</span>' : ''}</button>`;
+    const iso = calendarIso(date);
+    const allEvents = data.events.filter(event => eventOccursOn(event, iso));
+    const events = allEvents.slice(0, 2);
+    return `<button class="calendar-day ${date.getMonth() !== month.getMonth() ? 'outside' : ''} ${iso === todayISO() ? 'today' : ''} ${iso === ui.selectedDate ? 'selected' : ''}" data-action="select-date" data-date="${iso}"><span class="day-number">${date.getDate()}</span>${events.map(event => `<span class="day-event ${event.done ? 'done' : ''}" style="--event-color:${escape(isSchoolEvent(event) ? SCHOOL_EVENT_COLOR : (event.color || eventSubject(event)?.color || data.profile.accent))}">${calendarEventMarker(event)}<span class="day-event-label">${escape(schoolEventLabel(event))}</span></span>`).join('')}${allEvents.length > 2 ? `<span class="day-event day-event-more">${t('More…')}</span>` : ''}</button>`;
   }
 
   /* notes, grades, subjects */
@@ -765,7 +965,8 @@
     const notebook = notebookById(note.notebookId);
     const highlightCount = data.noteHighlights.filter(highlight => highlight.noteId === note.id).length;
     const activeTool = ui.noteTool || 'text';
-    return `<section class="rich-note-editor"><div class="rich-note-editor-head"><button class="text-button" data-action="exit-note-editor">← ${notebook ? escape(notebook.name || t('Untitled Notebook')) : t('Notes')}</button><div class="rich-note-editor-actions"><button class="marked-text-tab" data-action="show-note-highlights">▰ ${t('Marked text')} <b id="editorHighlightCount">${highlightCount}</b></button><button class="button secondary" data-action="save-rich-note">${t('Save')}</button></div></div><div class="note-meta-controls"><input id="noteEditorTitle" class="note-title-input" value="${escape(note.title || '')}" maxlength="100" placeholder="${t('Untitled note')}"><select id="noteEditorNotebook" class="input">${notebookSelectOptions(note.notebookId)}</select><select id="noteEditorSubject" class="input">${subjectOptions(note.subjectId)}</select><select id="noteEditorHomework" class="input" aria-label="${t('Homework (optional)')}">${homeworkOptions(note.homeworkId)}</select></div><div class="word-toolbar" role="toolbar" aria-label="${t('Note editing tools')}"><button type="button" class="${activeTool === 'text' ? 'active' : ''}" data-action="note-draw-tool" data-tool="text" title="${t('Type')}">T</button><button type="button" data-action="editor-command" data-command="bold" title="${t('Bold')}"><b>B</b></button><button type="button" data-action="editor-command" data-command="italic" title="${t('Italic')}"><i>I</i></button><button type="button" data-action="editor-command" data-command="underline" title="${t('Underline')}"><u>U</u></button><button type="button" data-action="editor-command" data-command="formatBlock" data-value="h2" title="${t('Heading')}">H</button><button type="button" data-action="editor-command" data-command="insertUnorderedList" title="${t('Bullet list')}">•≡</button><button type="button" data-action="editor-command" data-command="insertOrderedList" title="${t('Numbered list')}">1≡</button><span></span><button type="button" class="marker-tool" data-action="editor-marker" title="${t('Mark selected text')}">▰ ${t('Marked text')}</button><button type="button" data-action="editor-photo" title="${t('Add image')}">▧ ${t('Add image')}</button><button type="button" data-action="editor-command" data-command="undo" title="${t('Undo')}">↶</button><span></span><button type="button" class="${activeTool === 'draw' ? 'active' : ''}" data-action="note-draw-tool" data-tool="draw" title="${t('Draw')}">✎ ${t('Draw')}</button><button type="button" class="${activeTool === 'lasso' ? 'active' : ''}" data-action="note-draw-tool" data-tool="lasso" title="${t('Lasso select and move')}">⌁ ${t('Lasso')}</button><button id="copyDrawingButton" type="button" data-action="copy-lasso-drawing" title="${t('Copy selection')}" disabled>⧉ ${t('Copy')}</button><button id="pasteDrawingButton" type="button" data-action="paste-lasso-drawing" title="${t('Paste drawing')}" ${ui.noteDrawingClipboard?.length ? '' : 'disabled'}>↳ ${t('Paste')}</button><select id="noteBrushSelect" class="drawing-control" aria-label="${t('Brush')}"><option value="pen" ${ui.noteBrush === 'pen' ? 'selected' : ''}>${t('Pen')}</option><option value="pencil" ${ui.noteBrush === 'pencil' ? 'selected' : ''}>${t('Pencil')}</option><option value="highlighter" ${ui.noteBrush === 'highlighter' ? 'selected' : ''}>${t('Highlighter')}</option><option value="marker" ${ui.noteBrush === 'marker' ? 'selected' : ''}>${t('Marker')}</option><option value="watercolor" ${ui.noteBrush === 'watercolor' ? 'selected' : ''}>${t('Watercolor')}</option><option value="eraser" ${ui.noteBrush === 'eraser' ? 'selected' : ''}>${t('Eraser')}</option></select><input id="noteDrawColor" class="drawing-color" type="color" value="${escape(ui.noteDrawColor || '#25223a')}" aria-label="${t('Drawing color')}"><label class="drawing-width" title="${t('Thickness')}"><span>◒</span><input id="noteDrawWidth" type="range" min="1" max="18" value="${clamp(Number(ui.noteDrawWidth) || 4, 1, 18)}" aria-label="${t('Thickness')}"></label><button type="button" data-action="clear-note-drawing" title="${t('Clear drawing')}">⌫</button></div><article id="notePaper" class="a4-paper note-paper-shell"><div id="noteEditor" class="note-editor-surface" contenteditable="true" spellcheck="true" data-placeholder="${t('Start writing your note…')}">${noteMarkup(note.content)}</div><canvas id="noteDrawingCanvas" class="note-drawing-canvas" aria-label="${t('Drawing canvas')}"></canvas></article><p id="noteEditorHint" class="note-editor-hint">${t('Use Draw with your finger, stylus, or Apple Pencil. Choose Lasso to select drawings, then drag them, change their color, thickness, or brush.')}</p></section>`;
+    const stylusOnlyButton = `<button id="stylusOnlyDrawingButton" type="button" class="${ui.noteStylusOnly ? 'active' : ''}" data-action="toggle-stylus-only-drawing" title="${t('Stylus only')}" aria-pressed="${ui.noteStylusOnly}">✎ ${t('Stylus only')}</button>`;
+    return `<section class="rich-note-editor"><div class="rich-note-editor-head"><button class="text-button" data-action="exit-note-editor">← ${notebook ? escape(notebook.name || t('Untitled Notebook')) : t('Notes')}</button><div class="rich-note-editor-actions"><button class="marked-text-tab" data-action="show-note-highlights">▰ ${t('Marked text')} <b id="editorHighlightCount">${highlightCount}</b></button><button class="button secondary" data-action="save-rich-note">${t('Save')}</button></div></div><div class="note-meta-controls"><input id="noteEditorTitle" class="note-title-input" value="${escape(note.title || '')}" maxlength="100" placeholder="${t('Untitled note')}"><select id="noteEditorNotebook" class="input">${notebookSelectOptions(note.notebookId)}</select><select id="noteEditorSubject" class="input">${subjectOptions(note.subjectId)}</select><select id="noteEditorHomework" class="input" aria-label="${t('Homework (optional)')}">${homeworkOptions(note.homeworkId)}</select></div><div class="word-toolbar" role="toolbar" aria-label="${t('Note editing tools')}"><button type="button" class="${activeTool === 'text' ? 'active' : ''}" data-action="note-draw-tool" data-tool="text" title="${t('Type')}">T</button><button type="button" data-action="editor-command" data-command="bold" title="${t('Bold')}"><b>B</b></button><button type="button" data-action="editor-command" data-command="italic" title="${t('Italic')}"><i>I</i></button><button type="button" data-action="editor-command" data-command="underline" title="${t('Underline')}"><u>U</u></button><button type="button" data-action="editor-command" data-command="formatBlock" data-value="h2" title="${t('Heading')}">H</button><button type="button" data-action="editor-command" data-command="insertUnorderedList" title="${t('Bullet list')}">•≡</button><button type="button" data-action="editor-command" data-command="insertOrderedList" title="${t('Numbered list')}">1≡</button><span></span><button type="button" class="marker-tool" data-action="editor-marker" title="${t('Mark selected text')}">▰ ${t('Marked text')}</button><button type="button" data-action="editor-photo" title="${t('Add image')}">▧ ${t('Add image')}</button><button type="button" data-action="editor-command" data-command="undo" title="${t('Undo')}">↶</button><span></span><button type="button" class="${activeTool === 'draw' ? 'active' : ''}" data-action="note-draw-tool" data-tool="draw" title="${t('Draw')}">✎ ${t('Draw')}</button><button type="button" class="${activeTool === 'lasso' ? 'active' : ''}" data-action="note-draw-tool" data-tool="lasso" title="${t('Lasso select and move')}">⌁ ${t('Lasso')}</button>${stylusOnlyButton}<button id="copyDrawingButton" type="button" data-action="copy-lasso-drawing" title="${t('Copy selection')}" disabled>⧉ ${t('Copy')}</button><button id="pasteDrawingButton" type="button" data-action="paste-lasso-drawing" title="${t('Paste drawing')}" ${ui.noteDrawingClipboard?.length ? '' : 'disabled'}>↳ ${t('Paste')}</button><select id="noteBrushSelect" class="drawing-control" aria-label="${t('Brush')}"><option value="pen" ${ui.noteBrush === 'pen' ? 'selected' : ''}>${t('Pen')}</option><option value="pencil" ${ui.noteBrush === 'pencil' ? 'selected' : ''}>${t('Pencil')}</option><option value="highlighter" ${ui.noteBrush === 'highlighter' ? 'selected' : ''}>${t('Highlighter')}</option><option value="marker" ${ui.noteBrush === 'marker' ? 'selected' : ''}>${t('Marker')}</option><option value="watercolor" ${ui.noteBrush === 'watercolor' ? 'selected' : ''}>${t('Watercolor')}</option><option value="eraser" ${ui.noteBrush === 'eraser' ? 'selected' : ''}>${t('Eraser')}</option></select><input id="noteDrawColor" class="drawing-color" type="color" value="${escape(ui.noteDrawColor || '#25223a')}" aria-label="${t('Drawing color')}"><label class="drawing-width" title="${t('Thickness')}"><span>◒</span><input id="noteDrawWidth" type="range" min="1" max="18" value="${clamp(Number(ui.noteDrawWidth) || 4, 1, 18)}" aria-label="${t('Thickness')}"></label><button type="button" data-action="clear-note-drawing" title="${t('Clear drawing')}">⌫</button></div><article id="notePaper" class="a4-paper note-paper-shell"><div id="noteEditor" class="note-editor-surface" contenteditable="true" spellcheck="true" data-placeholder="${t('Start writing your note…')}">${noteMarkup(note.content)}</div><canvas id="noteDrawingCanvas" class="note-drawing-canvas" aria-label="${t('Drawing canvas')}"></canvas></article><p id="noteEditorHint" class="note-editor-hint">${t('Use Draw with your finger, stylus, or Apple Pencil. Choose Lasso to select drawings, then drag them, change their color, thickness, or brush.')}</p></section>`;
   }
   function renderNoteHighlights() {
     const highlights = [...data.noteHighlights].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
@@ -775,15 +976,22 @@
     const values = data.grades.map(gradeNumeric).filter(value => Number.isFinite(value));
     const average = values.length ? values.reduce((total, value) => total + value, 0) / values.length : null;
     const best = values.length ? (data.profile.gradeSystem === 'numeric' ? Math.min(...values) : Math.max(...values)) : null;
-    return `${pageHeader('ACADEMICS', 'Grades', 'Track your results and notice patterns over time.', button('＋ Add grade', 'add-grade'))}<section class="overview-grid"><article class="card"><span class="overview-label">OVERALL AVERAGE</span><strong class="overview-number">${average === null ? '—' : displayGrade(average)}</strong><span class="overview-label">${gradeSystemLabel()}</span></article><article class="card"><span class="overview-label">RECORDED GRADES</span><strong class="overview-number">${data.grades.length}</strong><span class="overview-label">Across all subjects</span></article><article class="card"><span class="overview-label">BEST RESULT</span><strong class="overview-number">${best === null ? '—' : displayGrade(best)}</strong><span class="overview-label">Your personal high point</span></article></section><article class="card" style="margin-top:14px"><div class="card-head"><h2>Grade history</h2></div>${data.grades.length ? `<div class="grade-list">${[...data.grades].sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(grade => `<div class="grade-row"><span class="subject-icon" style="--subject-color:${subjectById(grade.subjectId)?.color || data.profile.accent}">${subjectIcon(subjectById(grade.subjectId)?.icon || 'book')}</span><div class="grade-info"><b>${escape(grade.title)}</b><small>${escape(subjectName(subjectById(grade.subjectId)) || t('No subject'))} · ${grade.date ? formatDate(grade.date) : t('No date')}</small></div><strong class="grade-value">${escape(grade.value)}</strong><div class="row-menu"><button class="mini-button" data-action="edit-grade" data-id="${grade.id}">✎</button><button class="mini-button delete" data-action="delete-grade" data-id="${grade.id}">×</button></div></div>`).join('')}</div>` : empty('No grades recorded', 'Add a result to start seeing your average.', 'add-grade', 'Add grade')}</article>`;
+    return `${pageHeader('ACADEMICS', 'Grades', 'Track your results and notice patterns over time.', button('＋ Add grade', 'add-grade'))}<section class="overview-grid"><article class="card"><span class="overview-label">${t('OVERALL AVERAGE')}</span><strong class="overview-number">${average === null ? '—' : displayGrade(average)}</strong><span class="overview-label">${gradeSystemLabel()}</span></article><article class="card"><span class="overview-label">${t('RECORDED GRADES')}</span><strong class="overview-number">${data.grades.length}</strong><span class="overview-label">${t('Across all subjects')}</span></article><article class="card"><span class="overview-label">${t('BEST RESULT')}</span><strong class="overview-number">${best === null ? '—' : displayGrade(best)}</strong><span class="overview-label">${t('Your personal high point')}</span></article></section><article class="card" style="margin-top:14px"><div class="card-head"><h2>${t('Grade history')}</h2></div>${data.grades.length ? `<div class="grade-list">${[...data.grades].sort((a,b) => (b.date || '').localeCompare(a.date || '')).map(grade => `<div class="grade-row"><span class="subject-icon" style="--subject-color:${subjectById(grade.subjectId)?.color || data.profile.accent}">${subjectIcon(subjectById(grade.subjectId)?.icon || 'book')}</span><div class="grade-info"><b>${escape(grade.title)}</b><small>${escape(subjectName(subjectById(grade.subjectId)) || t('No subject'))} · ${grade.date ? formatDate(grade.date) : t('No date')}</small></div><strong class="grade-value">${escape(grade.value)}</strong><div class="row-menu"><button class="mini-button" data-action="edit-grade" data-id="${grade.id}" aria-label="${t('Edit')}">✎</button><button class="mini-button delete" data-action="delete-grade" data-id="${grade.id}" aria-label="${t('Delete')}">×</button></div></div>`).join('')}</div>` : empty('No grades recorded', 'Add a result to start seeing your average.', 'add-grade', 'Add grade')}</article>`;
   }
+  const NUMERIC_GRADE_OPTIONS = ['1+', '1', '1-', '2+', '2', '2-', '3+', '3', '3-', '4+', '4', '4-', '5+', '5', '5-', '6+', '6', '6-'];
+  const LETTER_GRADE_OPTIONS = ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F+', 'F', 'F-'];
+  const LETTER_GRADE_VALUES = { 'A+': 100, A: 96, 'A-': 92, 'B+': 89, B: 85, 'B-': 82, 'C+': 79, C: 75, 'C-': 72, 'D+': 69, D: 65, 'D-': 62, 'F+': 59, F: 55, 'F-': 52 };
   function gradeNumeric(grade) {
     const value = String(grade.value).trim().toUpperCase();
-    if (data.profile.gradeSystem === 'letter') return ({ A: 100, B: 85, C: 70, D: 55, E: 40, F: 20 }[value] ?? NaN);
+    if (data.profile.gradeSystem === 'letter') return LETTER_GRADE_VALUES[value] ?? NaN;
+    if (data.profile.gradeSystem === 'numeric') {
+      const base = Number.parseInt(value, 10); const modifier = value.endsWith('+') ? -0.3 : value.endsWith('-') ? 0.3 : 0;
+      return NUMERIC_GRADE_OPTIONS.includes(value) ? base + modifier : Number(value);
+    }
     return Number(value);
   }
   function displayGrade(value) {
-    if (data.profile.gradeSystem === 'letter') return value >= 92 ? 'A' : value >= 78 ? 'B' : value >= 63 ? 'C' : value >= 48 ? 'D' : value >= 32 ? 'E' : 'F';
+    if (data.profile.gradeSystem === 'letter') return LETTER_GRADE_OPTIONS.reduce((closest, grade) => Math.abs(LETTER_GRADE_VALUES[grade] - value) < Math.abs(LETTER_GRADE_VALUES[closest] - value) ? grade : closest, 'A+');
     return data.profile.gradeSystem === 'percentage' ? `${Math.round(value)}%` : value.toFixed(1).replace('.0', '');
   }
   function gradeSystemLabel() { return t({ numeric: 'Number scale', percentage: 'Percentage', letter: 'Letter grades' }[data.profile.gradeSystem] || 'Number scale'); }
@@ -819,12 +1027,12 @@
     const summary = health.issues.length
       ? 'Finish overdue homework and goals to freshen your banana. Review any weak grades to keep it healthy.'
       : 'Everything is up to date. Keep this rhythm going and your banana will stay fresh.';
-    const actionButtons = health.issues.slice(0, 4).map(issue => `<button class="banana-health-action ${issue.kind}" data-action="${issue.action}" data-id="${escape(issue.id)}" title="${escape(issue.title)}"><span>${issue.kind === 'grade' ? '↗' : '✓'}</span><b>${issue.label}</b><small>${escape(issue.title)}</small></button>`).join('');
+    const actionButtons = health.issues.slice(0, 4).map(issue => `<button class="banana-health-action ${issue.kind}" data-action="${issue.action}" data-id="${escape(issue.id)}" title="${escape(issue.title)}"><span>${issue.kind === 'grade' ? '↗' : '✓'}</span><b>${t(issue.label)}</b><small>${escape(issue.title)}</small></button>`).join('');
     const remaining = health.issues.length - 4;
-    return `<article class="card banana-health banana-health-${health.stage}" style="--banana-rot:${(health.rot / 100).toFixed(2)}"><div class="banana-health-copy"><p class="eyebrow">${t('STUDY RHYTHM')}</p><h2>${t(status)}</h2><p>${t(summary)}</p><div class="banana-health-meter"><div><span>${t('Freshness')}</span><b>${freshness}%</b></div><div class="progress" style="--progress:${freshness}%"><span></span></div></div>${health.issues.length ? `<div class="banana-health-actions" aria-label="${t('Items that affect banana health')}">${actionButtons}${remaining > 0 ? `<span class="banana-health-more">+${remaining} ${t('more to review')}</span>` : ''}</div>` : `<span class="banana-health-clear">✓ ${t('No overdue work or weak grades')}</span>`}</div><div class="banana-stage" role="img" aria-label="${escape(t('Banana freshness is {freshness} percent: {status}', { freshness, status: t(status) }))}"><svg class="banana-art" viewBox="0 0 560 280" focusable="false" aria-hidden="true"><defs><linearGradient id="bananaFresh" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff7a9"/><stop offset=".4" stop-color="#ffda47"/><stop offset="1" stop-color="#e9a018"/></linearGradient><linearGradient id="bananaBruised" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#d6c566"/><stop offset=".45" stop-color="#b17d2e"/><stop offset="1" stop-color="#6c4622"/></linearGradient><linearGradient id="bananaRotten" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#91723b"/><stop offset=".45" stop-color="#5f4229"/><stop offset="1" stop-color="#2f241e"/></linearGradient><radialGradient id="bananaRotPatch"><stop stop-color="#241b17" stop-opacity=".88"/><stop offset=".6" stop-color="#57351f" stop-opacity=".65"/><stop offset="1" stop-color="#724524" stop-opacity="0"/></radialGradient></defs><path class="banana-shadow" d="M58 95C119 178 227 208 335 180c73-19 126-62 158-124l19 11c-27 78-92 137-174 160-114 33-235-6-294-96Z"/><path class="banana-stem" d="m471 56 20-35 24 10-18 37"/><path class="banana-skin" d="M55 81c46 69 137 113 231 105 86-7 159-56 192-129l29 13c-24 84-93 153-182 180-109 33-227-2-286-91-15-23-24-50-27-79Z"/><path class="banana-highlight" d="M85 94c43 61 126 93 204 87 56-4 109-28 145-68-42 53-105 83-177 86-70 2-134-27-172-79Z"/><g class="banana-spots"><circle cx="188" cy="164" r="13"/><circle cx="263" cy="184" r="10"/><circle cx="342" cy="159" r="16"/><circle cx="406" cy="124" r="9"/><circle cx="123" cy="131" r="7"/></g><g class="banana-decay"><ellipse cx="327" cy="155" rx="50" ry="33"/><ellipse cx="199" cy="168" rx="27" ry="20"/><path d="M351 126c14 16 14 35 1 52M310 127c-10 16-11 34-2 50"/></g></svg></div></article>`;
+    return `<article class="card banana-health banana-health-${health.stage}" style="--banana-rot:${(health.rot / 100).toFixed(2)}"><div class="banana-health-copy"><p class="eyebrow">${t('STUDY RHYTHM')}</p><h2>${t(status)}</h2><p>${t(summary)}</p><div class="banana-health-meter"><div><span>${t('Freshness')}</span><b>${freshness}%</b></div><div class="progress" style="--progress:${freshness}%"><span></span></div></div>${health.issues.length ? `<div class="banana-health-actions" aria-label="${t('Items that affect banana health')}">${actionButtons}${remaining > 0 ? `<span class="banana-health-more">+${remaining} ${t('more to review')}</span>` : ''}</div>` : `<span class="banana-health-clear">✓ ${t('No overdue work or weak grades')}</span>`}</div><div class="banana-stage" role="img" aria-label="${escape(t('Banana freshness is {freshness} percent: {status}', { freshness, status: t(status) }))}"><svg class="banana-art" viewBox="0 0 560 300" focusable="false" aria-hidden="true"><defs><linearGradient id="bananaFresh" x1=".16" y1=".08" x2=".86" y2=".92"><stop stop-color="#fffde0"/><stop offset=".28" stop-color="#ffeb7a"/><stop offset=".67" stop-color="#f4c83b"/><stop offset="1" stop-color="#d8921d"/></linearGradient><linearGradient id="bananaBruised" x1=".12" y1=".05" x2=".87" y2=".95"><stop stop-color="#d8ca72"/><stop offset=".48" stop-color="#bd9137"/><stop offset="1" stop-color="#6c4627"/></linearGradient><linearGradient id="bananaRotten" x1=".12" y1=".05" x2=".87" y2=".95"><stop stop-color="#87713d"/><stop offset=".48" stop-color="#58422b"/><stop offset="1" stop-color="#29231e"/></linearGradient><radialGradient id="bananaRotPatch"><stop stop-color="#251d18" stop-opacity=".95"/><stop offset=".58" stop-color="#55351f" stop-opacity=".7"/><stop offset="1" stop-color="#7c4d25" stop-opacity="0"/></radialGradient></defs><path class="banana-shadow" d="M82 246c81 36 204 39 308-1 60-23 108-59 139-105 5 70-36 125-104 153-107 43-244 25-343-47Z"/><path class="banana-stem" d="M451 67c3-17 11-31 23-40 9-7 18-8 26-4 7 3 8 10 2 16-9 7-14 18-17 32Z"/><path class="banana-skin" d="M69 140c54 58 145 87 231 65 86-22 139-79 155-148l45 12c-15 83-69 153-149 190-88 42-196 27-273-39-29-25-49-57-57-92-2-10-3-19-3-28 16 7 33 14 51 20Z"/><path class="banana-highlight" d="M91 143c49 46 124 65 193 47 67-18 118-63 141-123"/><path class="banana-ridge" d="M75 159c59 63 153 91 240 62 62-20 111-66 134-124"/><g class="banana-spots"><circle cx="161" cy="213" r="8"/><circle cx="235" cy="230" r="11"/><circle cx="314" cy="213" r="8"/><circle cx="380" cy="170" r="10"/><circle cx="120" cy="179" r="6"/></g><g class="banana-decay"><ellipse cx="258" cy="205" rx="38" ry="27"/><ellipse cx="170" cy="201" rx="23" ry="18"/><path d="M264 185c12 12 15 30 7 44M300 185c-8 14-8 30 1 43"/></g></svg></div></article>`;
   }
   function renderGoals() {
-    return `${pageHeader('MILESTONES', 'Goals', 'Turn the things you want to achieve into visible progress.', button('＋ Add goal', 'add-goal'))}${renderBananaHealth()}<article class="card goal-list-card"><div class="card-head"><h2>In progress</h2></div>${data.goals.length ? `<div class="goal-list">${data.goals.map(goal => `<div class="goal-row"><button class="check ${Number(goal.progress) >= 100 ? 'done' : ''}" data-action="goal-complete" data-id="${goal.id}">✓</button><div><b>${escape(goal.title)}</b><small>${goal.targetDate ? t('Target {date}', { date: formatDate(goal.targetDate) }) : t('No target date')}</small><div class="progress" style="--progress:${clamp(goal.progress,0,100)}%"><span></span></div></div><span class="goal-percent">${clamp(goal.progress,0,100)}%</span><div class="row-menu"><button class="mini-button" data-action="edit-goal" data-id="${goal.id}">✎</button><button class="mini-button delete" data-action="delete-goal" data-id="${goal.id}">×</button></div></div>`).join('')}</div>` : empty('Set your first goal', 'A goal can be as small as revising one chapter.', 'add-goal', 'Add goal')}</article>`;
+    return `${pageHeader('MILESTONES', 'Goals', 'Turn the things you want to achieve into visible progress.', button('＋ Add goal', 'add-goal'))}<article class="card goal-list-card"><div class="card-head"><h2>${t('In progress')}</h2></div>${data.goals.length ? `<div class="goal-list">${data.goals.map(goal => `<div class="goal-row"><button class="check ${Number(goal.progress) >= 100 ? 'done' : ''}" data-action="goal-complete" data-id="${goal.id}">✓</button><div><b>${escape(goal.title)}</b><small>${goal.targetDate ? t('Target {date}', { date: formatDate(goal.targetDate) }) : t('No target date')}</small><div class="progress" style="--progress:${clamp(goal.progress,0,100)}%"><span></span></div></div><span class="goal-percent">${clamp(goal.progress,0,100)}%</span><div class="row-menu"><button class="mini-button" data-action="edit-goal" data-id="${goal.id}" aria-label="${t('Edit')}">✎</button><button class="mini-button delete" data-action="delete-goal" data-id="${goal.id}" aria-label="${t('Delete')}">×</button></div></div>`).join('')}</div>` : empty('Set your first goal', 'A goal can be as small as revising one chapter.', 'add-goal', 'Add goal')}</article>`;
   }
   function renderFriends() {
     const friendsById = new Map(data.friends.map(friend => [friend.id, friend]));
@@ -840,14 +1048,14 @@
   }
   function renderTimer() {
     const modes = [['study','Study'], ['break','Break'], ['longBreak','Long break'], ['custom','Custom']];
-    return `${pageHeader('FOCUS', 'Study Timer', 'Choose a rhythm that works for you, then give it your full attention.')}<section class="timer-layout"><article class="card timer-card"><div><div class="timer-mode-row">${modes.map(([id,label]) => `<button class="timer-mode ${ui.timerMode === id ? 'active' : ''}" data-action="timer-mode" data-mode="${id}">${label}</button>`).join('')}</div><div class="timer-ring"><span id="timerDisplay" class="timer-time">25:00</span></div><div class="timer-controls"><button id="timerStart" class="button primary" data-action="timer-start">Start</button><button class="button secondary" data-action="timer-reset">Reset</button><button class="button secondary" data-action="timer-skip">Skip</button></div></div></article><aside class="card timer-settings"><h2>Timer settings</h2><p class="muted">Choose the length of every focus mode.</p>${timerSetting('study','Study minutes')}${timerSetting('break','Break minutes')}${timerSetting('longBreak','Long break minutes')}${timerSetting('custom','Custom minutes')}<button class="button secondary full" data-action="save-timer-settings">Save settings</button></aside></section>`;
+    return `${pageHeader('FOCUS', 'Study Timer', 'Choose a rhythm that works for you, then give it your full attention.')}<section class="timer-layout"><article class="card timer-card"><div><div class="timer-mode-row">${modes.map(([id,label]) => `<button class="timer-mode ${ui.timerMode === id ? 'active' : ''}" data-action="timer-mode" data-mode="${id}">${t(label)}</button>`).join('')}</div><div class="timer-ring"><span id="timerDisplay" class="timer-time">25:00</span></div><div class="timer-controls"><button id="timerStart" class="button primary" data-action="timer-start">${t('Start')}</button><button class="button secondary" data-action="timer-reset">${t('Reset')}</button><button class="button secondary" data-action="timer-skip">${t('Skip')}</button></div></div></article><aside class="card timer-settings"><h2>${t('Timer settings')}</h2><p class="muted">${t('Choose the length of every focus mode.')}</p>${timerSetting('study','Study minutes')}${timerSetting('break','Break minutes')}${timerSetting('longBreak','Long break minutes')}${timerSetting('custom','Custom minutes')}<button class="button secondary full" data-action="save-timer-settings">${t('Save settings')}</button></aside></section>`;
   }
-  function timerSetting(key, label) { return `<label class="field-label" for="timer-${key}">${label}</label><input id="timer-${key}" class="input" type="number" min="1" max="240" value="${Number(data.timer[key]) || 1}">`; }
+  function timerSetting(key, label) { return `<label class="field-label" for="timer-${key}">${t(label)}</label><input id="timer-${key}" class="input" type="number" min="1" max="240" value="${Number(data.timer[key]) || 1}">`; }
   function renderStatistics() {
     const days = Array.from({ length: 7 }, (_, index) => { const date = new Date(); date.setDate(date.getDate() - (6 - index)); const iso = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`; return { label: date.toLocaleDateString(locale(), { weekday: 'short' }), minutes: Number(data.stats.dailyStudy[iso] || 0) }; });
     const max = Math.max(30, ...days.map(day => day.minutes));
     const rate = data.homework.length ? Math.round(data.homework.filter(item => item.done).length / data.homework.length * 100) : 0;
-    return `${pageHeader('YOUR PROGRESS', 'Statistics', 'Small habits leave a useful trail.')}<section class="overview-grid"><article class="card"><span class="overview-label">TOTAL FOCUS</span><strong class="overview-number">${formatMinutes(data.stats.studyMinutes)}</strong><span class="overview-label">All recorded sessions</span></article><article class="card"><span class="overview-label">TASK COMPLETION</span><strong class="overview-number">${rate}%</strong><span class="overview-label">${t('{count} tasks complete', { count: data.homework.filter(item => item.done).length })}</span></article><article class="card"><span class="overview-label">FOCUS SESSIONS</span><strong class="overview-number">${data.timer.completedSessions || 0}</strong><span class="overview-label">Keep the streak alive</span></article></section><article class="card" style="margin-top:14px"><div class="card-head"><h2>Focus time this week</h2><span class="chip">Minutes</span></div><div class="stat-bars">${days.map(day => `<div class="bar-row"><span>${day.label}</span><div class="progress" style="--progress:${Math.round(day.minutes / max * 100)}%"><span></span></div><b>${day.minutes}m</b></div>`).join('')}</div></article>`;
+    return `${pageHeader('YOUR PROGRESS', 'Statistics', 'Small habits leave a useful trail.')}<section class="overview-grid"><article class="card"><span class="overview-label">${t('TOTAL FOCUS')}</span><strong class="overview-number">${formatMinutes(data.stats.studyMinutes)}</strong><span class="overview-label">${t('All recorded sessions')}</span></article><article class="card"><span class="overview-label">${t('TASK COMPLETION')}</span><strong class="overview-number">${rate}%</strong><span class="overview-label">${t('{count} tasks complete', { count: data.homework.filter(item => item.done).length })}</span></article><article class="card"><span class="overview-label">${t('FOCUS SESSIONS')}</span><strong class="overview-number">${data.timer.completedSessions || 0}</strong><span class="overview-label">${t('Keep the streak alive')}</span></article></section>${renderBananaHealth()}<article class="card" style="margin-top:14px"><div class="card-head"><h2>${t('Focus time this week')}</h2><span class="chip">${t('Minutes')}</span></div><div class="stat-bars">${days.map(day => `<div class="bar-row"><span>${day.label}</span><div class="progress" style="--progress:${Math.round(day.minutes / max * 100)}%"><span></span></div><b>${day.minutes}m</b></div>`).join('')}</div></article>`;
   }
   function renderSettings() {
     const gradeOptions = `<option value="numeric" ${data.profile.gradeSystem === 'numeric' ? 'selected' : ''}>${t('Number scale (1 is best · 6 is worst)')}</option><option value="percentage" ${data.profile.gradeSystem === 'percentage' ? 'selected' : ''}>${t('Percentage (0–100%)')}</option><option value="letter" ${data.profile.gradeSystem === 'letter' ? 'selected' : ''}>${t('Letter (A–F)')}</option>`;
@@ -880,23 +1088,24 @@
   /* modal forms */
   function subjectOptions(selected = '') { return `<option value="">${t('No subject')}</option>${data.subjects.map(subject => `<option value="${subject.id}" ${subject.id === selected ? 'selected' : ''}>${escape(subjectName(subject))}</option>`).join('')}`; }
   function dateLabel(value) { return value ? formatDate(value, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : t('Add a date'); }
-  function dateField(name, label, value = '', wide = false, required = false) { return `<div class="field-label ${wide ? 'wide' : ''}"><span class="field-control-title">${label}</span><input type="hidden" name="${name}" value="${escape(value)}"><button class="value-picker ${value ? 'selected' : ''}" type="button" data-action="date-picker" data-target="${name}" data-date-target="${name}" ${required ? 'data-required-date="true"' : ''}><span>${dateLabel(value)}</span><b>⌄</b></button></div>`; }
+  function dateField(name, label, value = '', wide = false, required = false) { return `<div class="field-label ${wide ? 'wide' : ''}"><span class="field-control-title">${t(label)}</span><input type="hidden" name="${name}" value="${escape(value)}"><button class="value-picker ${value ? 'selected' : ''}" type="button" data-action="date-picker" data-target="${name}" data-date-target="${name}" ${required ? 'data-required-date="true"' : ''}><span>${dateLabel(value)}</span><b>⌄</b></button></div>`; }
   function parseTime(value) { const [hours = '0', minutes = '0'] = String(value || '00:00').split(':'); return { hours: clamp(Number(hours) || 0, 0, 23), minutes: clamp(Number(minutes) || 0, 0, 59) }; }
-  function timeLabel(value) { if (!value) return t('Add a time'); const { hours, minutes } = parseTime(value); if (data.profile.clockFormat === '12') { const hour = hours % 12 || 12; return `${hour}:${String(minutes).padStart(2, '0')} ${hours >= 12 ? 'PM' : 'AM'}`; } return `${String(hours || 24).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`; }
-  function timeField(name, label, value = '') { return `<div class="field-label"><span class="field-control-title">${label} <span class="help">(optional)</span></span><input type="hidden" name="${name}" value="${escape(value)}"><button class="value-picker ${value ? 'selected' : ''}" type="button" data-action="time-picker" data-target="${name}" data-time-target="${name}"><span>${timeLabel(value)}</span><b>⌄</b></button></div>`; }
+  function timeLabel(value) { if (!value) return t('Add a time'); const { hours, minutes } = parseTime(value); if (data.profile.clockFormat === '12') { const hour = hours % 12 || 12; return `${hour}:${String(minutes).padStart(2, '0')} ${t(hours >= 12 ? 'PM' : 'AM')}`; } return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`; }
+  function timeField(name, label, value = '') { return `<div class="field-label"><span class="field-control-title">${t(label)} <span class="help">${t('(optional)')}</span></span><input type="hidden" name="${name}" value="${escape(value)}"><button class="value-picker ${value ? 'selected' : ''}" type="button" data-action="time-picker" data-target="${name}" data-time-target="${name}"><span>${timeLabel(value)}</span><b>⌄</b></button></div>`; }
   function iconField(value = 'book', label = 'Icon') {
     const iconLabel = subjectIconOptions.find(([id]) => id === value)?.[1] || value || 'book';
     return `<div class="field-label"><span class="field-control-title">${t(label)}</span><input type="hidden" name="icon" value="${escape(value)}"><button class="value-picker icon-value-picker selected" type="button" data-action="icon-picker" data-icon-target="icon"><span class="icon-value">${subjectIcon(value)}</span><span>${escape(t(iconLabel))}</span><b>⌄</b></button></div>`;
   }
   function openModal(title, body, formName, submitText = 'Save') {
-    modalRoot.innerHTML = `<div class="modal-backdrop"><form class="modal" data-form="${formName}"><div class="modal-head"><h2>${title}</h2><button class="icon-button" type="button" data-action="close-modal" aria-label="Close">×</button></div>${body}<div id="datePickerHolder"></div><div id="timePickerHolder"></div><div id="iconPickerHolder"></div><div class="modal-actions"><button class="button secondary" type="button" data-action="close-modal">Cancel</button><button class="button primary" type="submit">${submitText}</button></div></form></div>`;
+    modalRoot.innerHTML = `<div class="modal-backdrop"><form class="modal" data-form="${formName}"><div class="modal-head"><h2>${t(title)}</h2><button class="icon-button" type="button" data-action="close-modal" aria-label="${t('Close')}">×</button></div>${body}<div id="datePickerHolder"></div><div id="timePickerHolder"></div><div id="iconPickerHolder"></div><div class="modal-actions"><button class="button secondary" type="button" data-action="close-modal">${t('Cancel')}</button><button class="button primary" type="submit">${t(submitText)}</button></div></form></div>`;
     localizeTree(modalRoot);
     const firstInput = el('input:not([type="hidden"]), textarea, select', modalRoot); if (firstInput) window.setTimeout(() => firstInput.focus(), 40);
   }
   function showReleaseNotes() {
     if (data.profile.seenReleaseVersion === APP_VERSION || ui.releaseNotesVisible || modalRoot.children.length) return;
     ui.releaseNotesVisible = true;
-    modalRoot.innerHTML = `<div class="modal-backdrop release-notes-backdrop"><section class="modal release-notes-modal" role="dialog" aria-modal="true" aria-labelledby="releaseNotesTitle"><div class="modal-head"><div><p class="eyebrow">BANANABOARD ${APP_VERSION}</p><h2 id="releaseNotesTitle">What’s new</h2></div><button class="icon-button" type="button" data-action="dismiss-release-notes" aria-label="Close release notes">×</button></div><p class="release-notes-intro">A more organized, more personal BananaBoard is here.</p><ul class="release-notes-list"><li><b>Reminder groups</b><span>Organize related reminders together, give each group its own color and icon, and add reminders directly where they belong.</span></li><li><b>Language that follows you</b><span>Choose your language and grade system when creating an account, then keep BananaBoard matched to your device language or set it manually.</span></li><li><b>Clearer, native icons</b><span>Navigation, subjects, and settings now use crisp built-in icons instead of emoji.</span></li><li><b>Better on every screen</b><span>Phone agenda cards, calendar markers, the vertical Banana health view, and note controls have all been refined for smaller displays.</span></li></ul><div class="modal-actions"><button class="button primary" type="button" data-action="dismiss-release-notes">Explore BananaBoard</button></div></section></div>`;
+    modalRoot.innerHTML = `<div class="modal-backdrop release-notes-backdrop"><section class="modal release-notes-modal" role="dialog" aria-modal="true" aria-labelledby="releaseNotesTitle"><div class="modal-head"><div><p class="eyebrow">BANANABOARD ${APP_VERSION}</p><h2 id="releaseNotesTitle">What’s new</h2></div><button class="icon-button" type="button" data-action="dismiss-release-notes" aria-label="Close release notes">×</button></div><p class="release-notes-intro">Planning school life is now more visual and more flexible.</p><ul class="release-notes-list"><li><b>Calendar week view</b><span>Switch between month and week views, place events on their real time slots, and mark plans complete.</span></li><li><b>School-day schedules</b><span>Build a reusable school day from your subjects, lesson times, and weekdays.</span></li><li><b>More precise study setup</b><span>Choose your preferred language before signing in or registering, use new subject icons, and select grades with clearer controls.</span></li><li><b>Banana health artwork</b><span>Your study-health snapshot now uses dedicated fresh, speckled, bruised, and rotten illustrations.</span></li></ul><div class="modal-actions"><button class="button primary" type="button" data-action="dismiss-release-notes">Explore BananaBoard</button></div></section></div>`;
+    localizeTree(modalRoot);
   }
   async function openAccountModal() {
     try {
@@ -940,8 +1149,9 @@
   function renderDatePicker() {
     const holder = el('#datePickerHolder'); if (!holder) return;
     const month = ui.datePickerMonth; const first = new Date(month.getFullYear(), month.getMonth(), 1); const start = new Date(first); start.setDate(1 - ((first.getDay() + 6) % 7));
-    const days = Array.from({ length: 42 }, (_, index) => { const date = new Date(start); date.setDate(start.getDate() + index); const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; const events = data.events.filter(event => event.date === iso); const eventNames = events.map(event => event.title).join(', '); return `<button type="button" class="picker-day ${date.getMonth() !== month.getMonth() ? 'outside' : ''} ${iso === todayISO() ? 'today' : ''} ${events.length ? 'has-event' : ''}" data-action="date-select" data-date="${iso}" title="${escape(eventNames)}" aria-label="${date.toLocaleDateString(locale(), { month: 'long', day: 'numeric' })}${eventNames ? `, ${escape(eventNames)}` : ''}">${date.getDate()}</button>`; });
-    holder.innerHTML = `<div class="date-picker-panel"><div class="date-picker-head"><button type="button" class="mini-button" data-action="date-picker-previous">‹</button><b>${month.toLocaleDateString(locale(), { month: 'long', year: 'numeric' })}</b><button type="button" class="mini-button" data-action="date-picker-next">›</button></div><div class="date-picker-weekdays"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="date-picker-days">${days.join('')}</div><p class="picker-event-legend"><i></i> Dates with calendar events</p><button type="button" class="text-button" data-action="date-picker-close">Close picker</button></div>`;
+    const days = Array.from({ length: 42 }, (_, index) => { const date = new Date(start); date.setDate(start.getDate() + index); const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; const events = data.events.filter(event => eventOccursOn(event, iso)); const eventNames = events.map(schoolEventLabel).join(', '); return `<button type="button" class="picker-day ${date.getMonth() !== month.getMonth() ? 'outside' : ''} ${iso === todayISO() ? 'today' : ''} ${events.length ? 'has-event' : ''}" data-action="date-select" data-date="${iso}" title="${escape(eventNames)}" aria-label="${date.toLocaleDateString(locale(), { month: 'long', day: 'numeric' })}${eventNames ? `, ${escape(eventNames)}` : ''}">${date.getDate()}</button>`; });
+    const weekdays = Array.from({ length: 7 }, (_, index) => new Date(2024, 0, index + 1).toLocaleDateString(locale(), { weekday: 'narrow' }));
+    holder.innerHTML = `<div class="date-picker-panel"><div class="date-picker-head"><button type="button" class="mini-button" data-action="date-picker-previous" aria-label="${t('Previous month')}">‹</button><b>${month.toLocaleDateString(locale(), { month: 'long', year: 'numeric' })}</b><button type="button" class="mini-button" data-action="date-picker-next" aria-label="${t('Next month')}">›</button></div><div class="date-picker-weekdays">${weekdays.map(day => `<span>${day}</span>`).join('')}</div><div class="date-picker-days">${days.join('')}</div><p class="picker-event-legend"><i></i> ${t('Dates with calendar events')}</p><button type="button" class="text-button" data-action="date-picker-close">${t('Close picker')}</button></div>`;
     localizeTree(holder);
   }
   function selectPickerDate(value) {
@@ -960,7 +1170,7 @@
     const displayedHour = twelveHour ? (hours % 12 || 12) : (hours || 24);
     const hourOptions = Array.from({ length: twelveHour ? 12 : 24 }, (_, index) => index + 1).map(hour => `<option value="${hour}" ${hour === displayedHour ? 'selected' : ''}>${String(hour).padStart(2, '0')}</option>`).join('');
     const minuteOptions = Array.from({ length: 60 }, (_, minute) => `<option value="${minute}" ${minute === minutes ? 'selected' : ''}>${String(minute).padStart(2, '0')}</option>`).join('');
-    holder.innerHTML = `<div class="time-picker-panel"><div class="time-picker-head"><b>Choose a time</b><button type="button" class="mini-button" data-action="time-picker-clear">Clear</button></div><div class="time-picker-wheels"><label><span>Hour</span><select class="time-wheel" size="5" data-time-picker="hour">${hourOptions}</select></label><label><span>Minute</span><select class="time-wheel" size="5" data-time-picker="minute">${minuteOptions}</select></label>${twelveHour ? `<div class="time-meridiem" role="group" aria-label="AM or PM"><button type="button" class="${ui.timePickerMeridiem === 'am' ? 'active' : ''}" data-action="time-meridiem" data-meridiem="am">AM</button><button type="button" class="${ui.timePickerMeridiem === 'pm' ? 'active' : ''}" data-action="time-meridiem" data-meridiem="pm">PM</button></div>` : ''}</div><p class="help">Scroll the wheels to choose a time.</p></div>`;
+    holder.innerHTML = `<div class="time-picker-panel"><div class="time-picker-head"><b>${t('Choose a time')}</b><button type="button" class="mini-button" data-action="time-picker-clear">${t('Clear')}</button></div><div class="time-picker-wheels"><label><span>${t('Hour')}</span><select class="time-wheel" size="5" data-time-picker="hour">${hourOptions}</select></label><label><span>${t('Minute')}</span><select class="time-wheel" size="5" data-time-picker="minute">${minuteOptions}</select></label>${twelveHour ? `<div class="time-meridiem" role="group" aria-label="${t('AM')} / ${t('PM')}"><button type="button" class="${ui.timePickerMeridiem === 'am' ? 'active' : ''}" data-action="time-meridiem" data-meridiem="am">${t('AM')}</button><button type="button" class="${ui.timePickerMeridiem === 'pm' ? 'active' : ''}" data-action="time-meridiem" data-meridiem="pm">${t('PM')}</button></div>` : ''}</div><p class="help">${t('Scroll the wheels to choose a time.')}</p></div>`;
     localizeTree(holder);
   }
   function selectPickerTime() {
@@ -987,13 +1197,66 @@
     item = item || { title: '', subjectId: '', due: '', priority: 'medium', description: '' };
     openModal(item.id ? 'Edit homework' : 'New homework', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Title<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="e.g. Finish algebra worksheet"></label><label class="field-label">Subject<select class="input" name="subjectId">${subjectOptions(item.subjectId)}</select></label>${dateField('due', 'Due date', item.due || '', false, true)}<label class="field-label">Priority<select class="input" name="priority"><option value="low" ${item.priority === 'low' ? 'selected' : ''}>Low</option><option value="medium" ${item.priority === 'medium' ? 'selected' : ''}>Medium</option><option value="high" ${item.priority === 'high' ? 'selected' : ''}>High</option></select></label><label class="field-label wide">Details <span class="help">(optional)</span><textarea class="textarea" name="description" placeholder="What do you need to do?">${escape(item.description || '')}</textarea></label></div>`, 'homework');
   }
+  function schoolLessonRow(lesson = {}) {
+    const subject = subjectById(lesson.subjectId);
+    return `<div class="school-lesson-row" data-school-lesson><span class="school-lesson-icon" style="--subject-color:${escape(subject?.color || data.profile.accent)}">${subjectIcon(subject?.icon || 'book')}</span><label>${t('Start')}<input class="input" data-school-start type="time" required value="${escape(lesson.start || '08:00')}"></label><label>${t('End')}<input class="input" data-school-end type="time" required value="${escape(lesson.end || '08:45')}"></label><label>${t('Subject')}<select class="input" data-school-subject required>${subjectOptions(lesson.subjectId || '')}</select></label><button type="button" class="mini-button delete" data-action="remove-school-lesson" aria-label="${t('Remove lesson')}">×</button></div>`;
+  }
+  function renderSchoolLessonRows(lessons) {
+    const holder = el('[data-school-lesson-list]', modalRoot); if (!holder) return;
+    holder.innerHTML = (lessons.length ? lessons : [{}]).map(schoolLessonRow).join('');
+    localizeTree(holder);
+  }
+  function schoolLessonsFromModal() {
+    return els('[data-school-lesson]', modalRoot).map(row => ({ start: el('[data-school-start]', row)?.value || '', end: el('[data-school-end]', row)?.value || '', subjectId: el('[data-school-subject]', row)?.value || '' }));
+  }
+  function schoolWeekdaysForModal(item) {
+    const savedDays = schoolWeekdays(item);
+    if (savedDays.length) return savedDays;
+    const startDate = localDate(item?.date || '');
+    return startDate ? [startDate.getDay()] : [1, 2, 3, 4, 5];
+  }
+  function schoolWeekdaysFromModal() {
+    return els('[data-school-weekday].active', modalRoot).map(button => Number(button.dataset.schoolWeekday)).filter(day => Number.isInteger(day) && day >= 0 && day <= 6).sort((left, right) => left - right);
+  }
+  function syncSchoolDailyButton() {
+    const everyDay = el('[data-school-every-day]', modalRoot); if (!everyDay) return;
+    const active = schoolWeekdaysFromModal().length === 7;
+    everyDay.classList.toggle('active', active); everyDay.setAttribute('aria-pressed', String(active));
+  }
+  function toggleSchoolWeekday(button) {
+    const active = !button.classList.contains('active');
+    button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
+    syncSchoolDailyButton();
+  }
+  function enableSchoolEveryDay() {
+    els('[data-school-weekday]', modalRoot).forEach(button => { button.classList.add('active'); button.setAttribute('aria-pressed', 'true'); });
+    syncSchoolDailyButton();
+  }
+  function syncEventTypeFields() {
+    const form = el('form[data-form="event"]', modalRoot); if (!form) return;
+    const school = el('[name="eventType"]', form)?.value === 'school';
+    els('[data-event-time-field], [data-event-subject-field], [data-event-color-field]', form).forEach(field => { field.hidden = school; els('input, select', field).forEach(control => { control.disabled = school; }); });
+    const schoolFields = el('[data-school-fields]', form); if (schoolFields) { schoolFields.hidden = !school; els('input, select, button', schoolFields).forEach(control => { control.disabled = !school; }); }
+    form.classList.toggle('school-event-form', school);
+    if (school && !el('[name="title"]', form)?.value.trim()) el('[name="title"]', form).value = t('School');
+    if (school) syncSchoolDailyButton();
+  }
+  function addSchoolLesson() { const lessons = schoolLessonsFromModal(); lessons.push({ start: '09:00', end: '09:45', subjectId: data.subjects[0]?.id || '' }); renderSchoolLessonRows(lessons); }
+  function removeSchoolLesson(button) { const rows = els('[data-school-lesson]', modalRoot); if (rows.length <= 1) return toast(t('A school day needs at least one lesson.'), 'error'); const lessons = schoolLessonsFromModal(); const index = rows.indexOf(button.closest('[data-school-lesson]')); lessons.splice(index, 1); renderSchoolLessonRows(lessons); }
+  function schoolLessonFields(lessons, weekdays) {
+    const weekdayLabels = Array.from({ length: 7 }, (_, offset) => (offset + 1) % 7).map(day => ({ day, label: new Date(2024, 0, day === 0 ? 7 : day).toLocaleDateString(locale(), { weekday: 'short' }) }));
+    const activeDays = new Set(weekdays);
+    return `<section class="school-event-fields wide" data-school-fields hidden><div class="school-event-fields-head"><div><b>${t('School lessons')}</b><p>${t('Choose the days this school schedule repeats, then add each lesson in order.')}</p></div><button type="button" class="button secondary" data-action="add-school-lesson">＋ ${t('Add lesson')}</button></div><div class="school-weekdays"><div class="school-weekdays-head"><b>${t('Repeats on')}</b><button type="button" class="text-button ${weekdays.length === 7 ? 'active' : ''}" data-action="school-every-day" data-school-every-day aria-pressed="${weekdays.length === 7}">${t('Every day')}</button></div><div class="school-weekday-buttons">${weekdayLabels.map(({ day, label }) => `<button type="button" class="school-weekday ${activeDays.has(day) ? 'active' : ''}" data-action="school-weekday" data-school-weekday="${day}" aria-pressed="${activeDays.has(day)}">${escape(label)}</button>`).join('')}</div></div><div class="school-lesson-list" data-school-lesson-list>${(lessons.length ? lessons : [{}]).map(schoolLessonRow).join('')}</div></section>`;
+  }
   function openEventModal(item) {
-    item = item || { title: '', date: '', time: '', subjectId: '', color: data.profile.accent, description: '' };
-    openModal(item.id ? 'Edit event' : 'New event', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Title<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="e.g. Biology test"></label>${dateField('date', 'Date', item.date || '', false, true)}<label class="field-label">Time <span class="help">(optional)</span><input class="input" name="time" type="time" value="${item.time || ''}"></label><label class="field-label">Subject<select class="input" name="subjectId">${subjectOptions(item.subjectId)}</select></label><label class="field-label">Color<input class="input" name="color" type="color" value="${item.color || data.profile.accent}"></label><label class="field-label wide">Details <span class="help">(optional)</span><textarea class="textarea" name="description">${escape(item.description || '')}</textarea></label></div>`, 'event');
+    item = item || { title: '', date: '', time: '', subjectId: '', color: data.profile.accent, description: '', type: 'event', lessons: [], weekdays: [1, 2, 3, 4, 5] };
+    const school = isSchoolEvent(item); const lessons = schoolLessons(item); const weekdays = schoolWeekdaysForModal(item);
+    openModal(item.id ? 'Edit event' : 'New event', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">${t('Title')}<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="${escape(t('e.g. Biology test'))}"></label><label class="field-label">${t('Event type')}<select class="input" name="eventType" data-event-type><option value="event" ${school ? '' : 'selected'}>${t('Event')}</option><option value="school" ${school ? 'selected' : ''}>${t('School')}</option></select></label>${dateField('date', 'Date', item.date || '', false, true)}<div data-event-time-field>${timeField('time', 'Time', item.time || '')}</div><label class="field-label" data-event-subject-field>${t('Subject')}<select class="input" name="subjectId">${subjectOptions(item.subjectId)}</select></label><label class="field-label" data-event-color-field>${t('Color')}<input class="input" name="color" type="color" value="${item.color || data.profile.accent}"></label>${schoolLessonFields(lessons, weekdays)}<label class="field-label wide">${t('Details')} <span class="help">${t('(optional)')}</span><textarea class="textarea" name="description">${escape(item.description || '')}</textarea></label></div>`, 'event');
+    syncEventTypeFields();
   }
   function openReminderModal(item, groupId = '') {
     item = item || { title: '', date: '', time: '', repeat: 'never', note: '', groupId };
-    openModal(item.id ? 'Edit reminder' : 'New reminder', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Reminder<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="e.g. Bring calculator to class"></label><label class="field-label">${t('Reminder group')}<select class="input" name="groupId">${reminderGroupOptions(item.groupId || groupId)}</select></label>${dateField('date', 'Reminder date', item.date || '', false, true)}${timeField('time', 'Time', item.time || '')}<label class="field-label">Repeat<select class="input" name="repeat"><option value="never" ${(item.repeat || 'never') === 'never' ? 'selected' : ''}>Does not repeat</option><option value="daily" ${item.repeat === 'daily' ? 'selected' : ''}>Every day</option><option value="weekly" ${item.repeat === 'weekly' ? 'selected' : ''}>Every week</option><option value="monthly" ${item.repeat === 'monthly' ? 'selected' : ''}>Every month</option></select></label><label class="field-label wide">Note <span class="help">(optional)</span><textarea class="textarea" name="note" placeholder="Add anything useful to remember…">${escape(item.note || '')}</textarea></label></div>`, 'reminder');
+    openModal(item.id ? t('Edit reminder') : t('New reminder'), `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">${t('Reminder')}<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="${escape(t('e.g. Bring calculator to class'))}"></label><label class="field-label">${t('Reminder group')}<select class="input" name="groupId">${reminderGroupOptions(item.groupId || groupId)}</select></label>${dateField('date', 'Reminder date', item.date || '', false, true)}${timeField('time', 'Time', item.time || '')}<label class="field-label">${t('Repeat')}<select class="input" name="repeat"><option value="never" ${(item.repeat || 'never') === 'never' ? 'selected' : ''}>${t('Does not repeat')}</option><option value="daily" ${item.repeat === 'daily' ? 'selected' : ''}>${t('Every day')}</option><option value="weekly" ${item.repeat === 'weekly' ? 'selected' : ''}>${t('Every week')}</option><option value="monthly" ${item.repeat === 'monthly' ? 'selected' : ''}>${t('Every month')}</option></select></label><label class="field-label wide">${t('Note')} <span class="help">${t('(optional)')}</span><textarea class="textarea" name="note" placeholder="${escape(t('Add anything useful to remember…'))}">${escape(item.note || '')}</textarea></label></div>`, 'reminder');
   }
   function openReminderGroupModal(item) {
     item = item || { name: '', icon: 'bell', color: data.profile.accent };
@@ -1153,6 +1416,25 @@
     if (brush === 'marker') return strokePath(baseWidth * 1.35, .93);
     return strokePath(baseWidth, 1);
   }
+  function drawLiveStrokeSegment(canvas, stroke, from, to = from) {
+    if (!canvas || !stroke || !from || !to || stroke.brush === 'eraser') return;
+    const box = canvas.getBoundingClientRect(); const ratio = Math.min(window.devicePixelRatio || 1, 2); const context = canvas.getContext('2d');
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    const brush = stroke.brush || 'pen'; const baseWidth = clamp(Number(stroke.width) || 4, 1, 40); const samePoint = Math.abs(from.x - to.x) < .00001 && Math.abs(from.y - to.y) < .00001;
+    const paint = (width, alpha = 1, offset = 0) => {
+      const pressureWidth = (brush === 'pen' || brush === 'pencil') ? width * (.55 + (Number(to.pressure) || .5) * .65) : width;
+      const fromX = from.x * box.width + offset; const fromY = from.y * box.height + offset; const toX = to.x * box.width + offset; const toY = to.y * box.height + offset;
+      context.save(); context.globalAlpha = alpha; context.strokeStyle = stroke.color || '#25223a'; context.fillStyle = stroke.color || '#25223a'; context.lineCap = 'round'; context.lineJoin = 'round'; context.lineWidth = pressureWidth;
+      if (samePoint) { context.beginPath(); context.arc(toX, toY, Math.max(1, pressureWidth / 2), 0, Math.PI * 2); context.fill(); }
+      else { context.beginPath(); context.moveTo(fromX, fromY); context.lineTo(toX, toY); context.stroke(); }
+      context.restore();
+    };
+    if (brush === 'highlighter') return paint(baseWidth * 2.8, .28);
+    if (brush === 'watercolor') { paint(baseWidth * 3.4, .09); return paint(baseWidth * 1.8, .13, .7); }
+    if (brush === 'pencil') { paint(Math.max(1, baseWidth * .72), .54); return paint(Math.max(1, baseWidth * .34), .28, .45); }
+    if (brush === 'marker') return paint(baseWidth * 1.35, .93);
+    paint(baseWidth);
+  }
   function renderNoteDrawing() {
     const canvas = drawingCanvas(); if (!canvas) return;
     const box = canvas.getBoundingClientRect(); const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -1170,9 +1452,15 @@
   function setNoteDrawingTool(tool) {
     ui.noteTool = ['text', 'draw', 'lasso'].includes(tool) ? tool : 'text';
     if (ui.noteTool !== 'lasso') ui.noteDrawingPastePending = false;
-    const paper = el('#notePaper'); paper?.classList.toggle('drawing-active', ui.noteTool !== 'text'); paper?.classList.toggle('lasso-active', ui.noteTool === 'lasso'); paper?.classList.toggle('eraser-active', ui.noteTool === 'draw' && ui.noteBrush === 'eraser'); paper?.classList.toggle('paste-active', Boolean(ui.noteDrawingPastePending));
+    const paper = el('#notePaper'); paper?.classList.toggle('drawing-active', ui.noteTool !== 'text'); paper?.classList.toggle('lasso-active', ui.noteTool === 'lasso'); paper?.classList.toggle('eraser-active', ui.noteTool === 'draw' && ui.noteBrush === 'eraser'); paper?.classList.toggle('paste-active', Boolean(ui.noteDrawingPastePending)); paper?.classList.toggle('stylus-only', ui.noteStylusOnly);
     els('[data-action="note-draw-tool"]').forEach(button => button.classList.toggle('active', button.dataset.tool === ui.noteTool));
+    const stylusButton = el('#stylusOnlyDrawingButton'); if (stylusButton) { stylusButton.classList.toggle('active', ui.noteStylusOnly); stylusButton.setAttribute('aria-pressed', String(ui.noteStylusOnly)); }
     renderNoteDrawing();
+  }
+  function toggleStylusOnlyDrawing() {
+    ui.noteStylusOnly = !ui.noteStylusOnly;
+    setNoteDrawingTool(ui.noteTool);
+    const hint = el('#noteEditorHint'); if (hint) hint.textContent = ui.noteStylusOnly ? t('Finger drawing is off. Use a stylus or Apple Pencil.') : t('Use Draw with your finger, stylus, or Apple Pencil. Choose Lasso to select drawings, then drag them, change their color, thickness, or brush.');
   }
   function persistDrawing({ quiet = true } = {}) { if (!el('#noteEditor')) return; persistEditorNote({ quiet }); }
   function updateSelectedDrawingStyle(property, value) {
@@ -1188,7 +1476,7 @@
     persistDrawing(); updateDrawingClipboardControls(); renderNoteDrawing();
   }
   function noteDrawingPointerDown(event) {
-    const canvas = drawingCanvas(); if (!canvas || ui.noteTool === 'text' || event.button > 0) return;
+    const canvas = drawingCanvas(); if (!canvas || ui.noteTool === 'text' || event.button > 0 || (ui.noteStylusOnly && event.pointerType === 'touch')) return;
     event.preventDefault(); const point = drawingPoint(event, canvas);
     if (ui.noteDrawingPastePending) { pasteDrawingAt(point); setNoteDrawingTool('lasso'); return; }
     canvas.setPointerCapture?.(event.pointerId);
@@ -1203,12 +1491,16 @@
       ui.noteDrawingSelectionIds = []; ui.noteDrawingInteraction = { mode: 'erase', pointerId: event.pointerId, lastPoint: point, changed }; renderNoteDrawing(); return;
     }
     const stroke = { id: uid(), brush: ui.noteBrush || 'pen', color: ui.noteDrawColor || '#25223a', width: clamp(Number(ui.noteDrawWidth) || 4, 1, 18), points: [point] };
-    ui.noteDrawingData.push(stroke); ui.noteDrawingSelectionIds = []; ui.noteDrawingInteraction = { mode: 'draw', pointerId: event.pointerId, strokeId: stroke.id }; updateDrawingClipboardControls(); renderNoteDrawing();
+    ui.noteDrawingSelectionIds = []; renderNoteDrawing(); ui.noteDrawingData.push(stroke); ui.noteDrawingInteraction = { mode: 'draw', pointerId: event.pointerId, strokeId: stroke.id }; updateDrawingClipboardControls(); drawLiveStrokeSegment(canvas, stroke, point);
   }
   function noteDrawingPointerMove(event) {
     const interaction = ui.noteDrawingInteraction; const canvas = drawingCanvas(); if (!interaction || !canvas || interaction.pointerId !== event.pointerId) return;
     event.preventDefault(); const events = event.getCoalescedEvents?.() || [event];
-    if (interaction.mode === 'draw') { const stroke = ui.noteDrawingData.find(item => item.id === interaction.strokeId); if (stroke) events.forEach(sample => stroke.points.push(drawingPoint(sample, canvas))); }
+    if (interaction.mode === 'draw') {
+      const stroke = ui.noteDrawingData.find(item => item.id === interaction.strokeId);
+      if (stroke) events.forEach(sample => { const previous = stroke.points[stroke.points.length - 1]; const point = drawingPoint(sample, canvas); stroke.points.push(point); drawLiveStrokeSegment(canvas, stroke, previous, point); });
+      return;
+    }
     if (interaction.mode === 'erase') events.forEach(sample => { const point = drawingPoint(sample, canvas); interaction.changed = eraseDrawingAlong(interaction.lastPoint, point, canvas) || interaction.changed; interaction.lastPoint = point; });
     if (interaction.mode === 'lasso') events.forEach(sample => interaction.points.push(drawingPoint(sample, canvas)));
     if (interaction.mode === 'move') {
@@ -1227,7 +1519,7 @@
     const canvas = drawingCanvas(); const paper = el('#notePaper'); const note = data.notes.find(entry => entry.id === ui.activeNoteId) || ui.noteDraft;
     if (!canvas || !paper || !note) return;
     ui.noteDrawingData = copyDrawing(note.drawing); ui.noteDrawingSelectionIds = []; ui.noteDrawingInteraction = null; ui.noteDrawingPastePending = false;
-    canvas.addEventListener('pointerdown', noteDrawingPointerDown); canvas.addEventListener('pointermove', noteDrawingPointerMove); canvas.addEventListener('pointerup', noteDrawingPointerUp); canvas.addEventListener('pointercancel', noteDrawingPointerUp);
+    canvas.addEventListener('pointerdown', noteDrawingPointerDown, { passive: false }); canvas.addEventListener('pointermove', noteDrawingPointerMove, { passive: false }); canvas.addEventListener('pointerup', noteDrawingPointerUp, { passive: false }); canvas.addEventListener('pointercancel', noteDrawingPointerUp, { passive: false });
     ui.noteCanvasObserver = new ResizeObserver(() => renderNoteDrawing()); ui.noteCanvasObserver.observe(paper); setNoteDrawingTool(ui.noteTool); updateDrawingClipboardControls(); renderNoteDrawing();
   }
   function imageCanvasFromFile(file, maxDimension = 1600) {
@@ -1296,23 +1588,31 @@
   function openNoteImageModal() { rememberEditorRange(); openModal(t('Add image'), `<div class="form-grid"><label class="field-label wide">${t('Image type')}<select class="input" name="paperType">${paperTypeOptions()}</select></label><label class="field-label wide">${t('Choose image')}<input class="input" name="image" type="file" accept="image/*" required></label><label class="check-field wide"><input name="autoCrop" type="checkbox" checked> <span>${t('Auto-crop the page')}</span></label></div><p class="help">${t('For paper pages, auto-crop finds the page edges on your device. A clear, high-contrast photo gives the best result.')}</p>`, 'note-image', t('Add to note')); }
   function hasHandheldLayout() { return document.body.classList.contains('layout-phone') || document.body.classList.contains('layout-tablet'); }
   function homeworkPhotoField() {
-    if (!hasHandheldLayout()) return `<label class="field-label">${t('Homework photo')}<input class="input" name="image" type="file" accept="image/*" required></label>`;
     return `<div class="field-label wide"><span class="field-control-title">${t('Homework photo')}</span><div class="homework-photo-sources"><label class="homework-photo-source"><input name="cameraImage" type="file" accept="image/*" capture="environment" data-homework-photo-source aria-label="${escape(t('Take photo'))}"><span class="homework-photo-source-icon" aria-hidden="true">◉</span><b>${t('Take photo')}</b></label><label class="homework-photo-source"><input name="libraryImage" type="file" accept="image/*" data-homework-photo-source aria-label="${escape(t('Choose from photos'))}"><span class="homework-photo-source-icon" aria-hidden="true">▧</span><b>${t('Choose from photos')}</b></label></div></div>`;
   }
   function selectedHomeworkPhoto(payload) { return [payload.cameraImage, payload.libraryImage, payload.image].find(file => file && typeof file.size === 'number' && file.size > 0); }
   function openHomeworkPhotoPrompt(item) {
-    openModal(t('Homework completed!'), `<input type="hidden" name="id" value="${escape(item.id)}"><section class="completion-photo-prompt"><span class="completion-photo-icon">▧</span><div><h3>${t('Pin a picture of your finished homework?')}</h3><p>${t('We will crop the picture to the paper so your work is easy to look back at.')}</p></div></section><div class="form-grid"><label class="field-label">${t('Paper type')}<select class="input" name="paperType">${paperTypeOptions('worksheet')}</select></label>${homeworkPhotoField()}</div><p class="help">${t('Automatic page crop works best when the whole paper is visible and clearly different from its background.')}</p>`, 'homework-photo', t('Crop & pin photo'));
+    openModal(t('Homework completed!'), `<input type="hidden" name="id" value="${escape(item.id)}"><section class="completion-photo-prompt"><span class="completion-photo-icon">▧</span><div><h3>${t('Save a picture of your finished homework?')}</h3><p>${t('Take a picture now or choose one from your photos.')}</p></div></section><div class="form-grid">${homeworkPhotoField()}</div><p class="help">${t('We save the full photo exactly as you choose it.')}</p>`, 'homework-photo', t('Save photo'));
     const skip = el('.modal-actions .secondary', modalRoot); if (skip) skip.textContent = t('Not now');
   }
   function openHomeworkPhotoPreview(item) {
     if (!item?.completionPhoto?.source) return;
-    openModal(t('Pinned homework photo'), `<section class="pinned-homework-photo"><img src="${escape(item.completionPhoto.source)}" alt="${t('Pinned homework photo')}"><p>${t('Automatically cropped from your completed homework.')}</p></section>`, 'photo-preview', t('Close'));
+    openModal(t('Pinned homework photo'), `<section class="pinned-homework-photo"><img src="${escape(item.completionPhoto.source)}" alt="${t('Pinned homework photo')}"><p>${t('Saved with your completed homework.')}</p></section>`, 'photo-preview', t('Close'));
     const cancel = el('.modal-actions .secondary', modalRoot); if (cancel) cancel.hidden = true;
   }
-  function gradePlaceholder() { return data.profile.gradeSystem === 'numeric' ? 'e.g. 1.7' : data.profile.gradeSystem === 'percentage' ? 'e.g. 87' : 'e.g. A'; }
+  async function saveHomeworkPhoto(file) { return compressNoteImage(file, 'photo', false); }
+  function gradePicker(value = '') {
+    const clean = String(value || '').trim().toUpperCase();
+    if (data.profile.gradeSystem === 'percentage') {
+      const percentage = clamp(Number(clean || 100), 0, 100);
+      return `<label class="field-label grade-picker">${t('Grade')}<div class="grade-slider"><input name="value" type="range" min="0" max="100" step="1" value="${percentage}" data-grade-slider><output data-grade-slider-output>${percentage}%</output></div><span class="grade-slider-scale"><span>0%</span><span>100%</span></span></label>`;
+    }
+    const options = data.profile.gradeSystem === 'numeric' ? NUMERIC_GRADE_OPTIONS : LETTER_GRADE_OPTIONS;
+    return `<label class="field-label">${t('Grade')}<select class="input" name="value" required><option value="" disabled ${clean ? '' : 'selected'}>${t('Choose a grade')}</option>${options.map(option => `<option value="${option}" ${option === clean ? 'selected' : ''}>${option}</option>`).join('')}</select></label>`;
+  }
   function openGradeModal(item) {
     item = item || { title: '', subjectId: '', value: '', date: '' };
-    openModal(item.id ? 'Edit grade' : 'Add grade', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">Assessment<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="e.g. Unit test"></label><label class="field-label">Subject<select class="input" name="subjectId">${subjectOptions(item.subjectId)}</select></label><label class="field-label">Grade<input class="input" name="value" required maxlength="10" value="${escape(item.value)}" placeholder="${gradePlaceholder()}"></label>${dateField('date', 'Date', item.date || '', true)}</div>`, 'grade');
+    openModal(item.id ? 'Edit grade' : 'Add grade', `<input type="hidden" name="id" value="${item.id || ''}"><div class="form-grid"><label class="field-label wide">${t('Assessment')}<input class="input" name="title" required maxlength="100" value="${escape(item.title)}" placeholder="${escape(t('e.g. Unit test'))}"></label><label class="field-label">${t('Subject')}<select class="input" name="subjectId">${subjectOptions(item.subjectId)}</select></label>${gradePicker(item.value)}${dateField('date', 'Date', item.date || '', true)}</div>`, 'grade');
   }
   function openSubjectModal(item) {
     item = item || { name: '', icon: 'book', color: data.profile.accent };
@@ -1374,9 +1674,9 @@
       const image = selectedHomeworkPhoto(payload);
       if (!image) return toast('Choose or take a homework photo before continuing.', 'error');
       try {
-        const source = await compressNoteImage(image, payload.paperType, true);
-        homework.completionPhoto = { source, paperType: payload.paperType, createdAt: Date.now() };
-        save(); closeModal(); renderPage(); toast('Homework photo pinned.', 'success');
+        const source = await saveHomeworkPhoto(image);
+        homework.completionPhoto = { source, createdAt: Date.now() };
+        save(); closeModal(); renderPage(); toast('Homework photo saved.', 'success');
       } catch (error) { toast(error.message || 'Could not add that photo.', 'error'); }
       return;
     }
@@ -1390,8 +1690,14 @@
     }
     if (form.dataset.form === 'event') {
       const existing = existingId ? data.events.find(item => item.id === existingId) : null;
-      const scheduleChanged = !existing || existing.date !== payload.date || (existing.time || '') !== (payload.time || '');
-      upsert('events', { ...payload, id: existingId, notifiedKey: scheduleChanged ? '' : (existing?.notifiedKey || '') });
+      const school = payload.eventType === 'school'; const lessons = school ? schoolLessonsFromModal().sort((left, right) => `${left.start}|${left.end}`.localeCompare(`${right.start}|${right.end}`)) : [];
+      const weekdays = school ? schoolWeekdaysFromModal() : [];
+      if (school && !lessons.length) return toast(t('A school day needs at least one lesson.'), 'error');
+      if (school && lessons.some(lesson => !lesson.start || !lesson.end || !lesson.subjectId || lesson.end <= lesson.start)) return toast(t('Every school lesson needs a subject, a start time, and a later end time.'), 'error');
+      if (school && !weekdays.length) return toast(t('Choose at least one day for this school schedule.'), 'error');
+      const scheduleChanged = !existing || existing.date !== payload.date || Boolean(isSchoolEvent(existing)) !== school || (existing.time || '') !== (school ? '' : payload.time || '') || JSON.stringify(schoolLessons(existing)) !== JSON.stringify(lessons) || JSON.stringify(schoolWeekdays(existing)) !== JSON.stringify(weekdays);
+      const { eventType: _eventType, ...eventPayload } = payload;
+      upsert('events', { ...eventPayload, id: existingId, title: school ? t('School') : payload.title, type: school ? 'school' : 'event', lessons, weekdays, color: school ? SCHOOL_EVENT_COLOR : payload.color, time: school ? '' : payload.time, subjectId: school ? '' : payload.subjectId, done: existing ? Boolean(existing.done) : false, notifiedKey: scheduleChanged ? '' : (existing?.notifiedKey || '') });
     }
     if (form.dataset.form === 'reminder') {
       const existing = existingId ? data.reminders.find(item => item.id === existingId) : null;
@@ -1418,7 +1724,8 @@
   }
   function validGrade(value) {
     const clean = String(value).trim().toUpperCase();
-    if (data.profile.gradeSystem === 'letter') return /^[A-F]$/.test(clean);
+    if (data.profile.gradeSystem === 'letter') return LETTER_GRADE_OPTIONS.includes(clean);
+    if (data.profile.gradeSystem === 'numeric') return NUMERIC_GRADE_OPTIONS.includes(clean);
     const numeric = Number(clean); return Number.isFinite(numeric) && (data.profile.gradeSystem === 'numeric' ? numeric >= 1 && numeric <= 6 : numeric >= 0 && numeric <= 100);
   }
 
@@ -1448,6 +1755,23 @@
     if (item.done) data.stats.completedHomework = Number(data.stats.completedHomework || 0) + 1;
     save(); renderPage(); toast(item.done ? 'Homework completed — nice work!' : 'Homework marked as active.');
     if (item.done && !item.completionPhoto?.source) openHomeworkPhotoPrompt(item);
+  }
+  function toggleEvent(id) {
+    const item = data.events.find(event => event.id === id); if (!item) return;
+    item.done = !item.done;
+    save(); renderPage(); toast(item.done ? 'Event marked complete.' : 'Event reopened.', 'success');
+  }
+  function shiftCalendar(direction) {
+    if (ui.calendarView === 'week') {
+      const date = calendarWeekStart(); date.setDate(date.getDate() + direction * 7);
+      ui.selectedDate = calendarIso(date); ui.month = new Date(date.getFullYear(), date.getMonth(), 1);
+    } else ui.month = new Date(ui.month.getFullYear(), ui.month.getMonth() + direction, 1);
+    renderPage();
+  }
+  function selectCalendarDate(date) {
+    ui.selectedDate = date;
+    ui.month = new Date(`${date}T12:00:00`); ui.month.setDate(1);
+    renderPage();
   }
   function toggleReminder(id) {
     const item = data.reminders.find(reminder => reminder.id === id); if (!item) return;
@@ -1601,9 +1925,9 @@
     if (!action) return false;
     const maps = {
       'add-homework': () => openHomeworkModal(), 'add-event': () => openEventModal(), 'add-reminder': () => openReminderModal(), 'add-reminder-group': () => openReminderGroupModal(), 'add-group-reminder': () => openReminderModal(null, id), 'edit-reminder-group': () => openReminderGroupModal(reminderGroupById(id)), 'add-note': () => openNoteModal(), 'add-grade': () => openGradeModal(), 'add-subject': () => openSubjectModal(), 'add-goal': () => openGoalModal(), 'add-friend': () => openFriendModal(),
-      'new-notebook': () => openNotebookModal(), 'edit-notebook': () => openNotebookModal(notebookById(id)), 'open-notebook': () => openNotebook(id), 'open-loose-notes': () => openNotebook(''), 'back-notes-library': backToNotes, 'new-notebook-note': newNotebookNote, 'open-note-editor': () => { const note = data.notes.find(entry => entry.id === id); if (note) openNoteModal(note); }, 'exit-note-editor': exitNoteEditor, 'save-rich-note': saveRichNote, 'show-note-highlights': showNoteHighlights, 'back-to-notes': backToNotes, 'editor-command': () => runEditorCommand(target.dataset.command, target.dataset.value), 'editor-marker': saveEditorHighlight, 'editor-photo': openNoteImageModal, 'note-draw-tool': () => setNoteDrawingTool(target.dataset.tool), 'copy-lasso-drawing': copySelectedDrawing, 'paste-lasso-drawing': requestDrawingPaste, 'clear-note-drawing': clearNoteDrawing,
-      'toggle-homework': () => toggleHomework(id), 'view-homework-photo': () => openHomeworkPhotoPreview(data.homework.find(item => item.id === id)), 'open-homework-note': () => openHomeworkNote(id), 'toggle-reminder': () => toggleReminder(id), 'homework-filter': () => { ui.homeworkFilter = target.dataset.filter; renderPage(); },
-      'calendar-previous': () => { ui.month = new Date(ui.month.getFullYear(), ui.month.getMonth() - 1, 1); renderPage(); }, 'calendar-next': () => { ui.month = new Date(ui.month.getFullYear(), ui.month.getMonth() + 1, 1); renderPage(); }, 'calendar-today': () => { ui.month = new Date(new Date().getFullYear(), new Date().getMonth(), 1); ui.selectedDate = todayISO(); renderPage(); }, 'select-date': () => { ui.selectedDate = target.dataset.date; ui.month = new Date(`${ui.selectedDate}T12:00:00`); ui.month.setDate(1); renderPage(); },
+      'new-notebook': () => openNotebookModal(), 'edit-notebook': () => openNotebookModal(notebookById(id)), 'open-notebook': () => openNotebook(id), 'open-loose-notes': () => openNotebook(''), 'back-notes-library': backToNotes, 'new-notebook-note': newNotebookNote, 'open-note-editor': () => { const note = data.notes.find(entry => entry.id === id); if (note) openNoteModal(note); }, 'exit-note-editor': exitNoteEditor, 'save-rich-note': saveRichNote, 'show-note-highlights': showNoteHighlights, 'back-to-notes': backToNotes, 'editor-command': () => runEditorCommand(target.dataset.command, target.dataset.value), 'editor-marker': saveEditorHighlight, 'editor-photo': openNoteImageModal, 'note-draw-tool': () => setNoteDrawingTool(target.dataset.tool), 'toggle-stylus-only-drawing': toggleStylusOnlyDrawing, 'copy-lasso-drawing': copySelectedDrawing, 'paste-lasso-drawing': requestDrawingPaste, 'clear-note-drawing': clearNoteDrawing,
+      'toggle-homework': () => toggleHomework(id), 'view-homework-photo': () => openHomeworkPhotoPreview(data.homework.find(item => item.id === id)), 'open-homework-note': () => openHomeworkNote(id), 'toggle-reminder': () => toggleReminder(id), 'toggle-event': () => toggleEvent(id), 'homework-filter': () => { ui.homeworkFilter = target.dataset.filter; renderPage(); },
+      'calendar-previous': () => shiftCalendar(-1), 'calendar-next': () => shiftCalendar(1), 'calendar-today': () => { ui.month = new Date(new Date().getFullYear(), new Date().getMonth(), 1); ui.selectedDate = todayISO(); renderPage(); }, 'calendar-view': () => { ui.calendarView = target.dataset.view === 'week' ? 'week' : 'month'; renderPage(); }, 'calendar-clock-format': () => { data.profile.clockFormat = target.dataset.format === '12' ? '12' : '24'; save(); tickClock(); renderPage(); }, 'select-date': () => selectCalendarDate(target.dataset.date), 'select-event-date': () => selectCalendarDate(target.dataset.date), 'add-school-lesson': addSchoolLesson, 'remove-school-lesson': () => removeSchoolLesson(target), 'school-weekday': () => toggleSchoolWeekday(target), 'school-every-day': enableSchoolEveryDay,
       'timer-mode': () => changeTimerMode(target.dataset.mode), 'timer-start': toggleTimer, 'timer-reset': resetTimer, 'timer-skip': () => completeTimer(false), 'save-timer-settings': saveTimerSettings,
       'accent': () => applyAccent(target.dataset.color), 'setup-accent': () => { data.profile.accent = target.dataset.color; applyAppearance(); renderAccentChoices(el('#setupAccents'), true); },
       'date-picker': () => openDatePicker(target.dataset.target), 'date-picker-previous': () => { ui.datePickerMonth = new Date(ui.datePickerMonth.getFullYear(), ui.datePickerMonth.getMonth() - 1, 1); renderDatePicker(); }, 'date-picker-next': () => { ui.datePickerMonth = new Date(ui.datePickerMonth.getFullYear(), ui.datePickerMonth.getMonth() + 1, 1); renderDatePicker(); }, 'date-select': () => selectPickerDate(target.dataset.date), 'date-picker-close': () => { const holder = el('#datePickerHolder'); if (holder) holder.innerHTML = ''; }, 'icon-picker': renderIconPicker, 'icon-select': () => selectIcon(target.dataset.icon), 'icon-custom': () => selectIcon(el('#customIconInput', modalRoot)?.value),
@@ -1656,7 +1980,7 @@
   function setSetupLanguage(nextLanguage) {
     if (!LANGUAGE_OPTIONS.some(([code]) => code === nextLanguage)) return;
     ui.setupLanguage = nextLanguage;
-    data.profile.language = nextLanguage; data.profile.languagePreference = 'manual'; save();
+    data.profile.language = nextLanguage; data.profile.languagePreference = 'manual'; data.profile.deviceLocaleVersion = DEVICE_LOCALE_VERSION; save();
     applyLanguageContent();
     el('#setupLanguage').value = nextLanguage;
   }
@@ -1679,8 +2003,8 @@
     screen.classList.remove('hidden');
     restartLanguageSpinner(screen);
     window.setTimeout(() => {
-      data.profile.language = nextLanguage; data.profile.languagePreference = nextLanguagePreference; save();
-      document.documentElement.lang = language();
+      data.profile.language = nextLanguage; data.profile.languagePreference = nextLanguagePreference; data.profile.deviceLocaleVersion = DEVICE_LOCALE_VERSION; save();
+      document.documentElement.lang = locale();
       renderPage();
       el('#languageLoadingTitle').textContent = t('Setting language');
       el('#languageLoadingText').textContent = t('Making every part of your space feel familiar…');
@@ -1702,11 +2026,18 @@
   }
   function saveSettingFromControl(target) {
     if (target.id === 'themeSelect') { data.profile.theme = target.value; save(); applyAppearance(); toast('Theme updated.', 'success'); }
-    if (target.id === 'clockFormatSelect') { data.profile.clockFormat = target.value; save(); tickClock(); toast('Clock format updated.', 'success'); }
+    if (target.id === 'clockFormatSelect') { data.profile.clockFormat = target.value; save(); tickClock(); renderPage(); toast('Clock format updated.', 'success'); }
     if (target.id === 'gradeSystemSelect') { data.profile.gradeSystem = target.value; save(); toast('Grade system updated.', 'success'); }
     if (target.id === 'setupLanguage') setSetupLanguage(target.value);
     if (target.id === 'languageSelect') setLanguageFromSettings(target.value);
     if (target.id === 'profileNameInput') { data.profile.name = target.value.trim() || 'Student'; save(); renderNav(); }
+  }
+  function syncDeviceLanguage() {
+    if (ui.languageTransitioning || data.profile.languagePreference !== 'auto') return;
+    const nextLanguage = deviceLanguage();
+    if (data.profile.language !== nextLanguage) { data.profile.language = nextLanguage; save(); }
+    applyLanguageContent();
+    if (!el('#app').classList.contains('hidden')) renderPage();
   }
   function bindEvents() {
     document.addEventListener('mousedown', event => { if (event.target.closest('.word-toolbar [data-action]')) event.preventDefault(); });
@@ -1739,6 +2070,7 @@
     });
     modalRoot.addEventListener('change', event => {
       if (event.target.matches('[data-time-picker]')) selectPickerTime();
+      if (event.target.matches('[data-event-type]')) syncEventTypeFields();
       if (event.target.matches('[data-homework-photo-source]') && event.target.files?.length) {
         els('[data-homework-photo-source]', modalRoot).forEach(input => {
           const selected = input === event.target;
@@ -1754,8 +2086,6 @@
     el('#openSidebar')?.addEventListener('click', () => { el('#sidebar').classList.add('open'); el('#scrim').classList.add('open'); }); el('#closeSidebar')?.addEventListener('click', closeSidebar); el('#scrim')?.addEventListener('click', closeSidebar);
     el('#quickAdd').addEventListener('click', () => { const menu = el('#quickAddMenu'); const opening = menu.classList.contains('hidden'); menu.classList.toggle('hidden', !opening); el('#quickAdd').setAttribute('aria-expanded', String(opening)); });
     el('#importInput').addEventListener('change', event => { importData(event.target.files[0]); event.target.value = ''; });
-    el('#globalSearch').addEventListener('input', event => { ui.searchQuery = event.target.value; });
-    el('#globalSearch').addEventListener('keydown', event => { if (event.key === 'Enter' && event.currentTarget.value.trim()) { event.preventDefault(); ui.page = 'search'; renderPage(); el('#globalSearch').value = ui.searchQuery; } });
     document.addEventListener('change', event => {
       saveSettingFromControl(event.target);
       if (event.target.id === 'noteBrushSelect') { ui.noteBrush = event.target.value; if (ui.noteBrush !== 'eraser') updateSelectedDrawingStyle('brush', ui.noteBrush); setNoteDrawingTool(ui.noteBrush === 'eraser' ? 'draw' : ui.noteTool); }
@@ -1765,6 +2095,7 @@
     });
     document.addEventListener('input', event => {
       if (event.target.id === 'profileNameInput') saveSettingFromControl(event.target);
+      if (event.target.matches('[data-grade-slider]')) { const output = el('[data-grade-slider-output]', event.target.closest('.grade-picker')); if (output) output.textContent = `${event.target.value}%`; }
       if (event.target.id === 'noteDrawWidth') { ui.noteDrawWidth = clamp(Number(event.target.value) || 4, 1, 18); updateSelectedDrawingStyle('width', ui.noteDrawWidth); }
     });
     document.addEventListener('paste', event => {
@@ -1782,6 +2113,7 @@
       if (event.key === 'Escape') { closeModal(); closeSidebar(); return; }
     });
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { if (data.profile.theme === 'system') applyAppearance(); });
+    window.addEventListener('languagechange', syncDeviceLanguage);
     let resizeFrame;
     window.addEventListener('resize', () => {
       window.cancelAnimationFrame(resizeFrame);
@@ -1796,6 +2128,11 @@
       root.classList.remove('hidden');
       root.innerHTML = `<main class="load-error"><h1>BananaBoard could not load</h1><p>${escape(error.message || 'Please refresh and try again.')}</p><a class="button primary" href="/auth">Sign in again</a></main>`;
       return;
+    }
+    if (Number(data.profile.deviceLocaleVersion) !== DEVICE_LOCALE_VERSION) {
+      data.profile.languagePreference = 'auto';
+      data.profile.deviceLocaleVersion = DEVICE_LOCALE_VERSION;
+      save();
     }
     if (data.profile.languagePreference === 'auto' && data.profile.language !== deviceLanguage()) { data.profile.language = deviceLanguage(); save(); }
     applyAppearance(); applyLanguageContent(); initTimer(); bindEvents();

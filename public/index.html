@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-title" content="BananaBoard">
     <link rel="manifest" href="/static/site.webmanifest?v=20260918-1">
     <title>BananaBoard</title>
-    <link rel="stylesheet" href="/static/style.css?v=20260918-1">
+    <link rel="stylesheet" href="/static/style.css?v=20260921-9">
     <style>@media (max-width: 760px) { #sidebar, #scrim { display: none !important; } }</style>
   </head>
   <body>
@@ -97,7 +97,7 @@
     <div id="app" class="app hidden">
       <aside id="sidebar" class="sidebar">
         <div class="sidebar-header">
-          <button class="logo" data-page="dashboard" aria-label="Open dashboard"><span class="brand-mark"><img class="studyflow-symbol" src="/static/icon-192.png?v=20260918-1" alt=""></span><span>BananaBoard<small><span data-i18n="Version">Version</span> 0.1</small></span></button>
+          <button class="logo" data-page="dashboard" aria-label="Open dashboard"><span class="brand-mark"><img class="studyflow-symbol" src="/static/icon-192.png?v=20260918-1" alt=""></span><span>BananaBoard<small><span data-i18n="Version">Version</span> 0.2</small></span></button>
           <button id="closeSidebar" class="icon-button mobile-only" aria-label="Close menu">×</button>
         </div>
         <nav id="mainNav" class="nav" aria-label="Main navigation"></nav>
@@ -109,12 +109,11 @@
       <div id="scrim" class="scrim"></div>
       <main class="main">
         <header class="mobile-header">
-          <span class="mobile-version"><span data-i18n="Version">Version</span> 0.1</span>
+          <span class="mobile-version"><span data-i18n="Version">Version</span> 0.2</span>
           <button class="logo compact" data-page="dashboard"><span class="brand-mark"><img class="studyflow-symbol" src="/static/icon-192.png?v=20260918-1" alt=""></span><span>BananaBoard</span></button>
           <span class="mobile-header-spacer" aria-hidden="true"></span>
         </header>
         <div class="topbar">
-          <label class="search"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search everything…" data-i18n-placeholder="Search everything…"><kbd>/</kbd></label>
           <div class="topbar-actions"><span id="todayLabel" class="today-label"></span><div class="quick-add-wrap"><button id="quickAdd" class="button primary" aria-expanded="false">＋ <span data-i18n="Quick add">Quick add</span></button><div id="quickAddMenu" class="quick-add-menu hidden" role="menu"><button data-action="add-homework">✓ <span data-i18n="Homework">Homework</span></button><button data-action="add-event">□ <span data-i18n="Event or test">Event or test</span></button><button data-action="add-reminder">⊙ <span data-i18n="Reminder">Reminder</span></button><button data-action="add-goal">◎ <span data-i18n="Goal">Goal</span></button><button data-action="add-subject">▦ <span data-i18n="Subject">Subject</span></button><button data-action="add-grade">A+ <span data-i18n="Grade">Grade</span></button><button data-action="add-note">▤ <span data-i18n="Note">Note</span></button></div></div></div>
         </div>
         <div id="pageRoot"></div>
@@ -133,6 +132,6 @@
     <div id="modalRoot"></div>
     <div id="toastRoot" class="toast-root" aria-live="polite"></div>
     <input id="importInput" type="file" accept="application/json" hidden>
-    <script src="/static/script.js?v=20260918-1"></script>
+    <script src="/static/script.js?v=20260921-9"></script>
   </body>
 </html>

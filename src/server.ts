@@ -31,6 +31,7 @@ const registrationSchema = z.object({
   displayName: z.string().trim().min(1, 'Display name is required.').max(40),
   password: z.string().min(12, 'Use at least 12 characters for your password.').max(256),
   language: z.enum(['en', 'de', 'tr', 'ru', 'uk', 'es']).optional(),
+  languagePreference: z.enum(['auto', 'manual']).optional(),
   gradeSystem: z.enum(['numeric', 'percentage', 'letter']).optional()
 });
 const loginSchema = z.object({
@@ -94,6 +95,10 @@ export function buildServer() {
   app.register(rateLimit, { global: false });
   app.register(multipart, { limits: { files: 1, fileSize: maxUploadBytes, fields: 5 } });
   app.register(staticFiles, { root: publicDirectory, prefix: '/static/', index: false, cacheControl: true, maxAge: 0 });
+  app.addHook('onSend', async (request, reply, payload) => {
+    if (!config.isProduction && request.url.startsWith('/static/')) reply.header('Cache-Control', 'no-store');
+    return payload;
+  });
 
   app.setErrorHandler((error, _request, reply) => {
     app.log.error(error);
@@ -144,7 +149,7 @@ export function buildServer() {
       updatedAt: new Date()
     };
     await db.insert(users).values(user);
-    await createWorkspace(user, { language: parsed.data.language, gradeSystem: parsed.data.gradeSystem });
+    await createWorkspace(user, { language: parsed.data.language, languagePreference: parsed.data.languagePreference, gradeSystem: parsed.data.gradeSystem });
     await createSession(reply, user.id);
     return reply.code(201).send({ user: { email: user.email, displayName: user.displayName } });
   });

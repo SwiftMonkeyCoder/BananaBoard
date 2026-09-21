@@ -33,6 +33,7 @@ const recordArray = (value: unknown): WorkspaceRecord[] => Array.isArray(value)
 
 export type InitialWorkspacePreferences = {
   language?: string;
+  languagePreference?: 'auto' | 'manual';
   gradeSystem?: string;
 };
 
@@ -42,10 +43,11 @@ const supportedGradeSystems = new Set(['numeric', 'percentage', 'letter']);
 export function defaultWorkspace(displayName: string, preferences: InitialWorkspacePreferences = {}): WorkspaceData {
   const language = supportedLanguages.has(preferences.language || '') ? preferences.language! : 'en';
   const gradeSystem = supportedGradeSystems.has(preferences.gradeSystem || '') ? preferences.gradeSystem! : 'numeric';
+  const languagePreference = preferences.languagePreference === 'manual' ? 'manual' : 'auto';
   return {
-    profile: { name: displayName, photo: '', theme: 'light', accent: '#f4c53a', gradeSystem, clockFormat: '24', language, languagePreference: 'manual', discoverySource: '' },
+    profile: { name: displayName, photo: '', theme: 'light', accent: '#f4c53a', gradeSystem, clockFormat: '24', language, languagePreference, deviceLocaleVersion: 1, discoverySource: '' },
     subjects: [
-      { id: 'math', name: 'Mathematics', color: '#6c63ff', icon: 'math' },
+      { id: 'math', name: 'Math', color: '#6c63ff', icon: 'math' },
       { id: 'english', name: 'English', color: '#ec4899', icon: 'language' },
       { id: 'science', name: 'Science', color: '#10b981', icon: 'science' }
     ],
@@ -62,7 +64,7 @@ export function normalizeWorkspace(input: unknown, displayName: string): Workspa
   const savedLanguagePreference = requestedProfile.languagePreference;
   const languagePreference = savedLanguagePreference === 'auto' || savedLanguagePreference === 'manual'
     ? savedLanguagePreference
-    : Object.keys(requestedProfile).length ? 'manual' : 'auto';
+    : 'auto';
   const profile = { ...fallback.profile, ...requestedProfile, languagePreference, name: String(requestedProfile.name || displayName).slice(0, 40) };
   const timer = { ...fallback.timer, ...object(candidate.timer) };
   const stats = { ...fallback.stats, ...object(candidate.stats) };
@@ -71,6 +73,7 @@ export function normalizeWorkspace(input: unknown, displayName: string): Workspa
     const records = recordArray(candidate[collection]);
     data[collection] = collection === 'subjects' && records.length === 0 ? fallback.subjects : records;
   }
+  data.subjects = data.subjects.map(subject => subject.id === 'math' && subject.name === 'Mathematics' ? { ...subject, name: 'Math' } : subject);
   return data;
 }
 

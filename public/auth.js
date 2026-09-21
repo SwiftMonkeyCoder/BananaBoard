@@ -11,14 +11,15 @@
     es: { 'Sign in': 'Iniciar sesión', 'Create account': 'Crear cuenta', 'Welcome back': 'Te damos la bienvenida', 'Create your space': 'Crea tu espacio', 'Sign in to open your personal BananaBoard.': 'Inicia sesión para abrir tu BananaBoard personal.', 'Start with an email, password, and the name you want shown in BananaBoard.': 'Empieza con un correo electrónico, una contraseña y el nombre que quieres mostrar en BananaBoard.', 'YOUR CALM STUDY SPACE': 'TU ESPACIO TRANQUILO PARA ESTUDIAR', 'Plan your work, keep your notes together, and make steady progress.': 'Planifica tu trabajo, guarda tus apuntes juntos y avanza con constancia.', 'Account access': 'Acceso a la cuenta', 'Display name': 'Nombre visible', 'What should we call you?': '¿Cómo debemos llamarte?', 'Email address': 'Dirección de correo', 'Password': 'Contraseña', 'Your password': 'Tu contraseña', 'Use at least 12 characters to protect your account.': 'Usa al menos 12 caracteres para proteger tu cuenta.', 'BananaBoard does not offer password recovery yet. Keep your password somewhere safe.': 'BananaBoard aún no ofrece recuperación de contraseña. Guarda tu contraseña en un lugar seguro.', 'Please complete every required field.': 'Completa todos los campos obligatorios.', 'Use at least 12 characters for your password.': 'Usa al menos 12 caracteres para tu contraseña.', 'Creating account…': 'Creando cuenta…', 'Signing in…': 'Iniciando sesión…', 'Please try again.': 'Vuelve a intentarlo.', 'Could not prepare a secure sign-in request. Refresh and try again.': 'No se pudo preparar una solicitud de inicio de sesión segura. Actualiza la página e inténtalo de nuevo.' }
   };
   const accountPreferencesTranslations = {
-    de: { 'Language': 'Sprache', 'Grade system': 'Notensystem', 'Number scale (1 is best · 6 is worst)': 'Zahlenskala (1 ist am besten · 6 am schlechtesten)', 'Percentage (0–100%)': 'Prozent (0–100 %)', 'Letter (A–F)': 'Buchstaben (A–F)', 'Set your language and grade system now; you can change them later.': 'Lege Sprache und Notensystem jetzt fest. Du kannst beides später ändern.' },
-    tr: { 'Language': 'Dil', 'Grade system': 'Not sistemi', 'Number scale (1 is best · 6 is worst)': 'Sayı sistemi (1 en iyi · 6 en kötü)', 'Percentage (0–100%)': 'Yüzde (0–100%)', 'Letter (A–F)': 'Harf (A–F)', 'Set your language and grade system now; you can change them later.': 'Dilini ve not sistemini şimdi seç. Bunları daha sonra değiştirebilirsin.' },
-    ru: { 'Language': 'Язык', 'Grade system': 'Система оценок', 'Number scale (1 is best · 6 is worst)': 'Числовая шкала (1 — лучшая · 6 — худшая)', 'Percentage (0–100%)': 'Проценты (0–100%)', 'Letter (A–F)': 'Буквы (A–F)', 'Set your language and grade system now; you can change them later.': 'Выберите язык и систему оценок сейчас. Их можно изменить позже.' },
-    uk: { 'Language': 'Мова', 'Grade system': 'Система оцінювання', 'Number scale (1 is best · 6 is worst)': 'Числова шкала (1 — найкраща · 6 — найгірша)', 'Percentage (0–100%)': 'Відсотки (0–100%)', 'Letter (A–F)': 'Літери (A–F)', 'Set your language and grade system now; you can change them later.': 'Виберіть мову та систему оцінювання зараз. Їх можна змінити пізніше.' },
-    es: { 'Language': 'Idioma', 'Grade system': 'Sistema de calificaciones', 'Number scale (1 is best · 6 is worst)': 'Escala numérica (1 es mejor · 6 es peor)', 'Percentage (0–100%)': 'Porcentaje (0–100%)', 'Letter (A–F)': 'Letras (A–F)', 'Set your language and grade system now; you can change them later.': 'Elige ahora el idioma y el sistema de calificaciones. Podrás cambiarlos más adelante.' }
+    de: { 'Language': 'Sprache', 'Grade system': 'Notensystem', 'Number scale (1 is best · 6 is worst)': 'Zahlenskala (1 ist am besten · 6 am schlechtesten)', 'Percentage (0–100%)': 'Prozent (0–100 %)', 'Letter (A–F)': 'Buchstaben (A–F)', 'Choose your grade system now; you can change it later.': 'Lege dein Notensystem jetzt fest. Du kannst es später ändern.' },
+    tr: { 'Language': 'Dil', 'Grade system': 'Not sistemi', 'Number scale (1 is best · 6 is worst)': 'Sayı sistemi (1 en iyi · 6 en kötü)', 'Percentage (0–100%)': 'Yüzde (0–100%)', 'Letter (A–F)': 'Harf (A–F)', 'Choose your grade system now; you can change it later.': 'Not sistemini şimdi seç. Daha sonra değiştirebilirsin.' },
+    ru: { 'Language': 'Язык', 'Grade system': 'Система оценок', 'Number scale (1 is best · 6 is worst)': 'Числовая шкала (1 — лучшая · 6 — худшая)', 'Percentage (0–100%)': 'Проценты (0–100%)', 'Letter (A–F)': 'Буквы (A–F)', 'Choose your grade system now; you can change it later.': 'Выберите систему оценок сейчас. Её можно изменить позже.' },
+    uk: { 'Language': 'Мова', 'Grade system': 'Система оцінювання', 'Number scale (1 is best · 6 is worst)': 'Числова шкала (1 — найкраща · 6 — найгірша)', 'Percentage (0–100%)': 'Відсотки (0–100%)', 'Letter (A–F)': 'Літери (A–F)', 'Choose your grade system now; you can change it later.': 'Виберіть систему оцінювання зараз. Її можна змінити пізніше.' },
+    es: { 'Language': 'Idioma', 'Grade system': 'Sistema de calificaciones', 'Number scale (1 is best · 6 is worst)': 'Escala numérica (1 es mejor · 6 es peor)', 'Percentage (0–100%)': 'Porcentaje (0–100%)', 'Letter (A–F)': 'Letras (A–F)', 'Choose your grade system now; you can change it later.': 'Elige ahora el sistema de calificaciones. Podrás cambiarlo más adelante.' }
   };
   const t = value => accountPreferencesTranslations[language]?.[value] || translations[language]?.[value] || value;
   let mode = 'login';
+  let languageWasChosen = false;
   let csrf = '';
   const $ = selector => document.querySelector(selector);
 
@@ -76,7 +77,7 @@
     const email = $('#email').value.trim();
     const password = $('#password').value;
     const displayName = $('#displayName').value.trim();
-    const accountLanguage = $('#accountLanguage').value;
+    const accountLanguage = $('#authLanguage').value;
     const gradeSystem = $('#accountGradeSystem').value;
     if (!email || !password || (mode === 'register' && !displayName)) {
       error.textContent = t('Please complete every required field.');
@@ -97,7 +98,7 @@
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'content-type': 'application/json', 'x-csrf-token': csrf },
-        body: JSON.stringify(mode === 'register' ? { email, password, displayName, language: accountLanguage, gradeSystem } : { email, password })
+        body: JSON.stringify(mode === 'register' ? { email, password, displayName, language: accountLanguage, languagePreference: languageWasChosen ? 'manual' : 'auto', gradeSystem } : { email, password })
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.error || t('Please try again.'));
@@ -109,8 +110,9 @@
       submit.textContent = t(mode === 'register' ? 'Create account' : 'Sign in');
     }
   });
-  $('#accountLanguage').value = language;
-  $('#accountLanguage').addEventListener('change', event => {
+  $('#authLanguage').value = language;
+  $('#authLanguage').addEventListener('change', event => {
+    languageWasChosen = true;
     language = event.target.value;
     applyLanguageContent();
     setMode(mode);
